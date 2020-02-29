@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name="ui.MainActivity">
+        <activity android:name="ca.cmpt276.restauranthealthinspection.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

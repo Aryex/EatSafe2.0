@@ -1,4 +1,4 @@
-package ui;
+package ca.cmpt276.restauranthealthinspection.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
