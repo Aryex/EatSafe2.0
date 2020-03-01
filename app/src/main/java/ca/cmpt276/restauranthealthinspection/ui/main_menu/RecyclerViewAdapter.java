@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
-class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "RecyclerViewAdapter";
+    public static final String TAG = "RecyclerViewAdapter";
     private ArrayList<String> restaurantNames = new ArrayList<>();
     private ArrayList<String> inspectionDates = new ArrayList<>();
     private ArrayList<Integer> issuesCount = new ArrayList<>();
@@ -55,7 +55,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ");
                 Toast.makeText(context, "Hi", Toast.LENGTH_SHORT).show();
-                String restaurantName = holder.textViewRestaurantName.getText().toString();
+                String restaurantName = restaurantNames.get(position);
                 Intent i = RestaurantDetails.makeLaunchIntent(context, restaurantName);
                 context.startActivity(i);
             }
@@ -81,8 +81,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
             super(itemView);
             hazardIcon = itemView.findViewById(R.id.hazardIcon);
 
-            textViewRestaurantName = itemView.findViewById(R.id.textViewRestaurantName);
-            textVievInspectionDate = itemView.findViewById(R.id.textViewInspectionDate);
+            textViewRestaurantName = itemView.findViewById(R.id.recyclerRestaurantName);
+            textVievInspectionDate = itemView.findViewById(R.id.recyclerInspectionDate);
             textViewHazardLevel = itemView.findViewById(R.id.textViewHazardLevel);
 
             warningBar = itemView.findViewById(R.id.warningBar);

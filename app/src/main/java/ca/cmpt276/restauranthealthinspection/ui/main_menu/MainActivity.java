@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         dummyNames.add("7-Eleven");
         dummyDates.add("19 Days ago");
-        dummyHazardLevel.add(HazardLevel.LOW);
+        dummyHazardLevel.add(HazardLevel.MEDIUM);
 
         dummyNames.add("Boston Pizza");
         dummyDates.add("May 2017");

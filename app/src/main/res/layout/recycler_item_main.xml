@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         card_view:cardElevation="3dp"
         card_view:contentPadding="10dp"
@@ -63,14 +63,14 @@
             </androidx.cardview.widget.CardView>
 
             <ImageView
-                android:id="@+id/itemImage"
+                android:id="@+id/recyclerThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                card_view:srcCompat="@drawable/icon_hazard_low" />
+                card_view:srcCompat="@drawable/microwave" />
 
             <TextView
-                android:id="@+id/textViewRestaurantName"
+                android:id="@+id/recyclerRestaurantName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -78,7 +78,7 @@
                 android:textSize="36sp" />
 
             <TextView
-                android:id="@+id/textViewInspectionDate"
+                android:id="@+id/recyclerInspectionDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
