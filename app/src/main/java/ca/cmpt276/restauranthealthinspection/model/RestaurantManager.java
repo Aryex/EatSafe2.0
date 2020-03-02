@@ -1,7 +1,5 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.List;
 
