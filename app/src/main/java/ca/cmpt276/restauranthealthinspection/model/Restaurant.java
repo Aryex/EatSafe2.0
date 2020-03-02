@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ *
+ */
 public class Restaurant implements Iterable<Inspection> {
-
     // ******
     // Fields
     // ******
@@ -43,15 +45,9 @@ public class Restaurant implements Iterable<Inspection> {
 
         // Maintain *reverse* sorted date order
         // Uses lambda expression instead of anon class for readability
-        //noinspection ComparatorCombinators
-//        inspections.sort((Inspection i1, Inspection i2)
-//                -> i2.getDate().compareTo(i1.getDate()
-//        ));
-
         inspections.sort((Inspection i1, Inspection i2)
-                -> i2.getCalendar().compareTo(i1.getCalendar()
-        ));
-
+                -> i2.getCalendar().compareTo(i1.getCalendar())
+        );
     }
 
     public Inspection get(int index) {
@@ -71,9 +67,29 @@ public class Restaurant implements Iterable<Inspection> {
         return inspections.iterator();
     }
 
-    // ****************************************
+    // **************
     // Other methods
-    // ****************************************
+    // **************
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getResType() {
+        return resType;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
 
     public String getResTrackingNumber() {
         return resTrackingNumber;
@@ -100,5 +116,4 @@ public class Restaurant implements Iterable<Inspection> {
                 ", inspections=" + inspections +
                 '}';
     }
-
 }

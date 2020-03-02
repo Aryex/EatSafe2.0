@@ -1,66 +1,67 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.exceptions.CsvException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.*;
+
 import java.util.List;
 
+/**
+ *
+ */
 public class Parser {
-    private List<Restaurant> csvRestaurants = new ArrayList<>();
-    private List<Inspection> csvInspections = new ArrayList<>();
-    private List<Violation> csvViolations = new ArrayList<>();
-    private File inspectionData;
-    private File restaurantData;
+    public static void parseData(RestaurantManager manager, File inspectionData, File restaurantData) throws FileNotFoundException {
+        List<Inspection> inspections = parseInspections(inspectionData);
+        List<Restaurant> restaurants = parseRestaurants(restaurantData);
 
-    public static void main(String[] args) {
-        File inspectionData = null;
-        File restaurantData = null;
+//            for (Inspection ins : inspections) {
+//                CSVParser parser = new CSVParserBuilder()
+//                        .withSeparator('|')
+//                        .build();
+//                CSVReader reader = new CSVReaderBuilder(new StringReader(ins.getViolLump()))
+//                        .withCSVParser(parser)
+//                        .build();
+//                try {
+//                    List<String[]> myEntries = reader.readAll();
+//                    for (String[] sarr : myEntries) {
+//                        for (String s : sarr) {
+//                            System.out.println(s);
+//                        }
+//                    }
+//                } catch (CsvException | IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
-        RestaurantManager manager = new RestaurantManager();
-
-        try {
-            inspectionData = new File ("data/inspectionreports_itr1.csv");
-            restaurantData = new File ("data/restaurants_itr1.csv");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            assert inspectionData != null;
-
-            //
-            //noinspection unchecked
-            List<Inspection> inspections = new CsvToBeanBuilder(new FileReader(inspectionData.getAbsolutePath()))
-                    .withType(Inspection.class)
-                    .build()
-                    .parse();
-
-            assert restaurantData != null;
-
-            //noinspection unchecked
-            List<Restaurant> restaurants = new CsvToBeanBuilder(new FileReader(restaurantData.getAbsolutePath()))
-                    .withType(Restaurant.class)
-                    .build()
-                    .parse();
-
-            for (Restaurant res : restaurants) {
-                for (Inspection ins : inspections) {
-                    if(ins.getInsTrackingNumber().equals(res.getResTrackingNumber())) {
-                        res.add(ins);
-                    }
+        for (Restaurant res : restaurants) {
+            for (Inspection ins : inspections) {
+                if(ins.getInsTrackingNumber().equals(res.getResTrackingNumber())) {
+                    res.add(ins);
                 }
-                manager.add(res);
+                System.out.println(ins.getDaysInBetween() + " days ago" + " | " + ins.getFromCurrentDate());
             }
-
-            for (Restaurant res : manager.getRestaurants()) {
-                System.out.println(res);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            manager.add(res);
         }
+    }
+
+    public static List<Restaurant> parseRestaurants(File restaurantData) throws FileNotFoundException {
+        //noinspection unchecked
+        return (List<Restaurant>) new CsvToBeanBuilder(new FileReader(restaurantData.getAbsolutePath()))
+                .withType(Restaurant.class)
+                .build()
+                .parse();
+    }
+
+    public static List<Inspection> parseInspections(File inspectionData) throws FileNotFoundException {
+        //noinspection unchecked
+        return (List<Inspection>) new CsvToBeanBuilder(new FileReader(inspectionData.getAbsolutePath()))
+                .withType(Inspection.class)
+                .build()
+                .parse();
     }
 }

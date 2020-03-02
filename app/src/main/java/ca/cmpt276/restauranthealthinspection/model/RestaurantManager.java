@@ -5,13 +5,17 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ *
+ */
 public class RestaurantManager implements Iterable<Restaurant>{
-    // **************************
+    // **********
     // Singleton
-    // **************************
+    // **********
     private static RestaurantManager instance;
 
     public static RestaurantManager getInstance() {
+
         if (instance == null) {
             instance = new RestaurantManager();
         }
@@ -19,8 +23,8 @@ public class RestaurantManager implements Iterable<Restaurant>{
     }
 
     public RestaurantManager() {
-    }
 
+    }
 
     private List<Restaurant> restaurants = new ArrayList<>();
 
@@ -31,9 +35,8 @@ public class RestaurantManager implements Iterable<Restaurant>{
         // Uses lambda expression instead of anon class for readability
         //noinspection ComparatorCombinators
         restaurants.sort((Restaurant r1, Restaurant r2)
-                -> r1.getName().compareTo(r2.getName()
-        ));
-
+                -> r1.getName().compareTo(r2.getName())
+        );
     }
 
     public Restaurant get(int index) {
