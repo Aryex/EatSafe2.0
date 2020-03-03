@@ -6,25 +6,15 @@ import com.opencsv.bean.CsvDate;
 import java.util.*;
 
 /**
- *
+ * Represents the inspections that were performed in the restaurant.
  */
-public class Inspection implements Iterable <Violation>{
+public class Inspection implements Iterable<Violation> {
     @CsvBindByName(column = "TrackingNumber", required = true)
     private String insTrackingNumber;
 
     @CsvBindByName(column = "InspectionDate", required = true)
     @CsvDate("yyyyMMdd")
     private Calendar calendar;
-
-    public Calendar getCalendar() {
-        return calendar;
-    }
-
-    private int month;
-
-    private int day;
-
-    private int year;
 
     @CsvBindByName(column = "InspType", required = true)
     private String insType;
@@ -43,33 +33,11 @@ public class Inspection implements Iterable <Violation>{
 
     private List<Violation> violations = new ArrayList<>();
 
-    // Source : https://stackoverflow.com/questions/7103064/java-calculate-the-number-of-days-between-two-dates/14278129
-    int getDaysInBetween() {
-        long days = Calendar.getInstance().getTimeInMillis() - calendar.getTimeInMillis();
-
-        return (int) Math.round(days / (60.0 * 60 * 24 * 1000)); // 60 seconds * 60 minutes * 24 hours * 1000 ms per second
-    }
-
-    public String getFromCurrentDate() {
-        if (getDaysInBetween() <= 30) { // hardcode each month's ending day!!
-            return getDaysInBetween() + " days";
-        }
-
-        // Not accounting for leap years
-        if (getDaysInBetween() <= 365) {
-            return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
-                    + " " + calendar.get(Calendar.DAY_OF_MONTH);
-        }
-
-        return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
-                + " " + calendar.get(Calendar.YEAR);
-    }
-
     // ****************************************
     // Methods for List<Violation> violations
     // ****************************************
 
-    public void add (Violation violation) {
+    public void add(Violation violation) {
         violations.add(violation);
     }
 
@@ -94,20 +62,14 @@ public class Inspection implements Iterable <Violation>{
     // Other methods
     // **************
 
-    public int getMonth() {
-        return month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
     public String getInsType() {
         return insType;
+    }
+
+    // Calendar contains the data of the inspection
+    // Year, Month, and Day is stored
+    public Calendar getCalendar() {
+        return calendar;
     }
 
     public int getNumCritical() {
@@ -134,6 +96,28 @@ public class Inspection implements Iterable <Violation>{
         return violLump;
     }
 
+    // Source : https://stackoverflow.com/questions/7103064/java-calculate-the-number-of-days-between-two-dates/14278129
+    private int getDaysInBetween() {
+        long days = Calendar.getInstance().getTimeInMillis() - calendar.getTimeInMillis();
+
+        return (int) Math.round(days / (60.0 * 60 * 24 * 1000)); // 60 seconds * 60 minutes * 24 hours * 1000 ms per second
+    }
+
+    public String getFromCurrentDate() {
+        if (getDaysInBetween() <= 30) {
+            return getDaysInBetween() + " days";
+        }
+
+        // Not accounting for leap years
+        if (getDaysInBetween() <= 365) {
+            return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
+                    + " " + calendar.get(Calendar.DAY_OF_MONTH);
+        }
+
+        return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
+                + " " + calendar.get(Calendar.YEAR);
+    }
+
     @Override
     public String toString() {
         return "\n\tInspection{" +
@@ -145,7 +129,7 @@ public class Inspection implements Iterable <Violation>{
                 ", numCritical=" + numCritical +
                 ", numNonCritical=" + numNonCritical +
                 ", hazardRating='" + hazardRating + '\'' +
-                ", violLump='" + violLump + '\'' +
+                ", violations='" + violations + '\'' +
                 '}';
     }
 }

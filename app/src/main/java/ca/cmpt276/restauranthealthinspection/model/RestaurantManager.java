@@ -1,14 +1,15 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Represents the manager for restaurants.
  *
+ * Contains a singleton to store and retain restaurants.
  */
-public class RestaurantManager implements Iterable<Restaurant>{
+public class RestaurantManager implements Iterable<Restaurant> {
     // **********
     // Singleton
     // **********
@@ -23,12 +24,12 @@ public class RestaurantManager implements Iterable<Restaurant>{
     }
 
     public RestaurantManager() {
-
+        // Nothing is here - forces singleton use.
     }
 
     private List<Restaurant> restaurants = new ArrayList<>();
 
-    public void add (Restaurant restaurant) {
+    public void add(Restaurant restaurant) {
         restaurants.add(restaurant);
 
         // Maintain sorted name order

@@ -7,12 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * Represents each restaurant.
  */
 public class Restaurant implements Iterable<Inspection> {
-    // ******
-    // Fields
-    // ******
     @CsvBindByName(column = "TRACKINGNUMBER", required = true)
     private String resTrackingNumber;
 
@@ -40,7 +37,7 @@ public class Restaurant implements Iterable<Inspection> {
     // Methods for List<Inspection> inspections
     // ****************************************
 
-    public void add (Inspection inspection) {
+    public void add(Inspection inspection) {
         inspections.add(inspection);
 
         // Maintain *reverse* sorted date order
