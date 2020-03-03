@@ -46,10 +46,6 @@ public class Inspection implements Iterable<Violation> {
         return violations.get(index);
     }
 
-    public int size() {
-        return violations.size();
-    }
-
     @Override
     public Iterator<Violation> iterator() {
         return violations.iterator();
@@ -116,20 +112,5 @@ public class Inspection implements Iterable<Violation> {
 
         return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
                 + " " + calendar.get(Calendar.YEAR);
-    }
-
-    @Override
-    public String toString() {
-        return "\n\tInspection{" +
-                "insTrackingNumber='" + insTrackingNumber + '\'' +
-                ", year=" + calendar.get(Calendar.YEAR) +
-                ", month=" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA) +
-                ", day=" + calendar.get(Calendar.DAY_OF_MONTH) +
-                ", insType='" + insType + '\'' +
-                ", numCritical=" + numCritical +
-                ", numNonCritical=" + numNonCritical +
-                ", hazardRating='" + hazardRating + '\'' +
-                ", violations='" + violations + '\'' +
-                '}';
     }
 }

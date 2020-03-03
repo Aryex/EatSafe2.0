@@ -15,7 +15,6 @@ public class Violation {
     @CsvBindByPosition(position = 2)
     private String description;
 
-
     @CsvBindByPosition(position = 3)
     private String repeatStatus;
 
@@ -33,15 +32,5 @@ public class Violation {
 
     public String getRepeatStatus() {
         return repeatStatus;
-    }
-
-    @Override
-    public String toString() {
-        return "\n\t\tViolation{" +
-                "number=" + number +
-                ", criticalStatus='" + criticalStatus + '\'' +
-                ", description='" + description + '\'' +
-                ", repeatStatus='" + repeatStatus + '\'' +
-                '}';
     }
 }

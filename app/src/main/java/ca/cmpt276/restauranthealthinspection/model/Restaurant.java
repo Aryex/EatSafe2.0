@@ -38,7 +38,7 @@ public class Restaurant implements Iterable<Inspection> {
     // Methods for List<Inspection> inspections
     // ****************************************
 
-    public void add(Inspection inspection) {
+    void add(Inspection inspection) {
         inspections.add(inspection);
 
         // Maintain *reverse* sorted date order
@@ -50,14 +50,6 @@ public class Restaurant implements Iterable<Inspection> {
 
     public Inspection get(int index) {
         return inspections.get(index);
-    }
-
-    public int size() {
-        return inspections.size();
-    }
-
-    public void remove(int index) {
-        inspections.remove(index);
     }
 
     @Override
@@ -99,19 +91,5 @@ public class Restaurant implements Iterable<Inspection> {
 
     public List<Inspection> getInspections() {
         return Collections.unmodifiableList(inspections);
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "resTrackingNumber='" + resTrackingNumber + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", city='" + city + '\'' +
-                ", resType='" + resType + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", inspections=" + inspections +
-                '}';
     }
 }

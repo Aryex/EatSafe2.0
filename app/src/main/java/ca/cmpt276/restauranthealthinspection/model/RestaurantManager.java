@@ -30,6 +30,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
             instance = new RestaurantManager();
             try {
                 Parser.parseData(instance, inspectionData, restaurantData);
+                Log.i("Parse completed", "Parsing completed in getInstance()");
             } catch (IOException e) {
                 Log.e("Parse error", "Error occurred while parsing in getInstance()");
                 e.printStackTrace();
@@ -42,7 +43,6 @@ public class RestaurantManager implements Iterable<Restaurant> {
     private RestaurantManager() {
         // Nothing is here - forces singleton use.
     }
-
 
     // Package private
     void add(Restaurant restaurant) {
@@ -60,10 +60,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
         return restaurants.get(index);
     }
 
-    public int size() {
-        return restaurants.size();
-    }
-
+    // Returns an unmodifiable list so the list cannot be changed
     public List<Restaurant> getRestaurants() {
         return Collections.unmodifiableList(restaurants);
     }
