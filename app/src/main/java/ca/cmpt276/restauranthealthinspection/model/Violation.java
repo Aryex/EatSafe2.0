@@ -10,10 +10,11 @@ public class Violation {
     private int number;
 
     @CsvBindByPosition(position = 1)
-    private String description;
+    private String criticalStatus;
 
     @CsvBindByPosition(position = 2)
-    private String criticalStatus;
+    private String description;
+
 
     @CsvBindByPosition(position = 3)
     private String repeatStatus;
@@ -38,8 +39,8 @@ public class Violation {
     public String toString() {
         return "\n\t\tViolation{" +
                 "number=" + number +
-                ", description='" + description + '\'' +
                 ", criticalStatus='" + criticalStatus + '\'' +
+                ", description='" + description + '\'' +
                 ", repeatStatus='" + repeatStatus + '\'' +
                 '}';
     }
