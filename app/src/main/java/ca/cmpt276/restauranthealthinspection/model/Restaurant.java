@@ -3,6 +3,7 @@ package ca.cmpt276.restauranthealthinspection.model;
 import com.opencsv.bean.CsvBindByName;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class Restaurant implements Iterable<Inspection> {
     }
 
     public List<Inspection> getInspections() {
-        return inspections;
+        return Collections.unmodifiableList(inspections);
     }
 
     @Override

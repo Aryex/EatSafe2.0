@@ -37,7 +37,8 @@ public class Inspection implements Iterable<Violation> {
     // Methods for List<Violation> violations
     // ****************************************
 
-    public void add(Violation violation) {
+    // Package private
+    void add(Violation violation) {
         violations.add(violation);
     }
 
@@ -47,10 +48,6 @@ public class Inspection implements Iterable<Violation> {
 
     public int size() {
         return violations.size();
-    }
-
-    public void remove(int index) {
-        violations.remove(index);
     }
 
     @Override
@@ -85,14 +82,16 @@ public class Inspection implements Iterable<Violation> {
     }
 
     public List<Violation> getViolations() {
-        return violations;
+        return Collections.unmodifiableList(violations);
     }
 
-    public String getInsTrackingNumber() {
+    // Package private
+    String getInsTrackingNumber() {
         return insTrackingNumber;
     }
 
-    public String getViolLump() {
+    // Package private
+    String getViolLump() {
         return violLump;
     }
 
@@ -103,6 +102,7 @@ public class Inspection implements Iterable<Violation> {
         return (int) Math.round(days / (60.0 * 60 * 24 * 1000)); // 60 seconds * 60 minutes * 24 hours * 1000 ms per second
     }
 
+    // Needed for displaying date of inspection from current date in MainActivity
     public String getFromCurrentDate() {
         if (getDaysInBetween() <= 30) {
             return getDaysInBetween() + " days";

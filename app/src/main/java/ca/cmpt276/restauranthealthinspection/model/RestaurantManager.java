@@ -1,6 +1,11 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import android.util.Log;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +15,10 @@ import java.util.List;
  * Contains a singleton to store and retain restaurants.
  */
 public class RestaurantManager implements Iterable<Restaurant> {
+    private static List<Restaurant> restaurants = new ArrayList<>();
+    private static File inspectionData = new File("data/inspectionreports_itr1.csv");
+    private static File restaurantData = new File("data/restaurants_itr1.csv");
+
     // **********
     // Singleton
     // **********
@@ -19,17 +28,24 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
         if (instance == null) {
             instance = new RestaurantManager();
+            try {
+                Parser.parseData(instance, inspectionData, restaurantData);
+            } catch (IOException e) {
+                Log.e("Parse error", "Error occurred while parsing in getInstance()");
+                e.printStackTrace();
+            }
         }
+
         return instance;
     }
 
-    public RestaurantManager() {
+    private RestaurantManager() {
         // Nothing is here - forces singleton use.
     }
 
-    private List<Restaurant> restaurants = new ArrayList<>();
 
-    public void add(Restaurant restaurant) {
+    // Package private
+    void add(Restaurant restaurant) {
         restaurants.add(restaurant);
 
         // Maintain sorted name order
@@ -48,12 +64,8 @@ public class RestaurantManager implements Iterable<Restaurant> {
         return restaurants.size();
     }
 
-    public void remove(int index) {
-        restaurants.remove(index);
-    }
-
     public List<Restaurant> getRestaurants() {
-        return restaurants;
+        return Collections.unmodifiableList(restaurants);
     }
 
     @Override

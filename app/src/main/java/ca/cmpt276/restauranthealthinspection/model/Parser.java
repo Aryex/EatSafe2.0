@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Parser {
     // Parse data from CSV files
-    public static void parseData(RestaurantManager manager, File inspectionData, File restaurantData) throws IOException {
+    static void parseData(RestaurantManager manager, File inspectionData, File restaurantData) throws IOException {
         List<Inspection> inspections = parseInspections(inspectionData);
         List<Restaurant> restaurants = parseRestaurants(restaurantData);
 
@@ -63,7 +63,7 @@ public class Parser {
     }
 
     // Parses the restaurants from data and generate a list containing the restaurants
-    public static List<Restaurant> parseRestaurants(File restaurantData) throws FileNotFoundException {
+    private static List<Restaurant> parseRestaurants(File restaurantData) throws FileNotFoundException {
         //noinspection unchecked
         return (List<Restaurant>) new CsvToBeanBuilder(new FileReader(restaurantData.getAbsolutePath()))
                 .withType(Restaurant.class)
@@ -72,7 +72,7 @@ public class Parser {
     }
 
     // Parses the inspections from data and generate a list containing the inspections
-    public static List<Inspection> parseInspections(File inspectionData) throws FileNotFoundException {
+    private static List<Inspection> parseInspections(File inspectionData) throws FileNotFoundException {
         //noinspection unchecked
         return (List<Inspection>) new CsvToBeanBuilder(new FileReader(inspectionData.getAbsolutePath()))
                 .withType(Inspection.class)
@@ -81,7 +81,7 @@ public class Parser {
     }
 
     // Parses the violations from data and generate a list containing the violations
-    public static List<Violation> parseViolations(String violLump) {
+    private static List<Violation> parseViolations(String violLump) {
         //noinspection unchecked
         return (List<Violation>) new CsvToBeanBuilder(new StringReader(violLump))
                 .withType(Violation.class)
