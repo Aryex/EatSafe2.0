@@ -92,4 +92,18 @@ public class Restaurant implements Iterable<Inspection> {
     public List<Inspection> getInspections() {
         return Collections.unmodifiableList(inspections);
     }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "resTrackingNumber='" + resTrackingNumber + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", resType='" + resType + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", inspections=" + inspections +
+                '}';
+    }
 }

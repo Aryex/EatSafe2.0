@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -16,32 +17,20 @@ import java.util.List;
  */
 public class RestaurantManager implements Iterable<Restaurant> {
     private static List<Restaurant> restaurants = new ArrayList<>();
-    private static File inspectionData = new File("data/inspectionreports_itr1.csv");
-    private static File restaurantData = new File("data/restaurants_itr1.csv");
-
     // **********
     // Singleton
     // **********
     private static RestaurantManager instance;
 
     public static RestaurantManager getInstance() {
-
         if (instance == null) {
             instance = new RestaurantManager();
-            try {
-                Parser.parseData(instance, inspectionData, restaurantData);
-                Log.i("Parse completed", "Parsing completed in getInstance()");
-            } catch (IOException e) {
-                Log.e("Parse error", "Error occurred while parsing in getInstance()");
-                e.printStackTrace();
-            }
         }
 
         return instance;
     }
 
     private RestaurantManager() {
-        // Nothing is here - forces singleton use.
     }
 
     // Package private

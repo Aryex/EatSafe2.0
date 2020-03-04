@@ -18,9 +18,9 @@ import java.util.List;
  */
 public class Parser {
     // Parse data from CSV files
-    static void parseData(RestaurantManager manager, File inspectionData, File restaurantData) throws IOException {
-        List<Inspection> inspections = parseInspections(inspectionData);
-        List<Restaurant> restaurants = parseRestaurants(restaurantData);
+    public static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader, InputStreamReader restaurantDataReader) throws IOException {
+        List<Inspection> inspections = parseInspections(inspectionDataReader);
+        List<Restaurant> restaurants = parseRestaurants(restaurantDataReader);
 
         CSVParser parser = new CSVParserBuilder()
                 .withSeparator('|')
@@ -63,18 +63,18 @@ public class Parser {
     }
 
     // Parses the restaurants from data and generate a list containing the restaurants
-    private static List<Restaurant> parseRestaurants(File restaurantData) throws FileNotFoundException {
+    private static List<Restaurant> parseRestaurants(InputStreamReader restaurantDataReader) throws FileNotFoundException {
         //noinspection unchecked
-        return (List<Restaurant>) new CsvToBeanBuilder(new FileReader(restaurantData.getAbsolutePath()))
+        return (List<Restaurant>) new CsvToBeanBuilder(restaurantDataReader)
                 .withType(Restaurant.class)
                 .build()
                 .parse();
     }
 
     // Parses the inspections from data and generate a list containing the inspections
-    private static List<Inspection> parseInspections(File inspectionData) throws FileNotFoundException {
+    private static List<Inspection> parseInspections(InputStreamReader inspectionDataReader) throws FileNotFoundException {
         //noinspection unchecked
-        return (List<Inspection>) new CsvToBeanBuilder(new FileReader(inspectionData.getAbsolutePath()))
+        return (List<Inspection>) new CsvToBeanBuilder(inspectionDataReader)
                 .withType(Inspection.class)
                 .build()
                 .parse();

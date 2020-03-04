@@ -33,4 +33,14 @@ public class Violation {
     public String getRepeatStatus() {
         return repeatStatus;
     }
+
+    @Override
+    public String toString() {
+        return "\n\t\tViolation{" +
+                "number=" + number +
+                ", criticalStatus='" + criticalStatus + '\'' +
+                ", description='" + description + '\'' +
+                ", repeatStatus='" + repeatStatus + '\'' +
+                '}';
+    }
 }
