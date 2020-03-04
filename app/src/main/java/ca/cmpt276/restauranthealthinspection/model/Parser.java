@@ -46,6 +46,11 @@ public class Parser {
             reader.close();
         }
 
+        // 205,Critical,Cold potentially hazardous food stored/displayed above 4 Â°C. [s. 14(2)],Not Repeat|
+        // 209,Not Critical,Food not protected from contamination [s. 12(a)],Not Repeat|306,Not Critical,Food premises not maintained in a sanitary condition [s. 17(1)],Not Repeat|
+        // 308,Not Critical,Equipment/utensils/food contact surfaces are not in good working order [s. 16(b)],Not Repeat|
+        // 402,Critical,Employee does not wash hands properly or at adequate frequency [s. 21(3)],Not Repeat
+
         addRestaurantsToManager(manager, inspections, restaurants);
     }
 
