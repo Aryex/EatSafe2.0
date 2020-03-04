@@ -1,5 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import ca.cmpt276.restauranthealthinspection.R;
 
 /**
  * Represents the manager for restaurants.
@@ -22,15 +25,28 @@ public class RestaurantManager implements Iterable<Restaurant> {
     // **********
     private static RestaurantManager instance;
 
-    public static RestaurantManager getInstance() {
+    public static RestaurantManager getInstance(Context context) {
         if (instance == null) {
             instance = new RestaurantManager();
+
+            InputStreamReader inspectionDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.inspectionreports_itr1));
+            InputStreamReader restaurantDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.restaurants_itr1));
+
+            try {
+                Parser.parseData(instance, inspectionDataReader, restaurantDataReader);
+                Log.i("Parse success", "Successfully parsed csv data.");
+            } catch (IOException e) {
+                Log.e("Parse error", "Error while parsing csv data");
+                e.printStackTrace();
+                throw new RuntimeException("Parse error");
+            }
         }
 
         return instance;
     }
 
     private RestaurantManager() {
+
     }
 
     // Package private

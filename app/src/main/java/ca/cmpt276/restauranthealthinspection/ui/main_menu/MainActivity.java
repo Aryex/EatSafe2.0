@@ -29,20 +29,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        InputStreamReader inspectionDataReader = new InputStreamReader(getResources().openRawResource(R.raw.inspectionreports_itr1));
-        InputStreamReader restaurantDataReader = new InputStreamReader(getResources().openRawResource(R.raw.restaurants_itr1));
+        Log.i("Start parsing", "Starting to parse data....");
 
-        restaurants = RestaurantManager.getInstance();
-
-        //parse
-        try {
-            Parser.parseData(restaurants, inspectionDataReader, restaurantDataReader);
-            Log.i("Parse success", "Successfully parsed csv file.");
-        } catch (IOException e) {
-            Log.e("Parse error", "Error while parsing csv file.");
-            e.printStackTrace();
-            throw new RuntimeException("Parse error");
-        }
+        restaurants = RestaurantManager.getInstance(this);
 
         for(Restaurant res : restaurants) {
             Log.d("Res Info", res.toString());
