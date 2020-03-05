@@ -1,4 +1,5 @@
 package ca.cmpt276.restauranthealthinspection.model;
+
 ;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
@@ -9,25 +10,19 @@ import java.util.*;
  * Represents the inspections that were performed in the restaurant.
  */
 public class Inspection implements Iterable<Violation> {
-    @CsvBindByName(column = "TrackingNumber", required = true)
+
     private String insTrackingNumber;
 
-   /* @CsvCustomBindByName(column = "InspectionDate", converter = CalendarConverter.class, required = true)*/
     private Calendar calendar;
 
-    @CsvBindByName(column = "InspType", required = true)
     private String insType;
 
-    @CsvBindByName(column = "NumCritical", required = true)
     private int numCritical;
 
-    @CsvBindByName(column = "NumNonCritical", required = true)
     private int numNonCritical;
 
-    @CsvBindByName(column = "HazardRating", required = true)
     private String hazardRating;
 
-    @CsvBindByName(column = "ViolLump")
     private String violLump;
 
     private List<Violation> violations = new ArrayList<>();

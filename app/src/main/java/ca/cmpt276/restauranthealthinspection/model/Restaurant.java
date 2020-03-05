@@ -11,25 +11,20 @@ import java.util.List;
  * Represents each restaurant.
  */
 public class Restaurant implements Iterable<Inspection> {
-    @CsvBindByName(column = "TRACKINGNUMBER", required = true)
+
     private String resTrackingNumber;
 
-    @CsvBindByName(column = "NAME", required = true)
     private String name;
 
-    @CsvBindByName(column = "PHYSICALADDRESS", required = true)
     private String address;
 
-    @CsvBindByName(column = "PHYSICALCITY", required = true)
     private String city;
 
-    @CsvBindByName(column = "FACTYPE", required = true)
     private String resType;
 
-    @CsvBindByName(column = "LATITUDE", required = true)
     private double latitude;
 
-    @CsvBindByName(column = "LONGITUDE", required = true)
+
     private double longitude;
 
     private List<Inspection> inspections = new ArrayList<>();

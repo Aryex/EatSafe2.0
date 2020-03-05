@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         restaurants = RestaurantManager.getInstance(this);
 
-        for(Restaurant res : restaurants) {
-            Log.d("Res Info", res.toString());
-        }
-
         setupDummyData();
         setupRecyclerView();
     }

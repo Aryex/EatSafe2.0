@@ -1,21 +1,17 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
-import android.util.Log;
-
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Represents the parser for parsing the CSV data.
@@ -107,7 +103,7 @@ public class Parser {
 
             while (((dataCols = reader.readNext()) != null)) {
                 String inspectionStrackingNum = dataCols[0];
-                Calendar calendar = CalendarConverter.convert(dataCols[1]);
+                Calendar calendar = calendarConverter(dataCols[1]);
                 String inspectionType = dataCols[2];
                 int numCritical = Integer.parseInt(dataCols[3]);
                 int numNonCritical = Integer.parseInt(dataCols[4]);
@@ -140,5 +136,22 @@ public class Parser {
         Violation violation = new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
         // Log.d("vioObt", vio.toString());
         return violation;
+    }
+
+    static Calendar calendarConverter(String value) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.CANADA);
+
+        try {
+            Date date = format.parse(value);
+            Calendar calendar = Calendar.getInstance();
+
+            assert date != null;
+
+            calendar.setTime(date);
+            return calendar;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Unable to parse date");
+        }
     }
 }
