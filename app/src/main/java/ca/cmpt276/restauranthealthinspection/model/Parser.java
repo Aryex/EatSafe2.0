@@ -15,12 +15,12 @@ import java.util.Locale;
 
 /**
  * Represents the parser for parsing the CSV data.
- * <p>
+ *
  * The data is parsed using OpenCSV.
  */
-public class Parser {
+class Parser {
     // Parse data from CSV files
-    public static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader, InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
+    static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader, InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
 
         List<Inspection> inspections = parseInspections(inspectionDataReader);
         List<Restaurant> restaurants = parseRestaurants(restaurantDataReader);
@@ -30,6 +30,7 @@ public class Parser {
         addRestaurantsToManager(manager, inspections, restaurants);
     }
 
+    // Parse ViolLump and add violations to inspection
     private static void parseViolationsInto(List<Inspection> inspections) {
         for (Inspection ins : inspections) {
             String violump = ins.getViolLump();
@@ -58,7 +59,7 @@ public class Parser {
 
     // Parses the restaurants from data and generate a list containing the restaurants
     private static List<Restaurant> parseRestaurants(InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
-        List<Restaurant> result = new ArrayList<Restaurant>();
+        List<Restaurant> result = new ArrayList<>();
 
         CSVReader reader = new CSVReader(restaurantDataReader);
         String[] dataCols;
@@ -91,8 +92,7 @@ public class Parser {
 
     // Parses the inspections from data and generate a list containing the inspections
     private static List<Inspection> parseInspections(InputStreamReader inspectionDataReader) throws IOException {
-        //noinspection unchecked
-        List<Inspection> result = new ArrayList<Inspection>();
+        List<Inspection> result = new ArrayList<>();
 
         CSVReader reader = new CSVReader(inspectionDataReader);
         String[] dataCols;
@@ -102,7 +102,7 @@ public class Parser {
             reader.readNext();
 
             while (((dataCols = reader.readNext()) != null)) {
-                String inspectionStrackingNum = dataCols[0];
+                String inspectionTrackingNum = dataCols[0];
                 Calendar calendar = calendarConverter(dataCols[1]);
                 String inspectionType = dataCols[2];
                 int numCritical = Integer.parseInt(dataCols[3]);
@@ -112,7 +112,7 @@ public class Parser {
 
                 //Log.i("TAG", "parseInspections: " + inspectionCols[3]);
                 result.add(new Inspection(
-                        inspectionStrackingNum,
+                        inspectionTrackingNum,
                         calendar,
                         inspectionType,
                         numCritical,
@@ -129,16 +129,15 @@ public class Parser {
         return result;
     }
 
-    // Parses the violations from data and generate a list containing the violations
+    // Parses the violations from data and create a violation object
     private static Violation parseVioChunk(String vioChunk) {
-        //noinspection unchecked
         String[] dataCols = vioChunk.split(",");
-        Violation violation = new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
         // Log.d("vioObt", vio.toString());
-        return violation;
+        return new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
     }
 
-    static Calendar calendarConverter(String value) {
+    // Converts the date string into a calendar object
+    private static Calendar calendarConverter(String value) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.CANADA);
 
         try {
