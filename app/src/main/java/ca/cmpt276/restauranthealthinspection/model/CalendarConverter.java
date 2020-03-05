@@ -14,9 +14,9 @@ import java.util.Locale;
  *
  * CsvCustomBindMyName annotation uses this class for conversion.
  */
-public class CalendarConverter extends AbstractBeanField {
-    @Override
-    protected Object convert(String value) {
+public class CalendarConverter {
+
+     static Calendar convert(String value) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.CANADA);
 
         try {

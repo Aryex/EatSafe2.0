@@ -1,57 +1,50 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import android.util.Log;
+
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * Represents the parser for parsing the CSV data.
- *
+ * <p>
  * The data is parsed using OpenCSV.
  */
 public class Parser {
     // Parse data from CSV files
-    public static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader, InputStreamReader restaurantDataReader) throws IOException {
+    public static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader, InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
+
         List<Inspection> inspections = parseInspections(inspectionDataReader);
         List<Restaurant> restaurants = parseRestaurants(restaurantDataReader);
 
-        CSVParser parser = new CSVParserBuilder()
-                .withSeparator('|')
-                .withIgnoreLeadingWhiteSpace(true)
-                .build();
-
-        for (Inspection ins : inspections) {
-            CSVReader reader = new CSVReaderBuilder(new StringReader(ins.getViolLump()))
-                    .withCSVParser(parser)
-                    .build();
-            try {
-                List<String[]> violLump = reader.readAll();
-                for (String[] violationsArray : violLump) {
-                    for (String violationString : violationsArray) {
-                        for (Violation v : parseViolations(violationString)) {
-                            ins.add(v);
-                        }
-                    }
-                }
-            } catch (CsvException | IOException e) {
-                e.printStackTrace();
-            }
-            reader.close();
-        }
-
-        // 205,Critical,Cold potentially hazardous food stored/displayed above 4 Â°C. [s. 14(2)],Not Repeat|
-        // 209,Not Critical,Food not protected from contamination [s. 12(a)],Not Repeat|306,Not Critical,Food premises not maintained in a sanitary condition [s. 17(1)],Not Repeat|
-        // 308,Not Critical,Equipment/utensils/food contact surfaces are not in good working order [s. 16(b)],Not Repeat|
-        // 402,Critical,Employee does not wash hands properly or at adequate frequency [s. 21(3)],Not Repeat
+        parseViolations(inspections);
 
         addRestaurantsToManager(manager, inspections, restaurants);
+    }
+
+    private static void parseViolations(List<Inspection> inspections) {
+        for (Inspection ins : inspections) {
+            String violump = ins.getViolLump();
+            if (!violump.isEmpty()) {
+                String[] vioChunks = violump.split("\\|");
+                for (String vioChunk : vioChunks) {
+                    //Log.d("vioChunk", "vioChunk: " + vioChunk);
+                    ins.add(parseVioChunk(vioChunk));
+                }
+            }
+        }
     }
 
     // Add restaurants to manager
@@ -68,29 +61,85 @@ public class Parser {
     }
 
     // Parses the restaurants from data and generate a list containing the restaurants
-    private static List<Restaurant> parseRestaurants(InputStreamReader restaurantDataReader) throws FileNotFoundException {
-        //noinspection unchecked
-        return (List<Restaurant>) new CsvToBeanBuilder(restaurantDataReader)
-                .withType(Restaurant.class)
-                .build()
-                .parse();
+    private static List<Restaurant> parseRestaurants(InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
+        List<Restaurant> result = new ArrayList<Restaurant>();
+
+        CSVReader reader = new CSVReader(restaurantDataReader);
+        String[] dataCols;
+        //skipping header
+        reader.readNext();
+
+        while ((dataCols = reader.readNext()) != null) {
+            String resTrackingNumber = dataCols[0];
+            String name = dataCols[1];
+            String address = dataCols[2];
+            String city = dataCols[3];
+            String resType = dataCols[4];
+            double latitude = Double.parseDouble(dataCols[5]);
+            double longitude = Double.parseDouble(dataCols[6]);
+
+            result.add(new Restaurant(
+                    resTrackingNumber,
+                    name,
+                    address,
+                    city,
+                    resType,
+                    latitude,
+                    longitude
+            ));
+        }
+
+        reader.close();
+        return result;
     }
 
     // Parses the inspections from data and generate a list containing the inspections
-    private static List<Inspection> parseInspections(InputStreamReader inspectionDataReader) throws FileNotFoundException {
+    private static List<Inspection> parseInspections(InputStreamReader inspectionDataReader) throws IOException {
         //noinspection unchecked
-        return (List<Inspection>) new CsvToBeanBuilder(inspectionDataReader)
-                .withType(Inspection.class)
-                .build()
-                .parse();
+        List<Inspection> result = new ArrayList<Inspection>();
+
+        CSVReader reader = new CSVReader(inspectionDataReader);
+        String[] dataCols;
+
+        try {
+            //skipping the headers
+            reader.readNext();
+
+            while (((dataCols = reader.readNext()) != null)) {
+                String inspectionStrackingNum = dataCols[0];
+                Calendar calendar = CalendarConverter.convert(dataCols[1]);
+                String inspectionType = dataCols[2];
+                int numCritical = Integer.parseInt(dataCols[3]);
+                int numNonCritical = Integer.parseInt(dataCols[4]);
+                String hazardRating = dataCols[5];
+                String vioLump = dataCols[6];
+
+
+                //Log.i("TAG", "parseInspections: " + inspectionCols[3]);
+                result.add(new Inspection(
+                        inspectionStrackingNum,
+                        calendar,
+                        inspectionType,
+                        numCritical,
+                        numNonCritical,
+                        hazardRating,
+                        vioLump
+                ));
+            }
+        } catch (CsvValidationException | IOException e) {
+            e.printStackTrace();
+        }
+
+        reader.close();
+        return result;
     }
 
     // Parses the violations from data and generate a list containing the violations
-    private static List<Violation> parseViolations(String violLump) {
+    private static Violation parseVioChunk(String vioChunk) {
         //noinspection unchecked
-        return (List<Violation>) new CsvToBeanBuilder(new StringReader(violLump))
-                .withType(Violation.class)
-                .build()
-                .parse();
+        String[] dataCols = vioChunk.split(",");
+        Violation violation = new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
+        // Log.d("vioObt", vio.toString());
+        return violation;
     }
 }

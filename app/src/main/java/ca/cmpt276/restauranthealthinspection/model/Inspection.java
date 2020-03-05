@@ -12,7 +12,7 @@ public class Inspection implements Iterable<Violation> {
     @CsvBindByName(column = "TrackingNumber", required = true)
     private String insTrackingNumber;
 
-    @CsvCustomBindByName(column = "InspectionDate", converter = CalendarConverter.class, required = true)
+   /* @CsvCustomBindByName(column = "InspectionDate", converter = CalendarConverter.class, required = true)*/
     private Calendar calendar;
 
     @CsvBindByName(column = "InspType", required = true)
@@ -37,6 +37,18 @@ public class Inspection implements Iterable<Violation> {
     // ****************************************
 
     // Package private
+
+
+    public Inspection(String insTrackingNumber, Calendar calendar, String insType, int numCritical, int numNonCritical, String hazardRating, String violLump) {
+        this.insTrackingNumber = insTrackingNumber;
+        this.calendar = calendar;
+        this.insType = insType;
+        this.numCritical = numCritical;
+        this.numNonCritical = numNonCritical;
+        this.hazardRating = hazardRating;
+        this.violLump = violLump;
+    }
+
     void add(Violation violation) {
         violations.add(violation);
     }

@@ -18,6 +18,13 @@ public class Violation {
     @CsvBindByPosition(position = 3)
     private String repeatStatus;
 
+    Violation(int number, String criticalStatus, String description, String repeatStatus) {
+        this.number = number;
+        this.criticalStatus = criticalStatus;
+        this.description = description;
+        this.repeatStatus = repeatStatus;
+    }
+
     public int getNumber() {
         return number;
     }

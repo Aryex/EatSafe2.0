@@ -3,6 +3,8 @@ package ca.cmpt276.restauranthealthinspection.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,7 +37,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
             try {
                 Parser.parseData(instance, inspectionDataReader, restaurantDataReader);
                 Log.i("Parse success", "Successfully parsed csv data.");
-            } catch (IOException e) {
+            } catch (IOException | CsvValidationException e) {
                 Log.e("Parse error", "Error while parsing csv data");
                 e.printStackTrace();
                 throw new RuntimeException("Parse error");

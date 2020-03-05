@@ -38,6 +38,18 @@ public class Restaurant implements Iterable<Inspection> {
     // Methods for List<Inspection> inspections
     // ****************************************
 
+
+    //Package Private
+    Restaurant(String resTrackingNumber, String name, String address, String city, String resType, double latitude, double longitude) {
+        this.resTrackingNumber = resTrackingNumber;
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        this.resType = resType;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     void add(Inspection inspection) {
         inspections.add(inspection);
 
