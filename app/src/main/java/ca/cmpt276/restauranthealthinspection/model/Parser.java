@@ -25,12 +25,12 @@ public class Parser {
         List<Inspection> inspections = parseInspections(inspectionDataReader);
         List<Restaurant> restaurants = parseRestaurants(restaurantDataReader);
 
-        parseViolations(inspections);
+        parseViolationsInto(inspections);
 
         addRestaurantsToManager(manager, inspections, restaurants);
     }
 
-    private static void parseViolations(List<Inspection> inspections) {
+    private static void parseViolationsInto(List<Inspection> inspections) {
         for (Inspection ins : inspections) {
             String violump = ins.getViolLump();
             if (!violump.isEmpty()) {
