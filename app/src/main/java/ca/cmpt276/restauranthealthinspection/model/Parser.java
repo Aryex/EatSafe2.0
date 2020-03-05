@@ -114,7 +114,6 @@ public class Parser {
                 String hazardRating = dataCols[5];
                 String vioLump = dataCols[6];
 
-
                 //Log.i("TAG", "parseInspections: " + inspectionCols[3]);
                 result.add(new Inspection(
                         inspectionStrackingNum,
