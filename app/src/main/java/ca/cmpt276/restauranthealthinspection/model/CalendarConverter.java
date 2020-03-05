@@ -10,6 +10,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Represents the custom calendar converter for use in the
+ * Inspection class.
+ *
+ * CsvCustomBindMyName annotation uses this class for conversion.
+ */
 public class CalendarConverter extends AbstractBeanField {
     @Override
     protected Object convert(String value) {
@@ -20,8 +26,8 @@ public class CalendarConverter extends AbstractBeanField {
             Calendar calendar = Calendar.getInstance();
 
             assert date != null;
-            calendar.setTime(date);
 
+            calendar.setTime(date);
             return calendar;
         } catch (ParseException e) {
             e.printStackTrace();
