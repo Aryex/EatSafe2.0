@@ -1,8 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
 import com.opencsv.bean.AbstractBeanField;
-import com.opencsv.exceptions.CsvConstraintViolationException;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
