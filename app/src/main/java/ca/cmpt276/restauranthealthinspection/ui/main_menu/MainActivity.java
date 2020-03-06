@@ -3,15 +3,11 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import ca.cmpt276.restauranthealthinspection.R;
@@ -37,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         restaurants = RestaurantManager.getInstance(this);
 
-        for(Restaurant r : restaurants){
+        for (Restaurant r : restaurants) {
             Log.d("Main Activity", "onCreate: " + r);
         }
 
@@ -75,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public enum HazardLevel{
-        LOW,MEDIUM,HIGH
+    public enum HazardLevel {
+        LOW, MEDIUM, HIGH
     }
 
 }

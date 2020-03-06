@@ -15,20 +15,18 @@
         <activity
             android:name=".ui.inspection_details.InspectionDetails"
             android:label="@string/inspection_details_title"
-            android:parentActivityName=".ui.restaurant_details.RestaurantDetails"/>
+            android:parentActivityName=".ui.restaurant_details.RestaurantDetails" />
 
         <activity
             android:name=".ui.restaurant_details.RestaurantDetails"
             android:label="@string/restaurant_details_title"
-            android:parentActivityName=".ui.main_menu.MainActivity"/>
+            android:parentActivityName=".ui.main_menu.MainActivity" />
 
         <activity android:name=".ui.main_menu.MainActivity">
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

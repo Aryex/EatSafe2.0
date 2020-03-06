@@ -3,6 +3,7 @@ package ca.cmpt276.restauranthealthinspection.ui.restaurant_details;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,14 +31,15 @@ public class RestaurantDetails extends AppCompatActivity {
     // DUMMY CLASS AND VARIABLES
     private class Inspection {
     }
+
     private ArrayList<Inspection> inspectionList = new ArrayList<>();
     private ArrayList<Integer> dummyCriticalIssues = new ArrayList<>();
     private ArrayList<Integer> dummyNoncriticalIssues = new ArrayList<>();
     private ArrayList<String> dummyDates = new ArrayList<>();
     private ArrayList<MainActivity.HazardLevel> dummyHazardLevel = new ArrayList<>();
 
-    public static Intent makeLaunchIntent(Context c, String restaurantName){
-        Intent i = new Intent(c,RestaurantDetails.class);
+    public static Intent makeLaunchIntent(Context c, String restaurantName) {
+        Intent i = new Intent(c, RestaurantDetails.class);
         i.putExtra(INTENT_TAG_RESTAURANT_NAME, restaurantName);
         return i;
     }
@@ -126,13 +128,14 @@ public class RestaurantDetails extends AppCompatActivity {
         });
     }
 
+
     private class MyListAdapter extends ArrayAdapter<Inspection> {
         public MyListAdapter() {
             super(RestaurantDetails.this, R.layout.inspection_item_view, inspectionList);
         }
 
         public int getIconID(MainActivity.HazardLevel hazardLevel) {
-            switch (hazardLevel){
+            switch (hazardLevel) {
                 case LOW:
                     return R.drawable.icon_hazard_low;
                 case MEDIUM:
@@ -154,7 +157,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
             int index = position;
             // Fill the view
-            ImageView imageView = (ImageView)itemView.findViewById(R.id.item_icon);
+            ImageView imageView = (ImageView) itemView.findViewById(R.id.item_icon);
             imageView.setImageResource(getIconID(dummyHazardLevel.get(index)));
 
             // Make:
@@ -171,5 +174,20 @@ public class RestaurantDetails extends AppCompatActivity {
 
             return itemView;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            // Returns to previous activity
+            // Needed to keep passed intent
+            onBackPressed();
+            finish();
+            return true;
+        }
+
+        return (super.onOptionsItemSelected(item));
     }
 }
