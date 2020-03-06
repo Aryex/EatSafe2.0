@@ -1,14 +1,19 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,10 +21,21 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> dummyDates = new ArrayList<>();
     private ArrayList<HazardLevel> dummyHazardLevel = new ArrayList<>();
 
+
+    private RestaurantManager restaurants;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.i("Start parsing", "Starting to parse data....");
+
+        restaurants = RestaurantManager.getInstance(this);
+
+        for(Restaurant r : restaurants){
+            Log.d("Main Activity", "onCreate: " + r);
+        }
 
         setupDummyData();
         setupRecyclerView();
