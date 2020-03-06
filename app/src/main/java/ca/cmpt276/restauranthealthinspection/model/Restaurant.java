@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MainActivity;
+
 /**
  * Represents each restaurant.
  */
@@ -100,6 +102,32 @@ public class Restaurant implements Iterable<Inspection> {
         return Collections.unmodifiableList(inspections);
     }
 
+    public boolean hasBeenInspected(){
+        return !inspections.isEmpty();
+    }
+
+    public String getLatestInspectionDate(){
+        if(inspections.isEmpty()){
+            return "";
+        }
+        return inspections.get(0).getFromCurrentDate();
+    }
+
+    public String getLatestInspectionTotalIssues() {
+        if(inspections.isEmpty()){
+            return "";
+        }
+        int totalIssues = inspections.get(0).getTotalIssues();
+        return String.valueOf(totalIssues);
+    }
+
+    public String getHazardLevel() {
+        if(inspections.isEmpty()){
+            return "";
+        }
+        return inspections.get(0).getHazardRating();
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
@@ -113,4 +141,5 @@ public class Restaurant implements Iterable<Inspection> {
                 ", inspections=" + inspections +
                 '}';
     }
+
 }

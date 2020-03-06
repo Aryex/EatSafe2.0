@@ -1,6 +1,8 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
 ;
+import android.util.Log;
+
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 
@@ -106,6 +108,7 @@ public class Inspection implements Iterable<Violation> {
 
     // Needed for displaying date of inspection from current date in MainActivity
     public String getFromCurrentDate() {
+        Log.d("Inspection Object", "getFromCurrentDate: " + calendar.getTime());
         if (getDaysInBetween() <= 30) {
             return getDaysInBetween() + " days";
         }
@@ -133,5 +136,9 @@ public class Inspection implements Iterable<Violation> {
                 ", hazardRating='" + hazardRating + '\'' +
                 ", violations='" + violations + '\'' +
                 '}';
+    }
+
+    public int getTotalIssues() {
+        return numCritical + numNonCritical;
     }
 }

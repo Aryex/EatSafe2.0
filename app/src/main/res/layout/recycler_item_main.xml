@@ -74,8 +74,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="Name"
-                android:textSize="36sp" />
+                android:textSize="28sp" />
 
+            <TextView
+                android:id="@+id/recylcerAddress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:text="Address"
+                android:textSize="18sp" />
             <TextView
                 android:id="@+id/recyclerInspectionDate"
                 android:layout_width="match_parent"
@@ -85,7 +92,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textViewIssuesCount"
+                android:id="@+id/recyclerIssuesCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
