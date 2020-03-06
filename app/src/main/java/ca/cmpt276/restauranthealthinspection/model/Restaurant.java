@@ -1,27 +1,116 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import com.opencsv.bean.CsvBindByName;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-public class Restaurant {
+/**
+ * Represents each restaurant.
+ */
+public class Restaurant implements Iterable<Inspection> {
+
     private String resTrackingNumber;
+
     private String name;
+
     private String address;
-    private String resType;
+
     private String city;
-    private boolean latitude;
-    private boolean longitude;
+
+    private String resType;
+
+    private double latitude;
+
+
+    private double longitude;
+
     private List<Inspection> inspections = new ArrayList<>();
 
-    public Restaurant(String resTrackingNumber, String name, String address, String resType, String city,
-                      boolean latitude, boolean longitude, List<Inspection> inspections) {
+    // ****************************************
+    // Methods for List<Inspection> inspections
+    // ****************************************
+
+
+    //Package Private
+    Restaurant(String resTrackingNumber, String name, String address, String city, String resType, double latitude, double longitude) {
         this.resTrackingNumber = resTrackingNumber;
         this.name = name;
         this.address = address;
-        this.resType = resType;
         this.city = city;
+        this.resType = resType;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.inspections = inspections;
+    }
+
+    void add(Inspection inspection) {
+        inspections.add(inspection);
+
+        // Maintain *reverse* sorted date order
+        // Uses lambda expression instead of anon class for readability
+        inspections.sort((Inspection i1, Inspection i2)
+                -> i2.getCalendar().compareTo(i1.getCalendar())
+        );
+    }
+
+    public Inspection get(int index) {
+        return inspections.get(index);
+    }
+
+    @Override
+    public Iterator<Inspection> iterator() {
+        return inspections.iterator();
+    }
+
+    // **************
+    // Other methods
+    // **************
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getResType() {
+        return resType;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getResTrackingNumber() {
+        return resTrackingNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Inspection> getInspections() {
+        return Collections.unmodifiableList(inspections);
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "resTrackingNumber='" + resTrackingNumber + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", resType='" + resType + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", inspections=" + inspections +
+                '}';
     }
 }
