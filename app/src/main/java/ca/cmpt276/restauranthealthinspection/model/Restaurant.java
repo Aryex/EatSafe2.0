@@ -71,7 +71,7 @@ public class Restaurant implements Iterable<Inspection> {
     // **************
 
     public String getAddress() {
-        return address;
+        return address + ", " + city + ", " + "BC";
     }
 
     public String getCity() {

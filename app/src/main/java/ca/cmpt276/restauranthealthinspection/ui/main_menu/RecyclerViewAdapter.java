@@ -96,7 +96,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }else{
                 textVievInspectionDate.setText("No inspections found");
                 textViewIssuesCount.setText("");
-                setupWarningBar(MainActivity.HazardLevel.HIGH);
+                setupWarningBar(MainActivity.HazardLevel.MEDIUM);
             }
 
         }
