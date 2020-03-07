@@ -13,18 +13,20 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 import static ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails.INTENT_TAG_TRACKING_ID;
 
 public class InspectionDetails extends AppCompatActivity {
 
-    public static final String INTENT_TAG_CALENDAR = "Calendar date";
+    public static final String INTENT_TAG_INSPECTION = "Inspection chosen";
 
-    public static Intent makeLaunchIntent(Context c, String trackingID, Calendar calendar) {
+    private Inspection inspection;
+
+    public static Intent makeLaunchIntent(Context c, Inspection inspection) {
         Intent i = new Intent(c, InspectionDetails.class);
-        i.putExtra(INTENT_TAG_TRACKING_ID, trackingID);
-        i.putExtra(INTENT_TAG_CALENDAR, calendar);
+        i.putExtra(INTENT_TAG_INSPECTION, inspection);
         return i;
     }
 
@@ -42,11 +44,12 @@ public class InspectionDetails extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        Intent i = getIntent();
-        String trackingID = i.getStringExtra(INTENT_TAG_TRACKING_ID);
+        getExtras();
+    }
 
-        TextView textView = findViewById(R.id.textViewInspectionDetails);
-        textView.setText(trackingID);
+    private void getExtras() {
+        Intent i = getIntent();
+        inspection = (Inspection) i.getSerializableExtra(INTENT_TAG_INSPECTION);
     }
 
     @Override

@@ -6,12 +6,13 @@ import android.util.Log;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Represents the inspections that were performed in the restaurant.
  */
-public class Inspection implements Iterable<Violation> {
+public class Inspection implements Iterable<Violation>, Serializable {
 
     private String insTrackingNumber;
 

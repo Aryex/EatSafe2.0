@@ -2,10 +2,12 @@ package ca.cmpt276.restauranthealthinspection.model;
 
 import com.opencsv.bean.CsvBindByPosition;
 
+import java.io.Serializable;
+
 /**
  * Represents the violations in an inspection.
  */
-public class Violation {
+public class Violation implements Serializable {
 
     private int number;
 

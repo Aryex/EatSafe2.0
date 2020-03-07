@@ -89,9 +89,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
             Inspection clickedInspection = inspectionList.get(position);
 
-            Calendar calendar = clickedInspection.getCalendar();
-            Intent intent = InspectionDetails.makeLaunchIntent(
-                    this, trackingID, calendar);
+            Intent intent = InspectionDetails.makeLaunchIntent(this, clickedInspection);
             startActivity(intent);
         });
     }
