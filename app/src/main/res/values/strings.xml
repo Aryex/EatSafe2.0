@@ -5,4 +5,6 @@
     <string name="latitude"><b>Latitude:</b> \n%1$s</string>
     <string name="longitude"><b>Longitude:</b> \n%1$s</string>
     <string name="description">description</string>
+    <string name="restaurant_details_title">Restaurant Details</string>
+    <string name="inspection_details_title">Inspection Details</string>
 </resources>
