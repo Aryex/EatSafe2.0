@@ -17,7 +17,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
@@ -27,19 +28,11 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.MainActivity;
 
 public class RestaurantDetails extends AppCompatActivity {
 
-    public static final String INTENT_TAG_TRACKING_ID = "trackingID";
+    public static final String INTENT_TAG_TRACKING_ID = "tracking ID";
     private String trackingID;
     private int index;
-    private RestaurantManager manager = RestaurantManager.getInstance(this);;
-    /*// DUMMY CLASS AND VARIABLES
-    private class Inspection {
-    }
-
-    private ArrayList<Inspection> inspectionList = new ArrayList<>();
-    private ArrayList<Integer> dummyCriticalIssues = new ArrayList<>();
-    private ArrayList<Integer> dummyNoncriticalIssues = new ArrayList<>();
-    private ArrayList<String> dummyDates = new ArrayList<>();
-    private ArrayList<MainActivity.HazardLevel> dummyHazardLevel = new ArrayList<>();*/
+    private RestaurantManager manager = RestaurantManager.getInstance(this);
+    private List<Inspection> inspectionList;
 
     public static Intent makeLaunchIntent(Context c, String trackingID) {
         Intent i = new Intent(c, RestaurantDetails.class);
@@ -61,8 +54,6 @@ public class RestaurantDetails extends AppCompatActivity {
         }
 
         extractIntent();
-
-        //setupDummyData();
         setupTextViews();
 
         populateListView();
@@ -73,27 +64,8 @@ public class RestaurantDetails extends AppCompatActivity {
         Intent i = getIntent();
         trackingID = i.getStringExtra(INTENT_TAG_TRACKING_ID);
         index = manager.getRestaurantIndexByID(trackingID);
+        inspectionList = manager.get(index).getInspections();
     }
-
-    /*private void setupDummyData() {
-        dummyCriticalIssues.add(2);
-        dummyNoncriticalIssues.add(1);
-        dummyDates.add("November 20th, 2020");
-        dummyHazardLevel.add(MainActivity.HazardLevel.MEDIUM);
-        inspectionList.add(new Inspection());
-
-        dummyCriticalIssues.add(4);
-        dummyNoncriticalIssues.add(0);
-        dummyDates.add("19 Days ago");
-        dummyHazardLevel.add(MainActivity.HazardLevel.HIGH);
-        inspectionList.add(new Inspection());
-
-        dummyCriticalIssues.add(1);
-        dummyNoncriticalIssues.add(1);
-        dummyDates.add("5 Days ago");
-        dummyHazardLevel.add(MainActivity.HazardLevel.LOW);
-        inspectionList.add(new Inspection());
-    }*/
 
     private void setupTextViews() {
         TextView nameTV = findViewById(R.id.resNameTV);
@@ -103,14 +75,14 @@ public class RestaurantDetails extends AppCompatActivity {
         addressTV.setText(manager.get(index).getAddress());
 
         TextView latitudeTV = findViewById(R.id.latitudeTV);
-        latitudeTV.setText(""+manager.get(index).getLatitude());
+        latitudeTV.setText("Latitude:\n" + manager.get(index).getLatitude());
 
         TextView longitudeTV = findViewById(R.id.longitudeTV);
-        longitudeTV.setText(""+manager.get(index).getLongitude());
+        longitudeTV.setText("Longitude\n" + manager.get(index).getLongitude());
     }
 
     private void populateListView() {
-        ArrayAdapter<Inspection> adapter = new MyListAdapter();
+        ArrayAdapter<Inspection> adapter = new InspectionLVAdapter(this, inspectionList);
         ListView list = (ListView) findViewById(R.id.inspectionListView);
         list.setAdapter(adapter);
     }
@@ -126,25 +98,27 @@ public class RestaurantDetails extends AppCompatActivity {
                 String message = "You clicked position " + position;
                 Toast.makeText(RestaurantDetails.this, message, Toast.LENGTH_SHORT).show();
 
-                Intent intent = InspectionDetails.makeLaunchIntent(RestaurantDetails.this, restaurantName);
+                Calendar calendar = inspectionList.get(position).getCalendar();
+                Intent intent = InspectionDetails.makeLaunchIntent(
+                        RestaurantDetails.this, trackingID, calendar);
                 startActivity(intent);
             }
         });
     }
 
 
-    private class MyListAdapter extends ArrayAdapter<Inspection> {
-        public MyListAdapter() {
+    /*private class InspectionLVAdapter extends ArrayAdapter<Inspection> {
+        public InspectionLVAdapter() {
             super(RestaurantDetails.this, R.layout.inspection_item_view, inspectionList);
         }
 
-        public int getIconID(MainActivity.HazardLevel hazardLevel) {
+        public int getIconID(String hazardLevel) {
             switch (hazardLevel) {
-                case LOW:
+                case "LOW":
                     return R.drawable.icon_hazard_low;
-                case MEDIUM:
+                case "MEDIUM":
                     return R.drawable.icon_hazard_medium;
-                case HIGH:
+                case "HIGH":
                     return R.drawable.icon_hazard_high;
                 default:
             }
@@ -172,30 +146,31 @@ public class RestaurantDetails extends AppCompatActivity {
                 itemView = getLayoutInflater().inflate(R.layout.inspection_item_view, parent, false);
             }
 
-            int index = position;
+            Inspection currentInspection = inspectionList.get(position);
+
             // Fill the view
             ImageView imageView = (ImageView) itemView.findViewById(R.id.item_icon);
-            imageView.setImageResource(getIconID(dummyHazardLevel.get(index)));
+            imageView.setImageResource(getIconID(currentInspection.getHazardRating()));
 
             // Hazard level:
             TextView levelText = (TextView) itemView.findViewById(R.id.levelTV);
-            levelText.setText("- Hazard level: " + getLevelString(dummyHazardLevel.get(index)));
+            levelText.setText("- Hazard level: " + currentInspection.getHazardRating());
 
-            // Make:
+            // Critical issues found:
             TextView critText = (TextView) itemView.findViewById(R.id.item_crit);
-            critText.setText("- Critical issues found: " + dummyCriticalIssues.get(index));
+            critText.setText("- Critical issues found: " + currentInspection.getNumCritical());
 
-            // Year:
+            // Non-critical issues found:
             TextView nonCritText = (TextView) itemView.findViewById(R.id.item_noncrit);
-            nonCritText.setText("- Non-critical issues found: " + dummyNoncriticalIssues.get(index));
+            nonCritText.setText("- Non-critical issues found: " + currentInspection.getNumNonCritical());
 
             // Date:
             TextView dateText = (TextView) itemView.findViewById(R.id.item_date);
-            dateText.setText("- Inspection date: " + dummyDates.get(index));
+            dateText.setText("- Inspection date: " + currentInspection.getFromCurrentDate());
 
             return itemView;
         }
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
