@@ -4,14 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +19,6 @@ import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.inspection_details.InspectionDetails;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MainActivity;
 
 public class RestaurantDetails extends AppCompatActivity {
 
@@ -75,10 +69,12 @@ public class RestaurantDetails extends AppCompatActivity {
         addressTV.setText(manager.get(index).getAddress());
 
         TextView latitudeTV = findViewById(R.id.latitudeTV);
-        latitudeTV.setText("Latitude:\n" + manager.get(index).getLatitude());
+        String latitude = Double.toString(manager.get(index).getLatitude());
+        latitudeTV.setText(getString(R.string.latitude, latitude));
 
         TextView longitudeTV = findViewById(R.id.longitudeTV);
-        longitudeTV.setText("Longitude\n" + manager.get(index).getLongitude());
+        String longitude = Double.toString(manager.get(index).getLongitude());
+        longitudeTV.setText(getString(R.string.longitude, longitude));
     }
 
     private void populateListView() {
@@ -89,88 +85,16 @@ public class RestaurantDetails extends AppCompatActivity {
 
     private void registerClickCallback() {
         ListView list = (ListView) findViewById(R.id.inspectionListView);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View viewClicked,
-                                    int position, long id) {
+        list.setOnItemClickListener((parent, viewClicked, position, id) -> {
 
-                Inspection clickedInspection = inspectionList.get(position);
-                String message = "You clicked position " + position;
-                Toast.makeText(RestaurantDetails.this, message, Toast.LENGTH_SHORT).show();
+            Inspection clickedInspection = inspectionList.get(position);
 
-                Calendar calendar = inspectionList.get(position).getCalendar();
-                Intent intent = InspectionDetails.makeLaunchIntent(
-                        RestaurantDetails.this, trackingID, calendar);
-                startActivity(intent);
-            }
+            Calendar calendar = clickedInspection.getCalendar();
+            Intent intent = InspectionDetails.makeLaunchIntent(
+                    RestaurantDetails.this, trackingID, calendar);
+            startActivity(intent);
         });
     }
-
-
-    /*private class InspectionLVAdapter extends ArrayAdapter<Inspection> {
-        public InspectionLVAdapter() {
-            super(RestaurantDetails.this, R.layout.inspection_item_view, inspectionList);
-        }
-
-        public int getIconID(String hazardLevel) {
-            switch (hazardLevel) {
-                case "LOW":
-                    return R.drawable.icon_hazard_low;
-                case "MEDIUM":
-                    return R.drawable.icon_hazard_medium;
-                case "HIGH":
-                    return R.drawable.icon_hazard_high;
-                default:
-            }
-            return R.drawable.icon_hazard_low;
-        }
-
-        public String getLevelString(MainActivity.HazardLevel hazardLevel) {
-            switch (hazardLevel) {
-                case LOW:
-                    return "LOW";
-                case MEDIUM:
-                    return "MEDIUM";
-                case HIGH:
-                    return "HIGH";
-                default:
-            }
-            return "LOW";
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // Make sure we have a view to work with (may have been given null)
-            View itemView = convertView;
-            if (itemView == null) {
-                itemView = getLayoutInflater().inflate(R.layout.inspection_item_view, parent, false);
-            }
-
-            Inspection currentInspection = inspectionList.get(position);
-
-            // Fill the view
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.item_icon);
-            imageView.setImageResource(getIconID(currentInspection.getHazardRating()));
-
-            // Hazard level:
-            TextView levelText = (TextView) itemView.findViewById(R.id.levelTV);
-            levelText.setText("- Hazard level: " + currentInspection.getHazardRating());
-
-            // Critical issues found:
-            TextView critText = (TextView) itemView.findViewById(R.id.item_crit);
-            critText.setText("- Critical issues found: " + currentInspection.getNumCritical());
-
-            // Non-critical issues found:
-            TextView nonCritText = (TextView) itemView.findViewById(R.id.item_noncrit);
-            nonCritText.setText("- Non-critical issues found: " + currentInspection.getNumNonCritical());
-
-            // Date:
-            TextView dateText = (TextView) itemView.findViewById(R.id.item_date);
-            dateText.setText("- Inspection date: " + currentInspection.getFromCurrentDate());
-
-            return itemView;
-        }
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

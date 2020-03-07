@@ -12,41 +12,28 @@ import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MainActivity;
-import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
     private List<Inspection> inspectionList;
+    private Context context;
 
-    public InspectionLVAdapter(Context context, List<Inspection> list) {
+    InspectionLVAdapter(Context context, List<Inspection> list) {
         super(context, R.layout.inspection_item_view, list);
-        inspectionList = list;
+        this.inspectionList = list;
+        this.context = context;
     }
 
-    public int getIconID(String hazardLevel) {
+    private int getIconID(String hazardLevel) {
         switch (hazardLevel) {
-            case "LOW":
+            case "Low":
                 return R.drawable.icon_hazard_low;
-            case "MEDIUM":
+            case "Moderate":
                 return R.drawable.icon_hazard_medium;
-            case "HIGH":
+            case "High":
                 return R.drawable.icon_hazard_high;
             default:
         }
         return R.drawable.icon_hazard_low;
-    }
-
-    public String getLevelString(MainActivity.HazardLevel hazardLevel) {
-        switch (hazardLevel) {
-            case LOW:
-                return "LOW";
-            case MEDIUM:
-                return "MEDIUM";
-            case HIGH:
-                return "HIGH";
-            default:
-        }
-        return "LOW";
     }
 
     @Override
@@ -65,19 +52,19 @@ public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
 
         // Hazard level:
         TextView levelText = (TextView) itemView.findViewById(R.id.levelTV);
-        levelText.setText("- Hazard level: " + currentInspection.getHazardRating());
+        levelText.setText(context.getString(R.string.hazard_level, currentInspection.getHazardRating()));
 
         // Critical issues found:
         TextView critText = (TextView) itemView.findViewById(R.id.item_crit);
-        critText.setText("- Critical issues found: " + currentInspection.getNumCritical());
+        critText.setText(context.getString(R.string.crit_issues, currentInspection.getNumCritical()));
 
         // Non-critical issues found:
         TextView nonCritText = (TextView) itemView.findViewById(R.id.item_noncrit);
-        nonCritText.setText("- Non-critical issues found: " + currentInspection.getNumNonCritical());
+        nonCritText.setText(context.getString(R.string.non_crit_issues, currentInspection.getNumNonCritical()));
 
         // Date:
         TextView dateText = (TextView) itemView.findViewById(R.id.item_date);
-        dateText.setText("- Inspection date: " + currentInspection.getFromCurrentDate());
+        dateText.setText(context.getString(R.string.date, currentInspection.getFromCurrentDate()));
 
         return itemView;
     }
