@@ -2,37 +2,35 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.Restaurant;
+import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     public static final String TAG = "RecyclerViewAdapter";
-    private ArrayList<String> restaurantNames = new ArrayList<>();
+    /*private ArrayList<String> restaurantNames = new ArrayList<>();
     private ArrayList<String> inspectionDates = new ArrayList<>();
     private ArrayList<Integer> issuesCount = new ArrayList<>();
-    private ArrayList<MainActivity.HazardLevel> hazardLevels = new ArrayList<>();
-    private Context context;
+    private ArrayList<MainActivity.HazardLevel> hazardLevels = new ArrayList<>();*/
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> restaurantNames, ArrayList<String> inspectionDates, ArrayList<MainActivity.HazardLevel> hazardLevels) {
-        this.restaurantNames = restaurantNames;
-        this.inspectionDates = inspectionDates;
-        this.hazardLevels = hazardLevels;
+    private Context context;
+    private RestaurantManager restaurantManager;
+
+    public RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
+        this.restaurantManager = restaurantManager;
         this.context = context;
     }
 
@@ -47,16 +45,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final int fPosition = position;
-//        holder.textViewRestaurantName.setText(restaurantNames.get(position));
-        holder.setupViewTexts(position);
+        Restaurant restaurant = restaurantManager.get(position);
+        holder.setupViewTexts(restaurant);
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: ");
-                Toast.makeText(context, "Hi", Toast.LENGTH_SHORT).show();
-                String restaurantName = restaurantNames.get(position);
-                Intent i = RestaurantDetails.makeLaunchIntent(context, restaurantName);
+                String trackingID = restaurant.getResTrackingNumber();
+                Intent i = RestaurantDetails.makeLaunchIntent(context, trackingID);
                 context.startActivity(i);
             }
         });
@@ -64,43 +60,50 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return restaurantNames.size();
+        return restaurantManager.restaurantCount();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView hazardIcon;
-        private final TextView textViewRestaurantName;
-        private final TextView textVievInspectionDate;
-        private final TextView textViewHazardLevel;
+        private final ImageView hazardIcon = itemView.findViewById(R.id.hazardIcon);
+        private final TextView textViewRestaurantName = itemView.findViewById(R.id.recyclerRestaurantName);
+        private final TextView textVievInspectionDate = itemView.findViewById(R.id.recyclerInspectionDate);
+        private final TextView textViewHazardLevel = itemView.findViewById(R.id.textViewHazardLevel);
+        private final TextView textViewAddress = itemView.findViewById(R.id.recylcerAddress);
+        private final TextView textViewIssuesCount = itemView.findViewById(R.id.recyclerIssuesCount);
 
-        private final RelativeLayout parentLayout;
-        private final CardView warningBar;
+        private final RelativeLayout parentLayout = itemView.findViewById(R.id.recyclerItemParent);
+        private final CardView warningBar = itemView.findViewById(R.id.warningBar);
 
         private ViewHolder(@NonNull View itemView) {
             super(itemView);
-            hazardIcon = itemView.findViewById(R.id.hazardIcon);
-
-            textViewRestaurantName = itemView.findViewById(R.id.recyclerRestaurantName);
-            textVievInspectionDate = itemView.findViewById(R.id.recyclerInspectionDate);
-            textViewHazardLevel = itemView.findViewById(R.id.textViewHazardLevel);
-
-            warningBar = itemView.findViewById(R.id.warningBar);
-            parentLayout = itemView.findViewById(R.id.recyclerItemParent);
         }
 
-        private void setupViewTexts(int position) {
-            MainActivity.HazardLevel hazardLevel = hazardLevels.get(position);
+        private void setupViewTexts(Restaurant restaurant) {
 
-            textViewRestaurantName.setText(restaurantNames.get(position));
-            textVievInspectionDate.setText("Last inspected: " + inspectionDates.get(position));
-            setupWarningBar(hazardLevel);
+            textViewRestaurantName.setText(restaurant.getName());
+            textViewAddress.setText(restaurant.getAddress());
+
+            if(restaurant.hasBeenInspected()){
+                String latestInspectionDate = restaurant.getLatestInspectionDate();
+                textVievInspectionDate.setText("Last inspected on " + latestInspectionDate);
+
+                String latestInspectionTotalIssues = restaurant.getLatestInspectionTotalIssues();
+                textViewIssuesCount.setText("Found " + latestInspectionTotalIssues + " issues ");
+
+                MainActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
+                setupWarningBar(hazardLevel);
+            }else{
+                textVievInspectionDate.setText("No inspections found");
+                textViewIssuesCount.setText("");
+                setupWarningBar(MainActivity.HazardLevel.MEDIUM);
+            }
 
         }
 
         private void setupWarningBar(MainActivity.HazardLevel hazardLevel) {
 
-            switch (hazardLevel){
+            switch (hazardLevel) {
                 case LOW:
                     textViewHazardLevel.setText("Low Hazard");
                     warningBar.setCardBackgroundColor(context.getColor(R.color.hazardLowDark));
@@ -118,6 +121,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     break;
                 default:
             }
+        }
+    }
+
+    private MainActivity.HazardLevel HazardLevelConverter(String hazardLevel) {
+        switch (hazardLevel.toLowerCase()) {
+            case "low":
+                return MainActivity.HazardLevel.LOW;
+            case "moderate":
+                return MainActivity.HazardLevel.MEDIUM;
+            default:
+                return MainActivity.HazardLevel.HIGH;
         }
     }
 }

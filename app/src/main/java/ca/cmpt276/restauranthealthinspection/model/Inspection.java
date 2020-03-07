@@ -1,6 +1,8 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
 ;
+import android.util.Log;
+
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 
@@ -106,12 +108,20 @@ public class Inspection implements Iterable<Violation> {
 
     // Needed for displaying date of inspection from current date in MainActivity
     public String getFromCurrentDate() {
+        Log.d("Inspection Object", "getFromCurrentDate: " + calendar.getTime());
         if (getDaysInBetween() <= 30) {
             return getDaysInBetween() + " days";
         }
 
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        int inspectionYear = calendar.get(Calendar.YEAR);
         // Not accounting for leap years
         if (getDaysInBetween() <= 365) {
+            if(inspectionYear < currentYear){
+                return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
+                        + " " + calendar.get(Calendar.DAY_OF_MONTH)
+                        + ", " + calendar.get(Calendar.YEAR);
+            }
             return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
                     + " " + calendar.get(Calendar.DAY_OF_MONTH);
         }
@@ -133,5 +143,9 @@ public class Inspection implements Iterable<Violation> {
                 ", hazardRating='" + hazardRating + '\'' +
                 ", violations='" + violations + '\'' +
                 '}';
+    }
+
+    public int getTotalIssues() {
+        return numCritical + numNonCritical;
     }
 }

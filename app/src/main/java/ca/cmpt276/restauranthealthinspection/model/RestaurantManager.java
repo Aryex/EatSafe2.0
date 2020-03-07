@@ -76,4 +76,8 @@ public class RestaurantManager implements Iterable<Restaurant> {
     public Iterator<Restaurant> iterator() {
         return restaurants.iterator();
     }
+
+    public int restaurantCount() {
+        return restaurants.size();
+    }
 }
