@@ -91,7 +91,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
             Calendar calendar = clickedInspection.getCalendar();
             Intent intent = InspectionDetails.makeLaunchIntent(
-                    RestaurantDetails.this, trackingID, calendar);
+                    this, trackingID, calendar);
             startActivity(intent);
         });
     }

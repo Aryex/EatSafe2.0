@@ -22,7 +22,7 @@ public class InspectionDetails extends AppCompatActivity {
     public static final String INTENT_TAG_CALENDAR = "Calendar date";
 
     public static Intent makeLaunchIntent(Context c, String trackingID, Calendar calendar) {
-        Intent i = new Intent(c, RestaurantDetails.class);
+        Intent i = new Intent(c, InspectionDetails.class);
         i.putExtra(INTENT_TAG_TRACKING_ID, trackingID);
         i.putExtra(INTENT_TAG_CALENDAR, calendar);
         return i;
