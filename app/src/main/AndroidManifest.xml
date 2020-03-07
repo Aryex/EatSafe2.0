@@ -15,12 +15,15 @@
         <activity
             android:name=".ui.inspection_details.InspectionDetails"
             android:label="@string/inspection_details_title"
-            android:parentActivityName=".ui.restaurant_details.RestaurantDetails" />
+            android:parentActivityName=".ui.restaurant_details.RestaurantDetails"
+            android:launchMode="singleTop"/>
+
 
         <activity
             android:name=".ui.restaurant_details.RestaurantDetails"
             android:label="@string/restaurant_details_title"
-            android:parentActivityName=".ui.main_menu.MainActivity" />
+            android:parentActivityName=".ui.main_menu.MainActivity"
+            android:launchMode="singleTop"/>
 
         <activity android:name=".ui.main_menu.MainActivity">
             <intent-filter>
@@ -29,7 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
