@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EatSafe</string>
-    <string name="address"><b>Address:</b> %1$s</string>
-    <string name="latitude"><b>Latitude:</b> \n%1$s</string>
-    <string name="longitude"><b>Longitude:</b> \n%1$s</string>
+    <string name="address">Address: %1$s</string>
+    <string name="latitude"> Latitude:\n%1$s</string>
+    <string name="longitude"> Longitude:\n%1$s</string>
     <string name="description">description</string>
     <string name="restaurant_details_title">Restaurant Details</string>
     <string name="inspection_details_title">Inspection Details</string>
+    <string name="hazard_level">- Hazard level: %1$s</string>
+    <string name="crit_issues">- Critical issues found: %1$d</string>
+    <string name="non_crit_issues">- Non-critical issues found: %1$d</string>
+    <string name="date">- Inspection date: %1$s</string>
 </resources>

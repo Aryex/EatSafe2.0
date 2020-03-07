@@ -4,47 +4,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/item_icon"
-        android:layout_width="61dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="338dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/description"
-        android:maxWidth="80dp"
-        android:maxHeight="80dp"
-        app:srcCompat="@drawable/icon_hazard_high" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
+        android:layout_marginStart="-3dp"
+        android:layout_marginTop="-1dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/item_date"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/description"
+            android:maxWidth="80dp"
+            android:maxHeight="80dp"
+            app:srcCompat="@drawable/icon_hazard_high" />
 
-        <TextView
-            android:id="@+id/item_crit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/item_noncrit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/item_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="date"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/levelTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="level"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/item_crit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="crit"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/item_noncrit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="noncrit"
+                android:textSize="18sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
