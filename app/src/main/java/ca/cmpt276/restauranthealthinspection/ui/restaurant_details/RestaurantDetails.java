@@ -20,15 +20,18 @@ import androidx.appcompat.widget.Toolbar;
 import java.util.ArrayList;
 
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.Inspection;
+import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.inspection_details.InspectionDetails;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.MainActivity;
 
 public class RestaurantDetails extends AppCompatActivity {
 
-    public static final String INTENT_TAG_RESTAURANT_NAME = "restaurantName";
-    private String restaurantName;
-
-    // DUMMY CLASS AND VARIABLES
+    public static final String INTENT_TAG_TRACKING_ID = "trackingID";
+    private String trackingID;
+    private int index;
+    private RestaurantManager manager = RestaurantManager.getInstance(this);;
+    /*// DUMMY CLASS AND VARIABLES
     private class Inspection {
     }
 
@@ -36,11 +39,11 @@ public class RestaurantDetails extends AppCompatActivity {
     private ArrayList<Integer> dummyCriticalIssues = new ArrayList<>();
     private ArrayList<Integer> dummyNoncriticalIssues = new ArrayList<>();
     private ArrayList<String> dummyDates = new ArrayList<>();
-    private ArrayList<MainActivity.HazardLevel> dummyHazardLevel = new ArrayList<>();
+    private ArrayList<MainActivity.HazardLevel> dummyHazardLevel = new ArrayList<>();*/
 
-    public static Intent makeLaunchIntent(Context c, String restaurantName) {
+    public static Intent makeLaunchIntent(Context c, String trackingID) {
         Intent i = new Intent(c, RestaurantDetails.class);
-        i.putExtra(INTENT_TAG_RESTAURANT_NAME, restaurantName);
+        i.putExtra(INTENT_TAG_TRACKING_ID, trackingID);
         return i;
     }
 
@@ -59,7 +62,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
         extractIntent();
 
-        setupDummyData();
+        //setupDummyData();
         setupTextViews();
 
         populateListView();
@@ -68,10 +71,11 @@ public class RestaurantDetails extends AppCompatActivity {
 
     private void extractIntent() {
         Intent i = getIntent();
-        restaurantName = i.getStringExtra(INTENT_TAG_RESTAURANT_NAME);
+        trackingID = i.getStringExtra(INTENT_TAG_TRACKING_ID);
+        index = manager.getRestaurantIndexByID(trackingID);
     }
 
-    private void setupDummyData() {
+    /*private void setupDummyData() {
         dummyCriticalIssues.add(2);
         dummyNoncriticalIssues.add(1);
         dummyDates.add("November 20th, 2020");
@@ -89,20 +93,20 @@ public class RestaurantDetails extends AppCompatActivity {
         dummyDates.add("5 Days ago");
         dummyHazardLevel.add(MainActivity.HazardLevel.LOW);
         inspectionList.add(new Inspection());
-    }
+    }*/
 
     private void setupTextViews() {
         TextView nameTV = findViewById(R.id.resNameTV);
-        nameTV.setText(restaurantName);
+        nameTV.setText(manager.get(index).getName());
 
         TextView addressTV = findViewById(R.id.addressTV);
-        addressTV.setText(getString(R.string.address, "Dummy address"));
+        addressTV.setText(manager.get(index).getAddress());
 
-        TextView latitudeTV = findViewById(R.id.lattitudeTV);
-        latitudeTV.setText(getString(R.string.latitude, "49.20610961"));
+        TextView latitudeTV = findViewById(R.id.latitudeTV);
+        latitudeTV.setText(""+manager.get(index).getLatitude());
 
-        TextView longitudeTV = findViewById(R.id.longtitude);
-        longitudeTV.setText(getString(R.string.longitude, "-122.8668064"));
+        TextView longitudeTV = findViewById(R.id.longitudeTV);
+        longitudeTV.setText(""+manager.get(index).getLongitude());
     }
 
     private void populateListView() {
@@ -147,6 +151,19 @@ public class RestaurantDetails extends AppCompatActivity {
             return R.drawable.icon_hazard_low;
         }
 
+        public String getLevelString(MainActivity.HazardLevel hazardLevel) {
+            switch (hazardLevel) {
+                case LOW:
+                    return "LOW";
+                case MEDIUM:
+                    return "MEDIUM";
+                case HIGH:
+                    return "HIGH";
+                default:
+            }
+            return "LOW";
+        }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Make sure we have a view to work with (may have been given null)
@@ -160,17 +177,21 @@ public class RestaurantDetails extends AppCompatActivity {
             ImageView imageView = (ImageView) itemView.findViewById(R.id.item_icon);
             imageView.setImageResource(getIconID(dummyHazardLevel.get(index)));
 
+            // Hazard level:
+            TextView levelText = (TextView) itemView.findViewById(R.id.levelTV);
+            levelText.setText("- Hazard level: " + getLevelString(dummyHazardLevel.get(index)));
+
             // Make:
-            TextView makeText = (TextView) itemView.findViewById(R.id.item_crit);
-            makeText.setText("Critical issues found: " + dummyCriticalIssues.get(index));
+            TextView critText = (TextView) itemView.findViewById(R.id.item_crit);
+            critText.setText("- Critical issues found: " + dummyCriticalIssues.get(index));
 
             // Year:
-            TextView yearText = (TextView) itemView.findViewById(R.id.item_noncrit);
-            yearText.setText("Non-critical issues found: " + dummyNoncriticalIssues.get(index));
+            TextView nonCritText = (TextView) itemView.findViewById(R.id.item_noncrit);
+            nonCritText.setText("- Non-critical issues found: " + dummyNoncriticalIssues.get(index));
 
-            // Condition:
-            TextView condionText = (TextView) itemView.findViewById(R.id.item_date);
-            condionText.setText("Inspection date: " + dummyDates.get(index));
+            // Date:
+            TextView dateText = (TextView) itemView.findViewById(R.id.item_date);
+            dateText.setText("- Inspection date: " + dummyDates.get(index));
 
             return itemView;
         }

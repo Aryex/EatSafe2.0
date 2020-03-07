@@ -6,14 +6,14 @@
 
     <ImageView
         android:id="@+id/item_icon"
-        android:layout_width="61dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="338dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="327dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/description"
         android:maxWidth="80dp"
@@ -34,17 +34,29 @@
             android:id="@+id/item_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="date"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/levelTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="level"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/item_crit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="crit"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/item_noncrit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="noncrit"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </RelativeLayout>
