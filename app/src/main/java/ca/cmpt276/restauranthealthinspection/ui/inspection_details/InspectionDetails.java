@@ -1,10 +1,13 @@
 package ca.cmpt276.restauranthealthinspection.ui.inspection_details;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import ca.cmpt276.restauranthealthinspection.R;
@@ -13,8 +16,8 @@ public class InspectionDetails extends AppCompatActivity {
 
     public static final String INTENT_TAG_RESTAURANT_NAME = "restaurantName";
 
-    public static Intent makeLaunchIntent(Context c, String restaurantName){
-        Intent i = new Intent(c,InspectionDetails.class);
+    public static Intent makeLaunchIntent(Context c, String restaurantName) {
+        Intent i = new Intent(c, InspectionDetails.class);
         i.putExtra(INTENT_TAG_RESTAURANT_NAME, restaurantName);
         return i;
     }
@@ -24,10 +27,34 @@ public class InspectionDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_details);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar ab = getSupportActionBar();
+        // Enable the Up button
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+
         Intent i = getIntent();
         String restaurantName = i.getStringExtra(INTENT_TAG_RESTAURANT_NAME);
 
         TextView textView = findViewById(R.id.textViewInspectionDetails);
         textView.setText(restaurantName);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            // Returns to previous activity
+            // Needed to keep passed intent
+            onBackPressed();
+            finish();
+            return true;
+        }
+
+        return (super.onOptionsItemSelected(item));
     }
 }
