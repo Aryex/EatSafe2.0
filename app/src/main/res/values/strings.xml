@@ -11,5 +11,15 @@
     <string name="crit_issues">- Critical issues found: %1$d</string>
     <string name="non_crit_issues">- Non-critical issues found: %1$d</string>
     <string name="date">- Inspection date: %1$s</string>
-    <string name="no_inspection">Nothing to show here</string>
+    <string name="hazard_level_high">High Hazard</string>
+    <string name="hazard_level_medium">Medium Hazard</string>
+    <string name="hazard_level_low">Low Hazard</string>
+    <string name="no_inspections_found">No inspections found</string>
+    <string name="last_inspected_on">Last inspected on %s</string>
+    <string name="found_num_issues">Found %s issues</string>
+    <string name="empty_string" />
+    <string name="default_num_issues">Found 3 issues.</string>
+    <string name="default_date">November 10th, 2020</string>
+    <string name="name">Name</string>
+    <string name="default_address">Address</string>
 </resources>
