@@ -11,6 +11,7 @@
     <string name="crit_issues">- Critical issues found: %1$d</string>
     <string name="non_crit_issues">- Non-critical issues found: %1$d</string>
     <string name="date">- Inspection date: %1$s</string>
+    <string name="no_inspection">No inspections found</string>
     <string name="inspectionDateDisplay">Date: %1$s</string>
     <string name="inspectionTypeDisplay">Inspection type: %1$s</string>
     <string name="hazardLevelDisplay">Hazard level: %1$s</string>
