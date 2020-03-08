@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/violationIcon"
-        android:layout_width="60dp"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:adjustViewBounds="true"
@@ -23,12 +23,12 @@
         android:id="@+id/violationDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
         android:layout_weight="1"
         android:scrollHorizontally="false"
         android:text="@string/hazardLevelDisplay"
-        android:textSize="18sp"
+        android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/violationIcon"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

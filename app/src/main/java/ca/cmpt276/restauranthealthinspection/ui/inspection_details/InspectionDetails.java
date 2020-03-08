@@ -74,6 +74,8 @@ public class InspectionDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         RecyclerViolationAdapter adapter = new RecyclerViolationAdapter(this, inspection.getViolations());
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private void setupHazard() {

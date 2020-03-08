@@ -23,12 +23,13 @@
                 android:id="@+id/inspectionDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="148dp"
+                android:layout_marginTop="136dp"
                 android:text="@string/inspectionDateDisplay"
                 android:textAlignment="center"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,10 +38,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="92dp"
+                android:layout_marginTop="76dp"
                 android:text="@string/inspectionTypeDisplay"
                 android:textAlignment="center"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hazardDisplay" />
 
@@ -50,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/critical_issues_found"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/inspectionType"
                 app:layout_constraintTop_toBottomOf="@+id/inspectionType" />
 
@@ -60,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/non_critical_issues_found"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/numberCritical"
                 app:layout_constraintTop_toBottomOf="@+id/numberCritical" />
 
@@ -101,10 +102,10 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViolationList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="348dp"
-                android:id="@+id/recyclerViolationList"
+                android:layout_marginTop="312dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -123,5 +124,4 @@
         app:titleTextColor="@android:color/white">
 
     </androidx.appcompat.widget.Toolbar>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

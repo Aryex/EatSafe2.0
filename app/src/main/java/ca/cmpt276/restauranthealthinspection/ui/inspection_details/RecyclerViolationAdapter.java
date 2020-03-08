@@ -1,7 +1,10 @@
 package ca.cmpt276.restauranthealthinspection.ui.inspection_details;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,19 +22,23 @@ import ca.cmpt276.restauranthealthinspection.model.Violation;
 
 public class RecyclerViolationAdapter extends RecyclerView.Adapter  {
 
-    private LayoutInflater layoutInflater;
+    private Context context;
     private List<Violation> violations;
 
     RecyclerViolationAdapter(Context context, List<Violation> violations) {
-        this.layoutInflater = LayoutInflater.from(context);
+        this.context = context;
         this.violations = violations;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.recycler_violation, parent, false);
-        return new ViolationViewHolder(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_violation, parent, false);
+
+        TextView violationDescription = view.findViewById(R.id.violationDescription);
+        ImageView violationIcon = view.findViewById(R.id.violationIcon);
+        ConstraintLayout layout = view.findViewById(R.id.recyclerViolation);
+        return new ViolationViewHolder(view, violationDescription, violationIcon, layout);
     }
 
     @Override
@@ -52,26 +59,34 @@ class ViolationViewHolder extends RecyclerView.ViewHolder {
     private ImageView violationIcon;
     private ConstraintLayout layout;
 
-    ViolationViewHolder(@NonNull View itemView) {
+    private boolean flag = false;
+
+    ViolationViewHolder(@NonNull View itemView, TextView violationDescription, ImageView violationIcon, ConstraintLayout layout) {
         super(itemView);
-        violationDescription = itemView.findViewById(R.id.violationDescription);
-        violationIcon = itemView.findViewById(R.id.violationIcon);
-        layout = itemView.findViewById(R.id.recyclerViolation);
+        this.violationDescription = violationDescription;
+        this.violationIcon = violationIcon;
+        this.layout = layout;
     }
 
     void setViews(Violation violation) {
-        violationDescription.setText(violation.getDescription());
 
-        switch (violation.getCriticalStatus()) {
-            case Violation.NON_CRITICAL_STATUS:
-                layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardMediumInspection));
-                break;
-            case Violation.CRITICAL_STATUS:
-                layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardHighInspection));
-                break;
+        if (!flag) {
+            flag = true;
+            String codeCategory = "code_" + (violation.getNumber() / 100) * 100;
+            int stringId = itemView.getResources().getIdentifier(codeCategory, "string", itemView.getContext().getPackageName());
+            int imageId = itemView.getResources().getIdentifier(codeCategory, "drawable", itemView.getContext().getPackageName());
+            violationDescription.setText(stringId);
+            violationIcon.setImageResource(imageId);
+
+            switch (violation.getCriticalStatus()) {
+                case Violation.NON_CRITICAL_STATUS:
+                    layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardMediumInspection));
+                    break;
+                case Violation.CRITICAL_STATUS:
+                    layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardHighInspection));
+                    violationDescription.setTypeface(null, Typeface.BOLD);
+                    break;
+            }
         }
-
     }
-
-
 }

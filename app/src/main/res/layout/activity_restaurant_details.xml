@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="restaurant"
+            android:text="@string/string_resNameTV"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
             android:id="@+id/addressTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="address"
+            android:text="@string/string_addressTV"
             android:textAlignment="center"
             android:textSize="18sp" />
 
@@ -47,13 +47,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="latitude"
+                android:text="@string/string_latitudeTV"
                 android:textSize="18sp" />
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@color/colorPrimaryDark" />
 
@@ -62,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="longitude"
+                android:text="@string/string_longitudeTV"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -104,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_inspection" />
+            android:text="@string/no_inspections_found" />
 
     </FrameLayout>
 
