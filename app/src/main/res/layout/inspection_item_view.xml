@@ -38,28 +38,28 @@
                 android:id="@+id/item_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="date"
+                android:text="@string/string_item_date"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/levelTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="level"
+                android:text="@string/string_levelTV"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/item_crit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="crit"
+                android:text="@string/string_item_crit"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/item_noncrit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="noncrit"
+                android:text="@string/string_item_noncrit"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

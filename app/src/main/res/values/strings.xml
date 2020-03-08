@@ -22,4 +22,13 @@
     <string name="default_date">November 10th, 2020</string>
     <string name="name">Name</string>
     <string name="default_address">Address</string>
+    <string name="string_item_noncrit">noncrit</string>
+    <string name="string_item_crit">crit</string>
+    <string name="string_levelTV">level</string>
+    <string name="string_item_date">date</string>
+    <string name="string_textViewInspectionDetails">TextView</string>
+    <string name="string_longitudeTV">longitude</string>
+    <string name="string_latitudeTV">latitude</string>
+    <string name="string_addressTV">address</string>
+    <string name="string_resNameTV">restaurant</string>
 </resources>
