@@ -30,6 +30,12 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     private List<Violation> violations = new ArrayList<>();
 
+    public static final String HAZARD_RATING_LOW = "Low";
+
+    public static final String HAZARD_RATING_MODERATE = "Moderate";
+
+    public static final String HAZARD_RATING_HIGH = "High";
+
     // ****************************************
     // Methods for List<Violation> violations
     // ****************************************

@@ -7,16 +7,15 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Calendar;
-
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
-import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
-
-import static ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails.INTENT_TAG_TRACKING_ID;
 
 public class InspectionDetails extends AppCompatActivity {
 
@@ -45,6 +44,49 @@ public class InspectionDetails extends AppCompatActivity {
         }
 
         getExtras();
+        populateViews();
+    }
+
+    private void populateViews() {
+
+        setupHazard();
+
+        TextView date = findViewById(R.id.inspectionDate);
+        date.setText(inspection.getFromCurrentDate());
+
+        TextView type = findViewById(R.id.inspectionType);
+        type.setText(this.getString(R.string.inspectionTypeDisplay, inspection.getInsType()));
+
+        TextView critical = findViewById(R.id.numberCritical);
+        critical.setText(this.getString(R.string.critical_issues_found, inspection.getNumCritical()));
+
+        TextView nonCritical = findViewById(R.id.numberNonCritical);
+        nonCritical.setText(this.getString(R.string.non_critical_issues_found, inspection.getNumNonCritical()));
+
+
+    }
+
+    private void setupHazard() {
+        TextView hazardLevel = findViewById(R.id.inspectionHazardLevel);
+        ImageView hazardIcon = findViewById(R.id.inspectionHazardIcon);
+        ConstraintLayout layout = findViewById(R.id.hazardDisplay);
+
+        hazardLevel.setText(this.getString(R.string.hazardLevelDisplay, inspection.getHazardRating()));
+
+        switch(inspection.getHazardRating()) {
+            case Inspection.HAZARD_RATING_LOW:
+                hazardIcon.setImageResource(R.drawable.icon_hazard_low);
+                layout.setBackgroundColor(ContextCompat.getColor(this, R.color.hazardLowInspection));
+                break;
+            case Inspection.HAZARD_RATING_MODERATE:
+                hazardIcon.setImageResource(R.drawable.icon_hazard_medium);
+                layout.setBackgroundColor(ContextCompat.getColor(this, R.color.hazardMediumInspection));
+                break;
+            case Inspection.HAZARD_RATING_HIGH:
+                hazardIcon.setImageResource(R.drawable.icon_hazard_high);
+                layout.setBackgroundColor(ContextCompat.getColor(this, R.color.hazardHighInspection));
+                break;
+        }
     }
 
     private void getExtras() {
