@@ -22,7 +22,6 @@ import ca.cmpt276.restauranthealthinspection.model.Inspection;
 public class InspectionDetails extends AppCompatActivity {
 
     public static final String INTENT_TAG_INSPECTION = "Inspection chosen";
-
     private Inspection inspection;
 
     public static Intent makeLaunchIntent(Context c, Inspection inspection) {
@@ -69,6 +68,7 @@ public class InspectionDetails extends AppCompatActivity {
 
     }
 
+    //set up the RecyclerView
     private void setupViolations() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViolationList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -80,6 +80,7 @@ public class InspectionDetails extends AppCompatActivity {
     }
 
     private void setupHazard() {
+        //set up hazard level depending on the hazard rating
         TextView hazardLevel = findViewById(R.id.inspectionHazardLevel);
         ImageView hazardIcon = findViewById(R.id.inspectionHazardIcon);
         ConstraintLayout layout = findViewById(R.id.hazardDisplay);
@@ -103,6 +104,7 @@ public class InspectionDetails extends AppCompatActivity {
     }
 
     private void getExtras() {
+        //get the extras from intent
         Intent i = getIntent();
         inspection = (Inspection) i.getSerializableExtra(INTENT_TAG_INSPECTION);
     }

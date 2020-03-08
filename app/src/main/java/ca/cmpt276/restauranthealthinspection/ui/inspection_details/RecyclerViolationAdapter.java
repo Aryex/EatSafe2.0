@@ -33,6 +33,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycler_violation, parent, false);
 
+        //find views and pass into holder
         TextView violationDescription = view.findViewById(R.id.violationDescription);
         ImageView violationIcon = view.findViewById(R.id.violationIcon);
         ConstraintLayout layout = view.findViewById(R.id.recyclerViolation);
@@ -69,13 +70,16 @@ class ViolationViewHolder extends RecyclerView.ViewHolder {
     void setViews(Violation violation) {
 
         if (!isCreated) {
-//            isCreated = true;
+            isCreated = true;
+
+            //get violation type and set image and description accordingly
             String codeCategory = "code_" + (violation.getNumber() / 100) * 100;
             int stringId = itemView.getResources().getIdentifier(codeCategory, "string", itemView.getContext().getPackageName());
             int imageId = itemView.getResources().getIdentifier(codeCategory, "drawable", itemView.getContext().getPackageName());
             violationDescription.setText(stringId);
             violationIcon.setImageResource(imageId);
 
+            //change background colour
             switch (violation.getCriticalStatus()) {
                 case Violation.NON_CRITICAL_STATUS:
                     layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardMediumInspection));
@@ -86,6 +90,7 @@ class ViolationViewHolder extends RecyclerView.ViewHolder {
                     break;
             }
 
+            //set onclick listener for each item on the list
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
