@@ -76,6 +76,7 @@ public class InspectionDetails extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
+
     }
 
     private void setupHazard() {

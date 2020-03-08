@@ -1,15 +1,13 @@
 package ca.cmpt276.restauranthealthinspection.ui.inspection_details;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Violation;
 
-public class RecyclerViolationAdapter extends RecyclerView.Adapter  {
+public class RecyclerViolationAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<Violation> violations;
@@ -59,7 +57,7 @@ class ViolationViewHolder extends RecyclerView.ViewHolder {
     private ImageView violationIcon;
     private ConstraintLayout layout;
 
-    private boolean flag = false;
+    private boolean isCreated = false;
 
     ViolationViewHolder(@NonNull View itemView, TextView violationDescription, ImageView violationIcon, ConstraintLayout layout) {
         super(itemView);
@@ -70,8 +68,8 @@ class ViolationViewHolder extends RecyclerView.ViewHolder {
 
     void setViews(Violation violation) {
 
-        if (!flag) {
-            flag = true;
+        if (!isCreated) {
+//            isCreated = true;
             String codeCategory = "code_" + (violation.getNumber() / 100) * 100;
             int stringId = itemView.getResources().getIdentifier(codeCategory, "string", itemView.getContext().getPackageName());
             int imageId = itemView.getResources().getIdentifier(codeCategory, "drawable", itemView.getContext().getPackageName());
@@ -87,6 +85,15 @@ class ViolationViewHolder extends RecyclerView.ViewHolder {
                     violationDescription.setTypeface(null, Typeface.BOLD);
                     break;
             }
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(itemView.getContext(), violation.getDescription(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
+
+
 }
