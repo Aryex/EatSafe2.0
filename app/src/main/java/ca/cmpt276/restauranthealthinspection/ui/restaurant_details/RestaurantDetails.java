@@ -50,8 +50,12 @@ public class RestaurantDetails extends AppCompatActivity {
         extractIntent();
         setupTextViews();
 
-        populateListView();
-        registerClickCallback();
+        if (inspectionList.size()!=0) {
+            TextView noInspectionText = (TextView) findViewById(R.id.noInspectionTV);
+            noInspectionText.setText("");
+            populateListView();
+            registerClickCallback();
+        }
     }
 
     private void extractIntent() {
