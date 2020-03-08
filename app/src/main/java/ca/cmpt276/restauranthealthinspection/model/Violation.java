@@ -17,6 +17,10 @@ public class Violation implements Serializable {
 
     private String repeatStatus;
 
+    public static final String CRITICAL_STATUS = "Critical";
+
+    public static final String NON_CRITICAL_STATUS = "Not Critical";
+
     Violation(int number, String criticalStatus, String description, String repeatStatus) {
         this.number = number;
         this.criticalStatus = criticalStatus;

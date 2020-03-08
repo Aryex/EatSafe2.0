@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 
@@ -50,6 +52,7 @@ public class InspectionDetails extends AppCompatActivity {
     private void populateViews() {
 
         setupHazard();
+        setupViolations();
 
         TextView date = findViewById(R.id.inspectionDate);
         date.setText(inspection.getFromCurrentDate());
@@ -64,6 +67,13 @@ public class InspectionDetails extends AppCompatActivity {
         nonCritical.setText(this.getString(R.string.non_critical_issues_found, inspection.getNumNonCritical()));
 
 
+    }
+
+    private void setupViolations() {
+        RecyclerView recyclerView = findViewById(R.id.recyclerViolationList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerViolationAdapter adapter = new RecyclerViolationAdapter(this, inspection.getViolations());
+        recyclerView.setAdapter(adapter);
     }
 
     private void setupHazard() {
