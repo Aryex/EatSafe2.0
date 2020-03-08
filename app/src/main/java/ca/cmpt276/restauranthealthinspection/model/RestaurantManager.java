@@ -15,6 +15,8 @@ import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 
+import static java.sql.Types.NULL;
+
 /**
  * Represents the manager for restaurants.
  *
@@ -79,5 +81,14 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
     public int restaurantCount() {
         return restaurants.size();
+    }
+
+    public int getRestaurantIndexByID(String trackingID) {
+        int size = restaurantCount();
+        for (int i=0; i<size; i++) {
+            if (this.get(i).getResTrackingNumber().equals(trackingID))
+                return i;
+        }
+        return NULL;
     }
 }

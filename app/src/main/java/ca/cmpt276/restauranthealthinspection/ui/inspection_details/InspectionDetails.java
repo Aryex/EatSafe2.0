@@ -10,15 +10,21 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
+
+import static ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails.INTENT_TAG_TRACKING_ID;
 
 public class InspectionDetails extends AppCompatActivity {
 
-    public static final String INTENT_TAG_RESTAURANT_NAME = "restaurantName";
+    public static final String INTENT_TAG_CALENDAR = "Calendar date";
 
-    public static Intent makeLaunchIntent(Context c, String restaurantName) {
+    public static Intent makeLaunchIntent(Context c, String trackingID, Calendar calendar) {
         Intent i = new Intent(c, InspectionDetails.class);
-        i.putExtra(INTENT_TAG_RESTAURANT_NAME, restaurantName);
+        i.putExtra(INTENT_TAG_TRACKING_ID, trackingID);
+        i.putExtra(INTENT_TAG_CALENDAR, calendar);
         return i;
     }
 
@@ -37,10 +43,10 @@ public class InspectionDetails extends AppCompatActivity {
         }
 
         Intent i = getIntent();
-        String restaurantName = i.getStringExtra(INTENT_TAG_RESTAURANT_NAME);
+        String trackingID = i.getStringExtra(INTENT_TAG_TRACKING_ID);
 
         TextView textView = findViewById(R.id.textViewInspectionDetails);
-        textView.setText(restaurantName);
+        textView.setText(trackingID);
     }
 
     @Override
