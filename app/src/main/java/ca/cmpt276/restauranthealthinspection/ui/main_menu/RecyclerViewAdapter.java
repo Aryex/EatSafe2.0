@@ -21,15 +21,11 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     public static final String TAG = "RecyclerViewAdapter";
-    /*private ArrayList<String> restaurantNames = new ArrayList<>();
-    private ArrayList<String> inspectionDates = new ArrayList<>();
-    private ArrayList<Integer> issuesCount = new ArrayList<>();
-    private ArrayList<MainActivity.HazardLevel> hazardLevels = new ArrayList<>();*/
 
     private Context context;
     private RestaurantManager restaurantManager;
 
-    public RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
+    RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
         this.restaurantManager = restaurantManager;
         this.context = context;
     }
@@ -63,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return restaurantManager.restaurantCount();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView hazardIcon = itemView.findViewById(R.id.hazardIcon);
         private final TextView textViewRestaurantName = itemView.findViewById(R.id.recyclerRestaurantName);
@@ -84,7 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textViewRestaurantName.setText(restaurant.getName());
             textViewAddress.setText(restaurant.getAddress());
 
-            if(restaurant.hasBeenInspected()){
+            if (restaurant.hasBeenInspected()) {
                 String latestInspectionDate = restaurant.getLatestInspectionDate();
                 textViewInspectionDate.setText(String.format(context.getString(R.string.last_inspected_on), latestInspectionDate));
 
@@ -93,7 +89,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 MainActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
                 setupWarningBar(hazardLevel);
-            }else{
+            } else {
                 textViewInspectionDate.setText(R.string.no_inspections_found);
                 textViewIssuesCount.setText(R.string.empty_string);
                 setupWarningBar(MainActivity.HazardLevel.LOW);
