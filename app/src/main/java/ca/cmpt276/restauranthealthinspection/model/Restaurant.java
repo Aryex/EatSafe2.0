@@ -1,13 +1,9 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
-import com.opencsv.bean.CsvBindByName;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MainActivity;
 
 /**
  * Represents each restaurant.
@@ -26,7 +22,6 @@ public class Restaurant implements Iterable<Inspection> {
 
     private double latitude;
 
-
     private double longitude;
 
     private List<Inspection> inspections = new ArrayList<>();
@@ -34,7 +29,6 @@ public class Restaurant implements Iterable<Inspection> {
     // ****************************************
     // Methods for List<Inspection> inspections
     // ****************************************
-
 
     //Package Private
     Restaurant(String resTrackingNumber, String name, String address, String city, String resType, double latitude, double longitude) {
@@ -102,19 +96,19 @@ public class Restaurant implements Iterable<Inspection> {
         return Collections.unmodifiableList(inspections);
     }
 
-    public boolean hasBeenInspected(){
+    public boolean hasBeenInspected() {
         return !inspections.isEmpty();
     }
 
-    public String getLatestInspectionDate(){
-        if(inspections.isEmpty()){
+    public String getLatestInspectionDate() {
+        if (inspections.isEmpty()) {
             return "";
         }
         return inspections.get(0).getFromCurrentDate();
     }
 
     public String getLatestInspectionTotalIssues() {
-        if(inspections.isEmpty()){
+        if (inspections.isEmpty()) {
             return "";
         }
         int totalIssues = inspections.get(0).getTotalIssues();
@@ -122,7 +116,7 @@ public class Restaurant implements Iterable<Inspection> {
     }
 
     public String getHazardLevel() {
-        if(inspections.isEmpty()){
+        if (inspections.isEmpty()) {
             return "";
         }
         return inspections.get(0).getHazardRating();
@@ -141,5 +135,4 @@ public class Restaurant implements Iterable<Inspection> {
                 ", inspections=" + inspections +
                 '}';
     }
-
 }

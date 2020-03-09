@@ -1,11 +1,11 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
-import com.opencsv.bean.CsvBindByPosition;
+import java.io.Serializable;
 
 /**
  * Represents the violations in an inspection.
  */
-public class Violation {
+public class Violation implements Serializable {
 
     private int number;
 
@@ -14,6 +14,10 @@ public class Violation {
     private String description;
 
     private String repeatStatus;
+
+    public static final String CRITICAL_STATUS = "Critical";
+
+    public static final String NON_CRITICAL_STATUS = "Not Critical";
 
     Violation(int number, String criticalStatus, String description, String repeatStatus) {
         this.number = number;
