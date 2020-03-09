@@ -1,5 +1,7 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import android.util.Log;
+
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
@@ -33,11 +35,12 @@ class Parser {
     // Parse ViolLump and add violations to inspection
     private static void parseViolationsInto(List<Inspection> inspections) {
         for (Inspection ins : inspections) {
+            Log.d("For inspection ", ins.toString());
+
             String violLump = ins.getViolLump();
             if (!violLump.isEmpty()) {
                 String[] violChunks = violLump.split("\\|");
                 for (String violChunk : violChunks) {
-                    //Log.d("violChunk", "violChunk: " + violChunk);
                     ins.add(parseVioChunk(violChunk));
                 }
             }
@@ -132,8 +135,9 @@ class Parser {
     // Parses the violations from data and create a violation object
     private static Violation parseVioChunk(String vioChunk) {
         String[] dataCols = vioChunk.split(",");
-        // Log.d("vioObt", vio.toString());
-        return new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
+        Violation vio = new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
+        Log.d("parseVioChunk(vioChunk)", vio.toString());
+        return vio;
     }
 
     // Converts the date string into a calendar object

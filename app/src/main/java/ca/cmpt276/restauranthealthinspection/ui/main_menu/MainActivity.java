@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.*;
@@ -40,9 +41,21 @@ public class MainActivity extends AppCompatActivity {
 
         restaurants = RestaurantManager.getInstance(this);
 
-        for (Restaurant r : restaurants) {
+        /*for (Restaurant r : restaurants) {
             Log.d("Main Activity", "onCreate: " + r);
+        }*/
+
+        Restaurant restaurant = restaurants.get(2);
+        Log.d("MainActivity", restaurant.getResTrackingNumber());
+        List<Inspection> inspections = restaurant.getInspections();
+
+        for(Inspection ins : inspections){
+            Log.d("MainActivity", "inspection: " + ins.toString());
+            for(Violation vio : ins){
+                Log.d("MainActivity", "violation: " + vio.toString());
+            }
         }
+
     }
 
     private void setupRecyclerView() {

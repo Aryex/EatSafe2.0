@@ -42,7 +42,6 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     // Package private
 
-
     public Inspection(String insTrackingNumber, Calendar calendar, String insType, int numCritical, int numNonCritical, String hazardRating, String violLump) {
         this.insTrackingNumber = insTrackingNumber;
         this.calendar = calendar;
@@ -148,7 +147,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
                 ", numCritical=" + numCritical +
                 ", numNonCritical=" + numNonCritical +
                 ", hazardRating='" + hazardRating + '\'' +
-                ", violations='" + violations + '\'' +
+                ", vioLump='" + violLump + '\'' +
                 '}';
     }
 

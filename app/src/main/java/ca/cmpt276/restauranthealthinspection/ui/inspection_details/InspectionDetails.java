@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -83,7 +84,7 @@ public class InspectionDetails extends AppCompatActivity {
         //set up hazard level depending on the hazard rating
         TextView hazardLevel = findViewById(R.id.inspectionHazardLevel);
         ImageView hazardIcon = findViewById(R.id.inspectionHazardIcon);
-        ConstraintLayout layout = findViewById(R.id.hazardDisplay);
+        LinearLayout layout = findViewById(R.id.hazardDisplay);
 
         hazardLevel.setText(this.getString(R.string.hazardLevelDisplay, inspection.getHazardRating()));
 
