@@ -94,7 +94,9 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(itemView.getContext(), violation.getDescription(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(itemView.getContext(),
+                                itemView.getContext().getString(R.string.violation_detail, violation.getNumber(), violation.getDescription()),
+                                Toast.LENGTH_LONG).show();
                     }
                 });
 

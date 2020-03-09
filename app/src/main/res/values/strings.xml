@@ -43,4 +43,5 @@
     <string name="code_400">Employee cleanliness</string>
     <string name="code_500">Inadequate employee training.</string>
     <string name="string_inspectionHazardLevel">Overall Hazard level: %1$s</string>
+    <string name="violation_detail">%1$d - %2$s</string>
 </resources>
