@@ -49,6 +49,7 @@
                 android:id="@+id/latitudeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:fontFamily="@font/roboto_light"
                 android:gravity="center"
                 android:text="@string/string_latitudeTV"
@@ -59,15 +60,17 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="@color/colorPrimaryDark" />
+                android:background="@color/colorPrimaryDark"
+                tools:ignore="InefficientWeight" />
 
             <TextView
                 android:id="@+id/longitudeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:fontFamily="@font/roboto_light"
                 android:gravity="center"
                 android:text="@string/string_longitudeTV"
