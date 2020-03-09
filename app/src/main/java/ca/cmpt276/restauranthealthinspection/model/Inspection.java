@@ -1,10 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
-;
 import android.util.Log;
-
-import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvCustomBindByName;
 
 import java.io.Serializable;
 import java.util.*;
@@ -42,7 +38,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     // Package private
 
-    public Inspection(String insTrackingNumber, Calendar calendar, String insType, int numCritical, int numNonCritical, String hazardRating, String violLump) {
+    Inspection(String insTrackingNumber, Calendar calendar, String insType, int numCritical, int numNonCritical, String hazardRating, String violLump) {
         this.insTrackingNumber = insTrackingNumber;
         this.calendar = calendar;
         this.insType = insType;
@@ -75,7 +71,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     // Calendar contains the data of the inspection
     // Year, Month, and Day is stored
-    public Calendar getCalendar() {
+    Calendar getCalendar() {
         return calendar;
     }
 
@@ -123,7 +119,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
         int inspectionYear = calendar.get(Calendar.YEAR);
         // Not accounting for leap years
         if (getDaysInBetween() <= 365) {
-            if(inspectionYear < currentYear){
+            if (inspectionYear < currentYear) {
                 return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
                         + " " + calendar.get(Calendar.DAY_OF_MONTH)
                         + ", " + calendar.get(Calendar.YEAR);
@@ -151,7 +147,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
                 '}';
     }
 
-    public int getTotalIssues() {
+    int getTotalIssues() {
         return numCritical + numNonCritical;
     }
 }
