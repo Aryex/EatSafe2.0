@@ -10,6 +10,7 @@
         android:id="@+id/recyclerViolationList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:background="#EDEAEA"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
@@ -41,13 +42,14 @@
             android:id="@+id/inspectionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="15dp"
             android:text="@string/inspectionTypeDisplay"
             android:textAlignment="center"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/inspectionDate"
+            app:layout_constraintStart_toStartOf="@+id/inspectionDate"
+            app:layout_constraintTop_toBottomOf="@+id/inspectionDate" />
+
         <TextView
             android:id="@+id/numberCritical"
             android:layout_width="wrap_content"
@@ -55,6 +57,7 @@
             android:layout_marginTop="7dp"
             android:text="@string/critical_issues_found"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/inspectionType"
             app:layout_constraintStart_toStartOf="@+id/inspectionType"
             app:layout_constraintTop_toBottomOf="@+id/inspectionType" />
 
@@ -63,8 +66,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/non_critical_issues_found"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/numberCritical"
             app:layout_constraintStart_toStartOf="@+id/numberCritical"
             app:layout_constraintTop_toBottomOf="@+id/numberCritical" />
 
