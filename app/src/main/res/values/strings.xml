@@ -7,10 +7,10 @@
     <string name="description">description</string>
     <string name="restaurant_details_title">Restaurant Details</string>
     <string name="inspection_details_title">Inspection Details</string>
-    <string name="hazard_level">- Hazard level: %1$s</string>
-    <string name="crit_issues">- Critical issues found: %1$d</string>
-    <string name="non_crit_issues">- Non-critical issues found: %1$d</string>
-    <string name="date">- Inspection date: %1$s</string>
+    <string name="hazard_level">Hazard level: %1$s</string>
+    <string name="crit_issues">Critical issues found: %1$d</string>
+    <string name="non_crit_issues">Non-critical issues found: %1$d</string>
+    <string name="date">Inspection date: %1$s</string>
     <string name="no_inspection">No inspections found</string>
     <string name="inspectionDateDisplay">Date: %1$s</string>
     <string name="inspectionTypeDisplay">Inspection type: %1$s</string>
@@ -37,11 +37,11 @@
     <string name="string_latitudeTV">latitude</string>
     <string name="string_addressTV">address</string>
     <string name="string_resNameTV">restaurant</string>
-    <string name="code_100">Restaurant operational/permit issues.</string>
+    <string name="code_100">Restaurant operational/permit issues</string>
     <string name="code_200">Food safety issues</string>
-    <string name="code_300">Equipments cleanliness</string>
+    <string name="code_300">Equipment cleanliness</string>
     <string name="code_400">Employee cleanliness</string>
-    <string name="code_500">Inadequate employee training.</string>
+    <string name="code_500">Inadequate employee training</string>
     <string name="string_inspectionHazardLevel">Overall Hazard level: %1$s</string>
     <string name="violation_detail">%1$d - %2$s</string>
 </resources>

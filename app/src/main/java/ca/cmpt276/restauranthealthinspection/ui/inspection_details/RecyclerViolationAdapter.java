@@ -105,6 +105,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
         //set up hazard level depending on the hazard rating
 
             description.setText(layout.getContext().getString(R.string.hazardLevelDisplay, hazardRating));
+            description.setTypeface(null, Typeface.BOLD);
 
             switch(inspection.getHazardRating()) {
                 case Inspection.HAZARD_RATING_LOW:
