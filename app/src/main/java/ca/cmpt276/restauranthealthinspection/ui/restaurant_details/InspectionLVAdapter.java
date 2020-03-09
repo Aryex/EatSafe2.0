@@ -13,6 +13,9 @@ import java.util.List;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 
+/*
+    Adapter for Inspection ListView
+ */
 public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
     private List<Inspection> inspectionList;
     private Context context;
@@ -36,6 +39,19 @@ public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
         return R.drawable.icon_hazard_low;
     }
 
+    private int getBackgroundColor(String hazardLevel) {
+        switch (hazardLevel) {
+            case "Low":
+                return context.getResources().getColor(R.color.hazardLowInspection);
+            case "Moderate":
+                return context.getResources().getColor(R.color.hazardMediumInspection);
+            case "High":
+                return context.getResources().getColor(R.color.hazardHighInspection);
+            default:
+        }
+        return context.getResources().getColor(R.color.hazardLowInspection);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Make sure we have a view to work with (may have been given null)
@@ -45,6 +61,7 @@ public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
         }
 
         Inspection currentInspection = inspectionList.get(position);
+        itemView.setBackgroundColor(getBackgroundColor(currentInspection.getHazardRating()));
 
         // Fill the view
         ImageView imageView = (ImageView) itemView.findViewById(R.id.item_icon);

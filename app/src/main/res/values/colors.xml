@@ -9,4 +9,7 @@
     <color name="hazardLowDark">#007e33</color>
     <color name="hazardMediumDark">#ff8800</color>
     <color name="hazardHighDark">#cc0000</color>
+    <color name="hazardLowInspection">#bfffbd</color>
+    <color name="hazardMediumInspection">#ffffdc</color>
+    <color name="hazardHighInspection">#ffb7b2</color>
 </resources>
