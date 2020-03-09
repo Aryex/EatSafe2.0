@@ -94,7 +94,7 @@ class ViolationViewHolder extends RecyclerView.ViewHolder {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(itemView.getContext(), violation.getDescription(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(itemView.getContext(), violation.getDescription(), Toast.LENGTH_LONG).show();
                 }
             });
         }
