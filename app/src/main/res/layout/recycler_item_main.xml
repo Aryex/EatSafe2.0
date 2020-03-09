@@ -35,13 +35,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
                         android:id="@+id/hazardIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_margin="5dp"
+                        android:contentDescription="@string/desc_hazard_icon"
                         card_view:srcCompat="@drawable/icon_hazard_low"
                         tools:srcCompat="@drawable/icon_hazard_low" />
 
@@ -67,6 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
+                android:contentDescription="@string/desc_recycler_thumbnail"
                 card_view:srcCompat="@drawable/microwave" />
 
             <TextView

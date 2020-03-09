@@ -44,4 +44,6 @@
     <string name="code_500">Inadequate employee training</string>
     <string name="string_inspectionHazardLevel">Overall Hazard level: %1$s</string>
     <string name="violation_detail">%1$d - %2$s</string>
+    <string name="desc_recycler_thumbnail">Recycler Thumbnail</string>
+    <string name="desc_hazard_icon">Hazard Icon</string>
 </resources>
