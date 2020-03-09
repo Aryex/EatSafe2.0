@@ -50,8 +50,6 @@ public class InspectionDetails extends AppCompatActivity {
     }
 
     private void populateViews() {
-
-        setupHazard();
         setupViolations();
 
         TextView date = findViewById(R.id.inspectionDate);
@@ -73,35 +71,11 @@ public class InspectionDetails extends AppCompatActivity {
     private void setupViolations() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViolationList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerViolationAdapter adapter = new RecyclerViolationAdapter(this, inspection.getViolations());
+        RecyclerViolationAdapter adapter = new RecyclerViolationAdapter(this, inspection);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-    }
-
-    private void setupHazard() {
-        //set up hazard level depending on the hazard rating
-        TextView hazardLevel = findViewById(R.id.inspectionHazardLevel);
-        ImageView hazardIcon = findViewById(R.id.inspectionHazardIcon);
-        LinearLayout layout = findViewById(R.id.hazardDisplay);
-
-        hazardLevel.setText(this.getString(R.string.hazardLevelDisplay, inspection.getHazardRating()));
-
-        switch(inspection.getHazardRating()) {
-            case Inspection.HAZARD_RATING_LOW:
-                hazardIcon.setImageResource(R.drawable.icon_hazard_low);
-                layout.setBackgroundColor(ContextCompat.getColor(this, R.color.hazardLowInspection));
-                break;
-            case Inspection.HAZARD_RATING_MODERATE:
-                hazardIcon.setImageResource(R.drawable.icon_hazard_medium);
-                layout.setBackgroundColor(ContextCompat.getColor(this, R.color.hazardMediumInspection));
-                break;
-            case Inspection.HAZARD_RATING_HIGH:
-                hazardIcon.setImageResource(R.drawable.icon_hazard_high);
-                layout.setBackgroundColor(ContextCompat.getColor(this, R.color.hazardHighInspection));
-                break;
-        }
     }
 
     private void getExtras() {

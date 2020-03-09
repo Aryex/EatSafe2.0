@@ -6,44 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.inspection_details.InspectionDetails">
 
-    <LinearLayout
-        android:id="@+id/hazardDisplay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
-
-        <ImageView
-            android:id="@+id/inspectionHazardIcon"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="50dp"
-            android:adjustViewBounds="true"
-            app:srcCompat="@drawable/icon_hazard_high" />
-
-        <TextView
-            android:id="@+id/inspectionHazardLevel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="Overall Hazard level: %1$s"
-            android:textAlignment="textStart"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViolationList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#EDEAEA"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hazardDisplay" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_bias="0.05" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

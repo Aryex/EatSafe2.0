@@ -2,34 +2,29 @@ package ca.cmpt276.restauranthealthinspection.ui.inspection_details;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Violation;
-
-import static ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter.TAG;
 
 public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViolationAdapter.ViolationViewHolder> {
 
     private Context context;
-    private List<Violation> violations;
+    private Inspection inspection;
 
-    RecyclerViolationAdapter(Context context, List<Violation> violations) {
+    RecyclerViolationAdapter(Context context, Inspection inspection) {
         this.context = context;
-        this.violations = violations;
+        this.inspection = inspection;
     }
 
     @NonNull
@@ -47,26 +42,30 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
 
     @Override
     public void onBindViewHolder(@NonNull ViolationViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder position: " + position);
-        Violation violation = violations.get(position);
-        holder.setViews(violation);
+        if (position == 0) {
+            holder.setHazardLevel(inspection.getHazardRating());
+        }
+        else {
+            Violation violation = inspection.get(position - 1);
+            holder.setViews(violation);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return violations.size();
+        return inspection.getViolations().size() + 1;
     }
 
     public class ViolationViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView violationDescription;
-        private ImageView violationIcon;
+        private TextView description;
+        private ImageView icon;
         private ConstraintLayout layout;
 
-        ViolationViewHolder(@NonNull View itemView, TextView violationDescription, ImageView violationIcon, ConstraintLayout layout) {
+        ViolationViewHolder(@NonNull View itemView, TextView description, ImageView icon, ConstraintLayout layout) {
             super(itemView);
-            this.violationDescription = violationDescription;
-            this.violationIcon = violationIcon;
+            this.description = description;
+            this.icon = icon;
             this.layout = layout;
         }
 
@@ -76,8 +75,8 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
                 String codeCategory = "code_" + (violation.getNumber() / 100) * 100;
                 int stringId = itemView.getResources().getIdentifier(codeCategory, "string", itemView.getContext().getPackageName());
                 int imageId = itemView.getResources().getIdentifier(codeCategory, "drawable", itemView.getContext().getPackageName());
-                violationDescription.setText(stringId);
-                violationIcon.setImageResource(imageId);
+                description.setText(stringId);
+                icon.setImageResource(imageId);
 
                 //change background colour
                 switch (violation.getCriticalStatus()) {
@@ -86,7 +85,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
                         break;
                     case Violation.CRITICAL_STATUS:
                         layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardHighInspection));
-                        violationDescription.setTypeface(null, Typeface.BOLD);
+                        description.setTypeface(null, Typeface.BOLD);
                         break;
                 }
 
@@ -100,6 +99,26 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
 
         }
 
+        void setHazardLevel(String hazardRating) {
+        //set up hazard level depending on the hazard rating
+
+            description.setText(layout.getContext().getString(R.string.hazardLevelDisplay, hazardRating));
+
+            switch(inspection.getHazardRating()) {
+                case Inspection.HAZARD_RATING_LOW:
+                    icon.setImageResource(R.drawable.icon_hazard_low);
+                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardLowInspection));
+                    break;
+                case Inspection.HAZARD_RATING_MODERATE:
+                    icon.setImageResource(R.drawable.icon_hazard_medium);
+                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardMediumInspection));
+                    break;
+                case Inspection.HAZARD_RATING_HIGH:
+                    icon.setImageResource(R.drawable.icon_hazard_high);
+                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardHighInspection));
+                    break;
+            }
+        }
     }
 
 }
