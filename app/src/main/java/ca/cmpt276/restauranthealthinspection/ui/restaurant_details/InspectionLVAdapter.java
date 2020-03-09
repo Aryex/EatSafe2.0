@@ -13,8 +13,8 @@ import java.util.List;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 
-/*
-    Adapter for Inspection ListView
+/**
+ *  Adapter for Inspection ListView
  */
 public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
     private List<Inspection> inspectionList;
