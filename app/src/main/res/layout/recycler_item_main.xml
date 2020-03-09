@@ -16,7 +16,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         card_view:cardElevation="3dp"
-        card_view:contentPadding="10dp"
+card_view:contentPadding="10dp"
         android:foreground="?android:attr/selectableItemBackground">
 
         <LinearLayout
@@ -28,7 +28,7 @@
                 android:id="@+id/warningBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardBackgroundColor="#007e33"
+                card_view:cardBackgroundColor="@color/hazardLowDark"
                >
 
                 <LinearLayout
@@ -41,7 +41,6 @@
                         android:id="@+id/hazardIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_margin="5dp"
                         card_view:srcCompat="@drawable/icon_hazard_low"
                         tools:srcCompat="@drawable/icon_hazard_low" />
 

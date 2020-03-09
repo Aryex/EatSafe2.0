@@ -19,7 +19,7 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 /*
-* Adapter for Main Menu's recycler view
+* RecyclerViewAdapter defines how Recycler View in main menu will setup each Card view.
 */
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> {
@@ -63,6 +63,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return restaurantManager.restaurantCount();
     }
 
+    /*
+    * RestaurantCardViewHolder setup restaurant cards in which will be added
+    * to Recycler View.
+    */
     class RestaurantCardViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView hazardIcon = itemView.findViewById(R.id.hazardIcon);
