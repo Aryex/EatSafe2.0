@@ -18,8 +18,8 @@ import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
-/*
-* RecyclerViewAdapter defines how Recycler View in main menu will setup each Card view.
+/**
+* RecyclerViewAdapter defines how RecyclerView in main menu will setup each Card view.
 */
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> {
@@ -63,9 +63,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return restaurantManager.restaurantCount();
     }
 
-    /*
-    * RestaurantCardViewHolder setup restaurant cards in which will be added
-    * to Recycler View.
+    /**
+    * RestaurantCardViewHolder setup restaurant cards to be added to Recycler View.
     */
     class RestaurantCardViewHolder extends RecyclerView.ViewHolder {
 
