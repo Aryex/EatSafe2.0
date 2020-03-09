@@ -49,11 +49,12 @@
                         android:id="@+id/textViewHazardLevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_margin="5dp"
                         android:background="@android:color/transparent"
+                        android:fontFamily="@font/roboto_light"
                         android:text="@string/hazard_level_low"
                         android:textAlignment="center"
-                        android:layout_gravity="center"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -73,21 +74,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/roboto_light"
                 android:text="@string/name"
-                android:textSize="28sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/recyclerAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/roboto_light"
                 android:text="@string/default_address"
                 android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/recyclerInspectionDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/roboto_light"
                 android:text="@string/default_date"
                 android:textSize="18sp" />
 
@@ -96,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/roboto_light"
                 android:text="@string/default_num_issues"
                 android:textSize="18sp" />
 

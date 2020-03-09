@@ -22,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_light"
             android:gravity="center"
             android:text="@string/string_resNameTV"
             android:textSize="24sp"
@@ -31,9 +32,11 @@
             android:id="@+id/addressTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/roboto_light"
             android:text="@string/string_addressTV"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -46,15 +49,17 @@
                 android:id="@+id/latitudeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_light"
                 android:gravity="center"
                 android:text="@string/string_latitudeTV"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@color/colorPrimaryDark" />
@@ -63,9 +68,10 @@
                 android:id="@+id/longitudeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_light"
                 android:gravity="center"
                 android:text="@string/string_longitudeTV"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -95,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="10dp"
             android:background="#EDEAEA">
 
@@ -106,6 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/roboto_light"
             android:text="@string/no_inspections_found" />
 
     </FrameLayout>

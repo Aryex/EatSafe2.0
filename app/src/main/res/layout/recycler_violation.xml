@@ -25,12 +25,13 @@
 
     <TextView
         android:id="@+id/violationDescription"
-        android:clickable="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
         android:layout_weight="1"
+        android:clickable="false"
+        android:fontFamily="@font/roboto_light"
         android:scrollHorizontally="false"
         android:text="@string/hazardLevelDisplay"
         android:textSize="15sp"

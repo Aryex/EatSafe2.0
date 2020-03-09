@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
@@ -89,7 +90,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
                         break;
                     case Violation.CRITICAL_STATUS:
                         layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardHighInspection));
-                        description.setTypeface(null, Typeface.BOLD);
+                        description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
                         break;
                 }
 
@@ -109,7 +110,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
         //set up hazard level depending on the hazard rating
 
             description.setText(layout.getContext().getString(R.string.hazardLevelDisplay, hazardRating));
-            description.setTypeface(null, Typeface.BOLD);
+            description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
 
             switch(inspection.getHazardRating()) {
                 case Inspection.HAZARD_RATING_LOW:
