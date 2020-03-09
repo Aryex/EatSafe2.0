@@ -20,6 +20,9 @@ import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.inspection_details.InspectionDetails;
 
+/*
+    Display details of single restaurant
+ */
 public class RestaurantDetails extends AppCompatActivity {
 
     public static final String INTENT_TAG_TRACKING_ID = "tracking ID";
