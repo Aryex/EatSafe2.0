@@ -17,6 +17,10 @@ import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Violation;
 
+/**
+ * Adapter for the list of violations
+ */
+
 public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViolationAdapter.ViolationViewHolder> {
 
     private Context context;
