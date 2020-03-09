@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.opencsv.exceptions.CsvValidationException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -23,7 +22,9 @@ import static java.sql.Types.NULL;
  * Contains a singleton to store and retain restaurants.
  */
 public class RestaurantManager implements Iterable<Restaurant> {
+
     private static List<Restaurant> restaurants = new ArrayList<>();
+
     // **********
     // Singleton
     // **********
@@ -50,7 +51,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
     }
 
     private RestaurantManager() {
-
+        // Nothing, ensures singleton usage.
     }
 
     // Package private
@@ -85,7 +86,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
     public int getRestaurantIndexByID(String trackingID) {
         int size = restaurantCount();
-        for (int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             if (this.get(i).getResTrackingNumber().equals(trackingID))
                 return i;
         }
