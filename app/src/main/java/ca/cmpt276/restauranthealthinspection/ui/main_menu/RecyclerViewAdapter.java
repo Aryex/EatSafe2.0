@@ -18,7 +18,11 @@ import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+/**
+* RecyclerViewAdapter defines how RecyclerView in main menu will setup each Card view.
+*/
+
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> {
 
     public static final String TAG = "RecyclerViewAdapter";
 
@@ -32,17 +36,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RestaurantCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_main, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        RestaurantCardViewHolder restaurantCardViewHolder = new RestaurantCardViewHolder(view);
+        return restaurantCardViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RestaurantCardViewHolder holder, int position) {
         final int fPosition = position;
         Restaurant restaurant = restaurantManager.get(position);
-        holder.setupViewTexts(restaurant);
+        holder.setupCardView(restaurant);
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +63,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return restaurantManager.restaurantCount();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    /**
+    * RestaurantCardViewHolder setup restaurant cards to be added to Recycler View.
+    */
+    class RestaurantCardViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView hazardIcon = itemView.findViewById(R.id.hazardIcon);
         private final TextView textViewRestaurantName = itemView.findViewById(R.id.recyclerRestaurantName);
@@ -71,11 +78,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final RelativeLayout parentLayout = itemView.findViewById(R.id.recyclerItemParent);
         private final CardView warningBar = itemView.findViewById(R.id.warningBar);
 
-        private ViewHolder(@NonNull View itemView) {
+        private RestaurantCardViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
-        private void setupViewTexts(Restaurant restaurant) {
+        private void setupCardView(Restaurant restaurant) {
 
             textViewRestaurantName.setText(restaurant.getName());
             textViewAddress.setText(restaurant.getAddress());
@@ -90,6 +97,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 MainActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
                 setupWarningBar(hazardLevel);
             } else {
+                //default setup for restaurant with no inspections.
                 textViewInspectionDate.setText(R.string.no_inspections_found);
                 textViewIssuesCount.setText(R.string.empty_string);
                 setupWarningBar(MainActivity.HazardLevel.LOW);
