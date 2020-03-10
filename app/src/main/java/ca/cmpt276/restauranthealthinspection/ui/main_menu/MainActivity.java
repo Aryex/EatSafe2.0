@@ -41,14 +41,6 @@ public class MainActivity extends AppCompatActivity {
         Restaurant restaurant = restaurants.get(2);
         Log.d("MainActivity", restaurant.getResTrackingNumber());
         List<Inspection> inspections = restaurant.getInspections();
-
-        for (Inspection ins : inspections) {
-            Log.d("MainActivity", "inspection: " + ins.toString());
-            for (Violation vio : ins) {
-                Log.d("MainActivity", "violation: " + vio.toString());
-            }
-        }
-
     }
 
     private void setupRecyclerView() {
