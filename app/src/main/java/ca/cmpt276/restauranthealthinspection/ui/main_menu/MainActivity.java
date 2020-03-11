@@ -17,7 +17,6 @@ import ca.cmpt276.restauranthealthinspection.model.*;
  * Main menu display a list of restaurants and their appropriate information.
  * It will also initializes the model.
  */
-
 public class MainActivity extends AppCompatActivity {
 
     private RestaurantManager restaurants;

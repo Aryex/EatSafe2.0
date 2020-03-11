@@ -22,7 +22,8 @@ import java.util.Locale;
  */
 class Parser {
     // Parse data from CSV files
-    static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader, InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
+    static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader,
+                          InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
 
         List<Inspection> inspections = parseInspections(inspectionDataReader);
         List<Restaurant> restaurants = parseRestaurants(restaurantDataReader);
@@ -113,7 +114,6 @@ class Parser {
                 String hazardRating = dataCols[5];
                 String vioLump = dataCols[6];
 
-                //Log.i("TAG", "parseInspections: " + inspectionCols[3]);
                 result.add(new Inspection(
                         inspectionTrackingNum,
                         calendar,

@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Violation;
@@ -21,7 +22,6 @@ import ca.cmpt276.restauranthealthinspection.model.Violation;
 /**
  * Adapter for the list of violations
  */
-
 public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViolationAdapter.ViolationViewHolder> {
 
     private Context context;
@@ -49,8 +49,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
     public void onBindViewHolder(@NonNull ViolationViewHolder holder, int position) {
         if (position == 0) {
             holder.setHazardLevel(inspection.getHazardRating());
-        }
-        else {
+        } else {
             Violation violation = inspection.get(position - 1);
             holder.setViews(violation);
         }
@@ -61,7 +60,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
         return inspection.getViolations().size() + 1;
     }
 
-    public class ViolationViewHolder extends RecyclerView.ViewHolder {
+    class ViolationViewHolder extends RecyclerView.ViewHolder {
 
         private TextView description;
         private ImageView icon;
@@ -76,43 +75,50 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
 
         private void setViews(Violation violation) {
 
-                //get violation type and set image and description accordingly
-                String codeCategory = "code_" + (violation.getNumber() / 100) * 100;
-                int stringId = itemView.getResources().getIdentifier(codeCategory, "string", itemView.getContext().getPackageName());
-                int imageId = itemView.getResources().getIdentifier(codeCategory, "drawable", itemView.getContext().getPackageName());
-                description.setText(stringId);
-                icon.setImageResource(imageId);
+            //get violation type and set image and description accordingly
+            String codeCategory = "code_" + (violation.getNumber() / 100) * 100;
 
-                //change background colour
-                switch (violation.getCriticalStatus()) {
-                    case Violation.NON_CRITICAL_STATUS:
-                        layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardMediumInspection));
-                        break;
-                    case Violation.CRITICAL_STATUS:
-                        layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardHighInspection));
-                        description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
-                        break;
+            int stringId = itemView
+                    .getResources()
+                    .getIdentifier(codeCategory, "string", itemView.getContext().getPackageName());
+
+            int imageId = itemView
+                    .getResources()
+                    .getIdentifier(codeCategory, "drawable", itemView.getContext().getPackageName());
+
+            description.setText(stringId);
+            icon.setImageResource(imageId);
+
+            //change background colour
+            switch (violation.getCriticalStatus()) {
+                case Violation.NON_CRITICAL_STATUS:
+                    layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardMediumInspection));
+                    break;
+                case Violation.CRITICAL_STATUS:
+                    layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.hazardHighInspection));
+                    description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
+                    break;
+            }
+
+            //set onclick listener for each item on the list
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(itemView.getContext(),
+                            itemView.getContext().getString(R.string.violation_detail, violation.getNumber(), violation.getDescription()),
+                            Toast.LENGTH_LONG).show();
                 }
-
-                //set onclick listener for each item on the list
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(itemView.getContext(),
-                                itemView.getContext().getString(R.string.violation_detail, violation.getNumber(), violation.getDescription()),
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
+            });
 
         }
 
         void setHazardLevel(String hazardRating) {
-        //set up hazard level depending on the hazard rating
+            //set up hazard level depending on the hazard rating
 
             description.setText(layout.getContext().getString(R.string.hazardLevelDisplay, hazardRating));
             description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
 
-            switch(inspection.getHazardRating()) {
+            switch (inspection.getHazardRating()) {
                 case Inspection.HAZARD_RATING_LOW:
                     icon.setImageResource(R.drawable.icon_hazard_low);
                     layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardLowInspection));
@@ -128,6 +134,4 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
             }
         }
     }
-
 }
-

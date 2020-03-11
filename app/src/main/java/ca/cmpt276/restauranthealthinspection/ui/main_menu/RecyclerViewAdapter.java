@@ -19,12 +19,9 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 /**
-* RecyclerViewAdapter defines how RecyclerView in main menu will setup each Card view.
-*/
-
+ * RecyclerViewAdapter defines how RecyclerView in main menu will setup each Card view.
+ */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> {
-
-    public static final String TAG = "RecyclerViewAdapter";
 
     private Context context;
     private RestaurantManager restaurantManager;
@@ -37,14 +34,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public RestaurantCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_main, parent, false);
-        RestaurantCardViewHolder restaurantCardViewHolder = new RestaurantCardViewHolder(view);
-        return restaurantCardViewHolder;
+        View view = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.recycler_item_main, parent, false);
+        return new RestaurantCardViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantCardViewHolder holder, int position) {
-        final int fPosition = position;
         Restaurant restaurant = restaurantManager.get(position);
         holder.setupCardView(restaurant);
 
@@ -64,8 +61,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     /**
-    * RestaurantCardViewHolder setup restaurant cards to be added to Recycler View.
-    */
+     * RestaurantCardViewHolder setup restaurant cards to be added to Recycler View.
+     */
     class RestaurantCardViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView hazardIcon = itemView.findViewById(R.id.hazardIcon);

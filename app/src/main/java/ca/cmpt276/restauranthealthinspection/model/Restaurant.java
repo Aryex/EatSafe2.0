@@ -31,7 +31,8 @@ public class Restaurant implements Iterable<Inspection> {
     // ****************************************
 
     //Package Private
-    Restaurant(String resTrackingNumber, String name, String address, String city, String resType, double latitude, double longitude) {
+    Restaurant(String resTrackingNumber, String name, String address,
+               String city, String resType, double latitude, double longitude) {
         this.resTrackingNumber = resTrackingNumber;
         this.name = name;
         this.address = address;
