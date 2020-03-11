@@ -12,7 +12,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.util.Calendar;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
@@ -21,7 +20,7 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.inspection_details.InspectionDetails;
 
 /**
- *  Display details of single restaurant
+ * Display details of single restaurant
  */
 public class RestaurantDetails extends AppCompatActivity {
 
@@ -54,7 +53,7 @@ public class RestaurantDetails extends AppCompatActivity {
         setupTextViews();
 
         if (inspectionList.size() != 0) {
-            TextView noInspectionText = (TextView) findViewById(R.id.noInspectionTV);
+            TextView noInspectionText = findViewById(R.id.noInspectionTV);
             noInspectionText.setText(getString(R.string.empty_string));
             populateListView();
             registerClickCallback();
@@ -86,14 +85,13 @@ public class RestaurantDetails extends AppCompatActivity {
 
     private void populateListView() {
         ArrayAdapter<Inspection> adapter = new InspectionLVAdapter(this, inspectionList);
-        ListView list = (ListView) findViewById(R.id.inspectionListView);
+        ListView list = findViewById(R.id.inspectionListView);
         list.setAdapter(adapter);
     }
 
     private void registerClickCallback() {
-        ListView list = (ListView) findViewById(R.id.inspectionListView);
+        ListView list = findViewById(R.id.inspectionListView);
         list.setOnItemClickListener((parent, viewClicked, position, id) -> {
-
             Inspection clickedInspection = inspectionList.get(position);
 
             Intent intent = InspectionDetails.makeLaunchIntent(this, clickedInspection);

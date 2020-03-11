@@ -11,13 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 
 /**
  * Display details of a single Inspection
  */
-
 public class InspectionDetails extends AppCompatActivity {
 
     public static final String INTENT_TAG_INSPECTION = "Inspection chosen";
@@ -61,19 +61,18 @@ public class InspectionDetails extends AppCompatActivity {
 
         TextView nonCritical = findViewById(R.id.numberNonCritical);
         nonCritical.setText(this.getString(R.string.non_critical_issues_found, inspection.getNumNonCritical()));
-
-
     }
 
     //set up the RecyclerView
     private void setupViolations() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViolationList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         RecyclerViolationAdapter adapter = new RecyclerViolationAdapter(this, inspection);
         recyclerView.setAdapter(adapter);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-
     }
 
     private void getExtras() {

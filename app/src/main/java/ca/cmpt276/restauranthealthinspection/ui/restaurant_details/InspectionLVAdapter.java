@@ -14,7 +14,7 @@ import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 
 /**
- *  Adapter for Inspection ListView
+ * Adapter for Inspection ListView
  */
 public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
     private List<Inspection> inspectionList;
@@ -64,23 +64,23 @@ public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
         itemView.setBackgroundColor(getBackgroundColor(currentInspection.getHazardRating()));
 
         // Fill the view
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.item_icon);
+        ImageView imageView = itemView.findViewById(R.id.item_icon);
         imageView.setImageResource(getIconID(currentInspection.getHazardRating()));
 
         // Hazard level:
-        TextView levelText = (TextView) itemView.findViewById(R.id.levelTV);
+        TextView levelText = itemView.findViewById(R.id.levelTV);
         levelText.setText(context.getString(R.string.hazard_level, currentInspection.getHazardRating()));
 
         // Critical issues found:
-        TextView critText = (TextView) itemView.findViewById(R.id.item_crit);
+        TextView critText = itemView.findViewById(R.id.item_crit);
         critText.setText(context.getString(R.string.crit_issues, currentInspection.getNumCritical()));
 
         // Non-critical issues found:
-        TextView nonCritText = (TextView) itemView.findViewById(R.id.item_noncrit);
+        TextView nonCritText = itemView.findViewById(R.id.item_noncrit);
         nonCritText.setText(context.getString(R.string.non_crit_issues, currentInspection.getNumNonCritical()));
 
         // Date:
-        TextView dateText = (TextView) itemView.findViewById(R.id.item_date);
+        TextView dateText = itemView.findViewById(R.id.item_date);
         dateText.setText(context.getString(R.string.date, currentInspection.getFromCurrentDate()));
 
         return itemView;
