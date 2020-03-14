@@ -46,4 +46,8 @@
     <string name="violation_detail">%1$d - %2$s</string>
     <string name="desc_recycler_thumbnail">Recycler Thumbnail</string>
     <string name="desc_hazard_icon">Hazard Icon</string>
+    <string name="update_avaiable">Update available</string>
+    <string name="update_message">An updated version of the inspection data is available. Do you want to update now?</string>
+    <string name="dialog_button_update">Update</string>
+    <string name="dialog_button_cancel">Cancel</string>
 </resources>
