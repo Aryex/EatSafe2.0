@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.*;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterDialogFragment;
 
 /**
  * Main menu display a list of restaurants and their appropriate information.
@@ -28,9 +30,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        showUpdaterDialog();
+
         setupModel();
 
         setupRecyclerView();
+    }
+
+    public void showUpdaterDialog() {
+        DialogFragment updaterDialog = new UpdaterDialogFragment();
+        updaterDialog.show(getSupportFragmentManager(), "Updater Dialog");
     }
 
     private void setupModel() {
