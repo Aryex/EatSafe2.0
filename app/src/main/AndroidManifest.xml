@@ -15,15 +15,14 @@
         <activity
             android:name=".ui.inspection_details.InspectionDetails"
             android:label="@string/inspection_details_title"
-            android:parentActivityName=".ui.restaurant_details.RestaurantDetails"
-            android:launchMode="singleTop"/>
-
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.restaurant_details.RestaurantDetails" />
 
         <activity
             android:name=".ui.restaurant_details.RestaurantDetails"
             android:label="@string/restaurant_details_title"
-            android:parentActivityName=".ui.main_menu.MainActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.main_menu.MainActivity" />
 
         <activity android:name=".ui.main_menu.MainActivity">
             <intent-filter>
