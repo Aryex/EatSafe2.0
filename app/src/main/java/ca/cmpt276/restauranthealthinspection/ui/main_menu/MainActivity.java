@@ -57,4 +57,15 @@ public class MainActivity extends AppCompatActivity {
     public enum HazardLevel {
         LOW, MEDIUM, HIGH
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }
