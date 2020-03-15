@@ -111,8 +111,8 @@ class Parser {
                 String inspectionType = dataCols[2];
                 int numCritical = Integer.parseInt(dataCols[3]);
                 int numNonCritical = Integer.parseInt(dataCols[4]);
-                String hazardRating = dataCols[5];
-                String vioLump = dataCols[6];
+                String hazardRating = dataCols[6];
+                String vioLump = dataCols[5];
 
                 result.add(new Inspection(
                         inspectionTrackingNum,
