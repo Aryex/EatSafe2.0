@@ -67,7 +67,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
         // Uses lambda expression instead of anon class for readability
         //noinspection ComparatorCombinators
         restaurants.sort((Restaurant r1, Restaurant r2)
-                -> r1.getName().compareTo(r2.getName())
+                -> (r1.getName()).compareToIgnoreCase(r2.getName())
         );
     }
 
