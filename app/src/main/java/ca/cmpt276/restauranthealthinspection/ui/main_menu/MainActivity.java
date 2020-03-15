@@ -1,5 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -19,7 +20,7 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterDialogFr
  * Main menu display a list of restaurants and their appropriate information.
  * It will also initializes the model.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UpdaterDialogFragment.UpdaterDialogListener {
 
     private RestaurantManager restaurants;
 
@@ -41,6 +42,25 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment updaterDialog = new UpdaterDialogFragment();
         updaterDialog.show(getSupportFragmentManager(), "Updater Dialog");
     }
+
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+        progressDialog.setTitle("Updating...");
+        progressDialog.setProgress(0);
+        progressDialog.setMax(100);
+
+        progressDialog.show();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        // User touched the dialog's negative button
+    }
+
 
     private void setupModel() {
         Log.i("Start parsing", "Starting to parse data....");
