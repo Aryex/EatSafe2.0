@@ -36,11 +36,11 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
             InputStreamReader inspectionDataReader = new InputStreamReader(context
                     .getResources()
-                    .openRawResource(R.raw.fraserhealthrestaurantinspectionreports));
+                    .openRawResource(R.raw.inspectionreports_itr1));
 
             InputStreamReader restaurantDataReader = new InputStreamReader(context
                     .getResources()
-                    .openRawResource(R.raw.restaurants));
+                    .openRawResource(R.raw.restaurants_itr1));
 
             try {
                 Parser.parseData(instance, inspectionDataReader, restaurantDataReader);
