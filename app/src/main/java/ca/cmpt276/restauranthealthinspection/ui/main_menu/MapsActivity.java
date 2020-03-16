@@ -103,6 +103,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Looper.getMainLooper());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
     private void getDeviceCurrentLocation() {
         Log.d(TAG, "getDeviceCurrentLocation: getting device location");
 
