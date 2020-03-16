@@ -6,21 +6,25 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,20 +36,7 @@ import ca.cmpt276.restauranthealthinspection.R;
 
 import static android.telephony.CellLocation.requestLocationUpdate;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady: map loaded");
-        Toast.makeText(this, "Eat Safe!", Toast.LENGTH_SHORT).show();
-        map = googleMap;
-
-        if (locationPermissionGranted) {
-            //setupDeviceLocationUpdate();
-            getDeviceCurrentLocation();
-            map.setMyLocationEnabled(true);
-        }
-    }
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "MapsActivity";
 
@@ -59,25 +50,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private Location currentLocation;
+    private  LocationRequest locationRequest;
+    private LocationCallback locationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        setupLocationCallBack();
         getLocationPermission();
         createLocationRequest();
+
     }
 
-    //Reference: https://developer.android.com/training/location/change-location-settings
+    private void setupLocationCallBack() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    Log.d(TAG, "onLocationResult: called");
+                    Toast.makeText(MapsActivity.this,  "onLocationResult: Lat: " + location.getLatitude() + " Long: " + location.getLongitude(), Toast.LENGTH_SHORT)
+                            .show();
+                    moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+                }
+            };
+        };
+    }
+
     protected void createLocationRequest() {
-        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,
+                locationCallback,
+                Looper.getMainLooper());
     }
 
     private void getDeviceCurrentLocation() {
@@ -104,11 +127,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (SecurityException e) {
             Log.d(TAG, "getDeviceCurrentLocation: " + e.getMessage());
         }
-    }
-
-    private void moveCamera(LatLng latLng, float zoom) {
-        Log.d(TAG, "moveCamera: { to lat: " + latLng.latitude + " long: " + latLng.longitude + " }");
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
     private void getLocationPermission() {
@@ -139,7 +157,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
+
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -157,7 +178,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     Log.d(TAG, "onRequestPermissionsResult: permission granted");
                     locationPermissionGranted = true;
-                    //init map
                     createMap();
                 }
             }
@@ -169,5 +189,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "createMap: creating map");
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(MapsActivity.this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady: map loaded");
+        Toast.makeText(this, "Eat Safe!", Toast.LENGTH_SHORT).show();
+        map = googleMap;
+
+        if (locationPermissionGranted) {
+            //setupDeviceLocationUpdate();
+
+            getDeviceCurrentLocation();
+            map.setMyLocationEnabled(true);
+
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "OnLocationChanged: creating map");
+        moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+    }
+
+    private void moveCamera(LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCamera: called");
+        Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 }
