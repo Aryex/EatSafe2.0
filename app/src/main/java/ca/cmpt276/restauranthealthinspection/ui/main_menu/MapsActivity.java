@@ -47,6 +47,16 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 
 import static android.telephony.CellLocation.requestLocationUpdate;
 
+
+/**
+ * Map activity serves as the first entry point into the app.
+ * The map uses Google Map API.
+ * Map activity uses the Fused Location API to to track user location.
+ *
+ * Codes were adapted from the following resources.
+ * https://developer.android.com/training/location
+ * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+ * */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "MapsActivity";
@@ -56,6 +66,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
 
+    private boolean cameraLocked = true;
+
     private GoogleMap map;
     private boolean locationPermissionGranted;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -63,6 +75,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location currentLocation;
     private  LocationRequest locationRequest;
     private LocationCallback locationCallback;
+
+    //What to do when map appear on screen
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady: map loaded");
+        Toast.makeText(this, "Eat Safe!", Toast.LENGTH_SHORT).show();
+        map = googleMap;
+
+        if (locationPermissionGranted) {
+            getDeviceCurrentLocation();
+            map.setMyLocationEnabled(true);
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +106,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
 
     private void setupLocationCallBack() {
         locationCallback = new LocationCallback() {
@@ -93,43 +129,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Log.d(TAG, "onLocationResult: called");
                     Toast.makeText(MapsActivity.this,  "onLocationResult: Lat: " + location.getLatitude() + " Long: " + location.getLongitude(), Toast.LENGTH_SHORT)
                             .show();
-                    moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+                    if(cameraLocked){
+                        moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+                    }
                 }
             };
         };
-    }
-
-    protected void createLocationRequest() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(500);
-        locationRequest.setFastestInterval(100);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startLocationUpdates();
-    }
-
-    private void startLocationUpdates() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-                Looper.getMainLooper());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopLocationUpdates();
-    }
-
-    private void stopLocationUpdates() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     private void getDeviceCurrentLocation() {
@@ -190,7 +195,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -220,25 +224,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         supportMapFragment.getMapAsync(MapsActivity.this);
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady: map loaded");
-        Toast.makeText(this, "Eat Safe!", Toast.LENGTH_SHORT).show();
-        map = googleMap;
+    protected void createLocationRequest() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(500);
+        locationRequest.setFastestInterval(100);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        if (locationPermissionGranted) {
-            //setupDeviceLocationUpdate();
-
-            getDeviceCurrentLocation();
-            map.setMyLocationEnabled(true);
-
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "OnLocationChanged: creating map");
-        moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
@@ -246,6 +239,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
+
+    private void stopLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+    private void startLocationUpdates() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,
+                locationCallback,
+                Looper.getMainLooper());
+    }
+
+    //Toolbar setup
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,5 +282,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Restaurant restaurant = restaurants.get(2);
         Log.d("MainActivity", restaurant.getResTrackingNumber());
         List<Inspection> inspections = restaurant.getInspections();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged: Called");
+        Toast.makeText(this, "onLocationChanged: Called", Toast.LENGTH_SHORT)
+                .show();
     }
 }
