@@ -1,18 +1,24 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,11 +38,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.Inspection;
+import ca.cmpt276.restauranthealthinspection.model.Restaurant;
+import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 
 import static android.telephony.CellLocation.requestLocationUpdate;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "MapsActivity";
 
@@ -57,11 +68,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        setupModel();
+
         setupLocationCallBack();
         getLocationPermission();
         createLocationRequest();
 
     }
+
+
 
     private void setupLocationCallBack() {
         locationCallback = new LocationCallback() {
@@ -226,5 +245,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "moveCamera: called");
         Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_show_list:
+                Intent intent = RestaurantListActivity.makeLaunchIntent(this);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setupModel() {
+        Log.i("Start parsing", "Starting to parse data....");
+
+        RestaurantManager restaurants = RestaurantManager.getInstance(this);
+
+        for (Restaurant r : restaurants) {
+            Log.d("Main Activity", "onCreate: " + r);
+        }
+
+        Restaurant restaurant = restaurants.get(2);
+        Log.d("MainActivity", restaurant.getResTrackingNumber());
+        List<Inspection> inspections = restaurant.getInspections();
     }
 }

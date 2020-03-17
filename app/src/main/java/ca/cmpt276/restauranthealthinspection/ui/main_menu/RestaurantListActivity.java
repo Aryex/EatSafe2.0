@@ -1,5 +1,7 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -21,6 +23,10 @@ public class RestaurantListActivity extends AppCompatActivity {
 
     private RestaurantManager restaurants;
 
+    public static Intent makeLaunchIntent(Context context) {
+        return new Intent(context, RestaurantListActivity.class);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,24 +34,12 @@ public class RestaurantListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setupModel();
+        restaurants = RestaurantManager.getInstance(this);
 
         setupRecyclerView();
     }
 
-    private void setupModel() {
-        Log.i("Start parsing", "Starting to parse data....");
 
-        restaurants = RestaurantManager.getInstance(this);
-
-        for (Restaurant r : restaurants) {
-            Log.d("Main Activity", "onCreate: " + r);
-        }
-
-        Restaurant restaurant = restaurants.get(2);
-        Log.d("MainActivity", restaurant.getResTrackingNumber());
-        List<Inspection> inspections = restaurant.getInspections();
-    }
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewMain);
