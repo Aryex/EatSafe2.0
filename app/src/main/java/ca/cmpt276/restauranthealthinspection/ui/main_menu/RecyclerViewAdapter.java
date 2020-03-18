@@ -91,18 +91,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String latestInspectionTotalIssues = restaurant.getLatestInspectionTotalIssues();
                 textViewIssuesCount.setText(String.format(context.getString(R.string.found_num_issues), latestInspectionTotalIssues));
 
-                MainActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
+                RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
                 setupWarningBar(hazardLevel);
             } else {
                 //default setup for restaurant with no inspections.
                 textViewInspectionDate.setText(R.string.no_inspections_found);
                 textViewIssuesCount.setText(R.string.empty_string);
-                setupWarningBar(MainActivity.HazardLevel.LOW);
+                setupWarningBar(RestaurantListActivity.HazardLevel.LOW);
             }
 
         }
 
-        private void setupWarningBar(MainActivity.HazardLevel hazardLevel) {
+        private void setupWarningBar(RestaurantListActivity.HazardLevel hazardLevel) {
 
             switch (hazardLevel) {
                 case LOW:
@@ -125,14 +125,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    private MainActivity.HazardLevel HazardLevelConverter(String hazardLevel) {
+    private RestaurantListActivity.HazardLevel HazardLevelConverter(String hazardLevel) {
         switch (hazardLevel.toLowerCase()) {
             case "low":
-                return MainActivity.HazardLevel.LOW;
+                return RestaurantListActivity.HazardLevel.LOW;
             case "moderate":
-                return MainActivity.HazardLevel.MEDIUM;
+                return RestaurantListActivity.HazardLevel.MEDIUM;
             default:
-                return MainActivity.HazardLevel.HIGH;
+                return RestaurantListActivity.HazardLevel.HIGH;
         }
     }
 }
