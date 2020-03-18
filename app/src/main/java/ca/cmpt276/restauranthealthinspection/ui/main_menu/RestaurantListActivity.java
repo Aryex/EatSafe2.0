@@ -1,5 +1,7 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,9 +19,13 @@ import ca.cmpt276.restauranthealthinspection.model.*;
  * Main menu display a list of restaurants and their appropriate information.
  * It will also initializes the model.
  */
-public class MainActivity extends AppCompatActivity {
+public class RestaurantListActivity extends AppCompatActivity {
 
     private RestaurantManager restaurants;
+
+    public static Intent makeLaunchIntent(Context context) {
+        return new Intent(context, RestaurantListActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +34,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setupModel();
-
-        setupRecyclerView();
-    }
-
-    private void setupModel() {
-        Log.i("Start parsing", "Starting to parse data....");
-
         restaurants = RestaurantManager.getInstance(this);
 
-        for (Restaurant r : restaurants) {
-            Log.d("Main Activity", "onCreate: " + r);
-        }
-
-        Restaurant restaurant = restaurants.get(2);
-        Log.d("MainActivity", restaurant.getResTrackingNumber());
-        List<Inspection> inspections = restaurant.getInspections();
+        setupRecyclerView();
     }
 
     private void setupRecyclerView() {
