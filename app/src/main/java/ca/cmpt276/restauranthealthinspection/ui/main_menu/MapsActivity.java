@@ -56,7 +56,7 @@ import static android.telephony.CellLocation.requestLocationUpdate;
  * Codes were adapted from the following resources.
  * https://developer.android.com/training/location
  * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
- * */
+ */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "MapsActivity";
@@ -73,7 +73,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private Location currentLocation;
-    private  LocationRequest locationRequest;
+    private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
     //What to do when map appear on screen
@@ -127,13 +127,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 for (Location location : locationResult.getLocations()) {
                     Log.d(TAG, "onLocationResult: called");
-                    Toast.makeText(MapsActivity.this,  "onLocationResult: Lat: " + location.getLatitude() + " Long: " + location.getLongitude(), Toast.LENGTH_SHORT)
+                    Toast.makeText(MapsActivity.this, "onLocationResult: Lat: " + location.getLatitude() + " Long: " + location.getLongitude(), Toast.LENGTH_SHORT)
                             .show();
-                    if(cameraLocked){
+                    if (cameraLocked) {
                         moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
                     }
                 }
-            };
+            }
+
+            ;
         };
     }
 
@@ -242,6 +244,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void stopLocationUpdates() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
+
     private void startLocationUpdates() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,
