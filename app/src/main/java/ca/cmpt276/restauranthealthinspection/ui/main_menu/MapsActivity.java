@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,6 +46,7 @@ import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterDialogFragment;
 
 import static android.telephony.CellLocation.requestLocationUpdate;
 
@@ -57,7 +60,7 @@ import static android.telephony.CellLocation.requestLocationUpdate;
  * https://developer.android.com/training/location
  * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, UpdaterDialogFragment.UpdaterDialogListener {
 
     private static final String TAG = "MapsActivity";
 
@@ -98,12 +101,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        showUpdaterDialog();
+
         setupModel();
 
         setupLocationCallBack();
         getLocationPermission();
         createLocationRequest();
 
+    }
+
+    public void showUpdaterDialog() {
+        DialogFragment updaterDialog = new UpdaterDialogFragment();
+        updaterDialog.show(getSupportFragmentManager(), "Updater Dialog");
+    }
+
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+        progressDialog.setTitle("Updating data...");
+        progressDialog.setProgress(0);
+        progressDialog.setMax(100);
+
+        progressDialog.show();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        // User touched the dialog's negative button
     }
 
     @Override

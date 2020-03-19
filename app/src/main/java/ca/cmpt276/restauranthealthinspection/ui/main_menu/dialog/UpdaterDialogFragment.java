@@ -16,11 +16,11 @@ import ca.cmpt276.restauranthealthinspection.R;
 public class UpdaterDialogFragment extends DialogFragment {
 
     public interface UpdaterDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog);
-        public void onDialogNegativeClick(DialogFragment dialog);
+        void onDialogPositiveClick(DialogFragment dialog);
+        void onDialogNegativeClick(DialogFragment dialog);
     }
 
-    UpdaterDialogListener listener;
+    private UpdaterDialogListener listener;
 
     public void onAttach(Context context) {
         super.onAttach(context);

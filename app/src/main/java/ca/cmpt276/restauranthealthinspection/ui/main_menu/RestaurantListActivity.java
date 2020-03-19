@@ -37,40 +37,6 @@ public class RestaurantListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        showUpdaterDialog();
-
-        setupModel();
-
-        setupRecyclerView();
-    }
-
-    public void showUpdaterDialog() {
-        DialogFragment updaterDialog = new UpdaterDialogFragment();
-        updaterDialog.show(getSupportFragmentManager(), "Updater Dialog");
-    }
-
-
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-
-        progressDialog.setTitle("Updating...");
-        progressDialog.setProgress(0);
-        progressDialog.setMax(100);
-
-        progressDialog.show();
-    }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-        // User touched the dialog's negative button
-    }
-
-
-    private void setupModel() {
-        Log.i("Start parsing", "Starting to parse data....");
-
         restaurants = RestaurantManager.getInstance(this);
 
         setupRecyclerView();
