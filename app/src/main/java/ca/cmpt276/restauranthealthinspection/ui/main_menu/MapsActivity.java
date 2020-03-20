@@ -50,7 +50,10 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
  * https://developer.android.com/training/location
  * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class MapsActivity extends AppCompatActivity implements
+                                                            OnMapReadyCallback,
+                                                            LocationListener,
+                                                            GoogleMap.OnCameraMoveListener {
 
     //Debug
     private static final String TAG = "MapsActivity";
@@ -81,56 +84,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map = googleMap;
 
         if (locationPermissionGranted) {
+
             getLastKnownLocation();
             map.setMyLocationEnabled(true);
+            map.setOnCameraMoveListener(MapsActivity.this);
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
                     Log.d(TAG, "onMyLocationButtonClick: camera locked");
                     cameraZoom = map.getCameraPosition().zoom;
-                    moveCamera(deviceLocation,cameraZoom);
+                    moveCamera(deviceLocation, cameraZoom);
                     cameraLocked = true;
                     return true;
-                }
-            });
-            map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-                @Override
-                public void onCameraMove() {
-                    CameraPosition cameraPosition = map.getCameraPosition();
-                    LatLng cameraLaLng = cameraPosition.target;
-
-                    //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
-                    double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
-                    double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
-
-                    if(inbetween(0.0001, latPrecision)
-                            && inbetween(0.0001, lngPrecision)){
-                        Log.d(TAG, "setOnCameraMoveListener: locked");
-                        debugDisplay("setOnCameraMoveListener: locked");
-                        cameraLocked = true;
-                    }else{
-                        Log.d(TAG, "setOnCameraMoveListener: unlocked");
-                        debugDisplay("setOnCameraMoveListener: unlocked");
-                        cameraLocked = false;
-                    }
-
-                    /*if (!deviceLocation.equals(cameraLaLng)) {
-                        Log.d(TAG, "setOnCameraMoveListener: unlocked");
-                        cameraLocked = false;
-                    }else{
-                        Log.d(TAG, "setOnCameraMoveListener: locked");
-                        cameraLocked = true;
-                    }*/
                 }
             });
 
         }
     }
 
-
-
-    private boolean inbetween(double absolute, double value){
-        return value > - absolute && value < absolute;
+    private boolean inbetween(double absolute, double value) {
+        return value > -absolute && value < absolute;
     }
 
     @Override
@@ -201,8 +174,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (location != null) {
                             // Logic to handle location object
                             Log.d(TAG, "getLastKnownLocation: got current location");
-                            LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            moveCamera(newLocation, DEFAULT_ZOOM);
+                            LatLng lastKnownLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            deviceLocation = lastKnownLocation;
+                            moveCamera(lastKnownLocation, DEFAULT_ZOOM);
                         } else {
                             Log.d(TAG, "getLastKnownLocation: current location is null");
                         }
@@ -280,7 +254,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void moveCamera(LatLng newLocation, float zoom) {
         Log.d(TAG, "moveCamera: called");
         //Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
-
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
 
     }
@@ -295,6 +268,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         debugTextview.setText(s);
     }
 
+    @Override
+    public void onCameraMove() {
+        CameraPosition cameraPosition = map.getCameraPosition();
+        LatLng cameraLaLng = cameraPosition.target;
+
+        //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
+        double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
+        double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
+
+        if (inbetween(0.0001, latPrecision)
+                && inbetween(0.0001, lngPrecision)) {
+            Log.d(TAG, "setOnCameraMoveListener: locked");
+            debugDisplay("setOnCameraMoveListener: locked");
+            cameraLocked = true;
+        } else {
+            Log.d(TAG, "setOnCameraMoveListener: unlocked");
+            debugDisplay("setOnCameraMoveListener: unlocked");
+            cameraLocked = false;
+        }
+
+    }
 
     //Toolbar setup
     @Override
@@ -335,4 +329,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(this, "onLocationChanged: Called", Toast.LENGTH_SHORT)
                 .show();
     }
+
+
 }
