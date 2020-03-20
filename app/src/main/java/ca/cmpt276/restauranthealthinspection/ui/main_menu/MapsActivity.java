@@ -1,19 +1,15 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -30,13 +26,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -45,14 +38,12 @@ import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 
-import static android.telephony.CellLocation.requestLocationUpdate;
-
 
 /**
  * Map activity serves as the first entry point into the app.
  * The map uses Google Map API.
  * Map activity uses the Fused Location API to to track user location.
- *
+ * <p>
  * Codes were adapted from the following resources.
  * https://developer.android.com/training/location
  * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
@@ -72,7 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean locationPermissionGranted;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    private Location currentLocation;
+
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
@@ -94,13 +85,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         setupModel();
 
-        setupLocationCallBack();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLocationPermission();
         createLocationRequest();
 
@@ -109,20 +98,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
+        makeLocationCallback();
         startLocationUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
+
+        //Stop updating location.
+        this.fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
-    private void setupLocationCallBack() {
+    private void makeLocationCallback() {
+        Log.d(TAG, "setupLocationCallBack: called");
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult == null) {
+                    Log.d(TAG, "onLocationResult: NULL");
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
@@ -134,35 +128,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
             }
-
-            ;
         };
     }
 
     private void getDeviceCurrentLocation() {
-        Log.d(TAG, "getDeviceCurrentLocation: getting device location");
+        Log.d(TAG, "getDeviceCurrentLocation: Called");
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            Log.d(TAG, "getDeviceCurrentLocation: got current location");
+//                        Location currentLocation = (Location) task.getResult();
+//                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                        } else {
+                            Log.d(TAG, "getDeviceCurrentLocation: current location is null");
+//                        Toast.makeText(MapsActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
 
-        try {
-            Task location = fusedLocationProviderClient.getLastLocation();
-            location.addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "getDeviceCurrentLocation: got current location");
-                        currentLocation = (Location) task.getResult();
-                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
-
-                    } else {
-                        Log.d(TAG, "getDeviceCurrentLocation: current location is null");
-                        Toast.makeText(MapsActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
-        } catch (SecurityException e) {
-            Log.d(TAG, "getDeviceCurrentLocation: " + e.getMessage());
-        }
+                });
+//        try {
+//            Task location = fusedLocationProviderClient.getLastLocation();
+//            location.addOnCompleteListener(new OnCompleteListener() {
+//                @Override
+//                public void onComplete(@NonNull Task task) {
+//                    if (task.isSuccessful()) {
+//                        Log.d(TAG, "getDeviceCurrentLocation: got current location");
+//                        Location currentLocation = (Location) task.getResult();
+//                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+//
+//                    } else {
+//                        Log.d(TAG, "getDeviceCurrentLocation: current location is null");
+//                        Toast.makeText(MapsActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//        } catch (SecurityException e) {
+//            Log.d(TAG, "getDeviceCurrentLocation: " + e.getMessage());
+//        }
     }
 
     private void getLocationPermission() {
@@ -227,8 +234,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected void createLocationRequest() {
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(500);
-        locationRequest.setFastestInterval(100);
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -241,12 +248,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
-    private void stopLocationUpdates() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-    }
-
     private void startLocationUpdates() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        //FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+//            this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,
                 locationCallback,
                 Looper.getMainLooper());
