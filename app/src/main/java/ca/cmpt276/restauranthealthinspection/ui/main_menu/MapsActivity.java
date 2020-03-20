@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,7 +52,9 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
  */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
+    //Debug
     private static final String TAG = "MapsActivity";
+    private TextView debugTextview;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -67,7 +70,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-    private LatLng myLocation;
+    private LatLng deviceLocation;
+    private float cameraZoom = DEFAULT_ZOOM;
 
     //What to do when map appear on screen
     @Override
@@ -83,36 +87,64 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public boolean onMyLocationButtonClick() {
                     Log.d(TAG, "onMyLocationButtonClick: camera locked");
+                    cameraZoom = map.getCameraPosition().zoom;
+                    moveCamera(deviceLocation,cameraZoom);
                     cameraLocked = true;
                     return true;
                 }
             });
-            map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                 @Override
-                public void onCameraIdle() {
-                    Log.d(TAG, "setOnCameraIdleListener: camera Idle");
-                    LatLng cameraPosition = map.getCameraPosition().target;
-                    if(cameraPosition.equals(myLocation)){
-                        Log.d(TAG, "setOnCameraIdleListener: camera on top of device");
+                public void onCameraMove() {
+                    CameraPosition cameraPosition = map.getCameraPosition();
+                    LatLng cameraLaLng = cameraPosition.target;
 
+                    //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
+                    double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
+                    double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
+
+                    if(inbetween(0.0001, latPrecision)
+                            && inbetween(0.0001, lngPrecision)){
+                        Log.d(TAG, "setOnCameraMoveListener: locked");
+                        debugDisplay("setOnCameraMoveListener: locked");
+                        cameraLocked = true;
                     }else{
-                        Log.d(TAG, "setOnCameraIdleListener: camera unlocked");
+                        Log.d(TAG, "setOnCameraMoveListener: unlocked");
+                        debugDisplay("setOnCameraMoveListener: unlocked");
                         cameraLocked = false;
                     }
+
+                    /*if (!deviceLocation.equals(cameraLaLng)) {
+                        Log.d(TAG, "setOnCameraMoveListener: unlocked");
+                        cameraLocked = false;
+                    }else{
+                        Log.d(TAG, "setOnCameraMoveListener: locked");
+                        cameraLocked = true;
+                    }*/
                 }
             });
+
         }
+    }
+
+
+
+    private boolean inbetween(double absolute, double value){
+        return value > - absolute && value < absolute;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        debugTextview = findViewById(R.id.debugTextview);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setupModel();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        deviceLocation = new LatLng(49.246292, -123.116226);
+
         getLocationPermission();
         createLocationRequest();
 
@@ -143,12 +175,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    Log.d(TAG, "onLocationResult: called");
+                    Log.d(TAG, "onLocationResult: called + cameraLocked: " + cameraLocked);
 //                    Toast.makeText(MapsActivity.this, "onLocationResult: Lat: " + location.getLatitude() + " Long: " + location.getLongitude(), Toast.LENGTH_SHORT)
 //                            .show();
                     if (cameraLocked) {
-                        myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+                        LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        if (!deviceLocation.equals(newLocation)) {
+                            deviceLocation = newLocation;
+                            moveCamera(newLocation, cameraZoom);
+                        }
                     }
                 }
             }
@@ -166,7 +201,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (location != null) {
                             // Logic to handle location object
                             Log.d(TAG, "getLastKnownLocation: got current location");
-                        moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM);
+                            LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            moveCamera(newLocation, DEFAULT_ZOOM);
                         } else {
                             Log.d(TAG, "getLastKnownLocation: current location is null");
                         }
@@ -201,7 +237,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
-
     }
 
     @Override
@@ -242,16 +277,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addLocationRequest(locationRequest);
     }
 
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void moveCamera(LatLng newLocation, float zoom) {
         Log.d(TAG, "moveCamera: called");
         //Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
+
     }
 
     private void startLocationUpdates() {
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,
                 locationCallback,
                 Looper.getMainLooper());
+    }
+
+    private void debugDisplay(String s) {
+        debugTextview.setText(s);
     }
 
 
