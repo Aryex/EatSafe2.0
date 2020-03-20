@@ -93,6 +93,9 @@ public class MapsActivity extends AppCompatActivity implements
                 public boolean onMyLocationButtonClick() {
                     Log.d(TAG, "onMyLocationButtonClick: camera locked");
                     cameraZoom = map.getCameraPosition().zoom;
+                    if(cameraZoom < DEFAULT_ZOOM){
+                        cameraZoom = DEFAULT_ZOOM;
+                    }
                     moveCamera(deviceLocation, cameraZoom);
                     cameraLocked = true;
                     return true;
@@ -149,10 +152,14 @@ public class MapsActivity extends AppCompatActivity implements
                 }
                 for (Location location : locationResult.getLocations()) {
                     Log.d(TAG, "onLocationResult: called + cameraLocked: " + cameraLocked);
-//                    Toast.makeText(MapsActivity.this, "onLocationResult: Lat: " + location.getLatitude() + " Long: " + location.getLongitude(), Toast.LENGTH_SHORT)
-//                            .show();
+
+                    //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
+
                     if (cameraLocked) {
                         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        double latPrecision = deviceLocation.latitude - location.getLatitude();
+                        double lngPrecision = deviceLocation.longitude - location.getLongitude();
+
                         if (!deviceLocation.equals(newLocation)) {
                             deviceLocation = newLocation;
                             moveCamera(newLocation, cameraZoom);
@@ -176,7 +183,7 @@ public class MapsActivity extends AppCompatActivity implements
                             Log.d(TAG, "getLastKnownLocation: got current location");
                             LatLng lastKnownLocation = new LatLng(location.getLatitude(), location.getLongitude());
                             deviceLocation = lastKnownLocation;
-                            moveCamera(lastKnownLocation, DEFAULT_ZOOM);
+                            moveCamera(lastKnownLocation, 12f);
                         } else {
                             Log.d(TAG, "getLastKnownLocation: current location is null");
                         }
