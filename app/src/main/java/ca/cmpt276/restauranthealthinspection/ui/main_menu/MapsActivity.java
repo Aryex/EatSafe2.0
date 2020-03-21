@@ -106,7 +106,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean inbetween(double absolute, double value) {
+    private boolean inBetweenAbsolutes(double absolute, double value) {
         return value > -absolute && value < absolute;
     }
 
@@ -285,8 +285,8 @@ public class MapsActivity extends AppCompatActivity implements
         double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
         double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
 
-        if (inbetween(DEFAULT_PRECISION, latPrecision)
-                && inbetween(DEFAULT_PRECISION, lngPrecision)) {
+        if (inBetweenAbsolutes(DEFAULT_PRECISION, latPrecision)
+                && inBetweenAbsolutes(DEFAULT_PRECISION, lngPrecision)) {
             Log.d(TAG, "setOnCameraMoveListener: locked");
             debugDisplay("setOnCameraMoveListener: locked");
             cameraLocked = true;
