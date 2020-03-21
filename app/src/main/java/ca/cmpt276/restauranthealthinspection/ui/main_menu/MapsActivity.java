@@ -15,6 +15,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,14 +33,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.WeakHashMap;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 
 /**
@@ -51,9 +58,10 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
  * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
  */
 public class MapsActivity extends AppCompatActivity implements
-                                                            OnMapReadyCallback,
-                                                            LocationListener,
-                                                            GoogleMap.OnCameraMoveListener {
+        OnMapReadyCallback,
+        LocationListener,
+        GoogleMap.OnCameraMoveListener,
+        GoogleMap.OnInfoWindowClickListener {
 
     //Debug
     private static final String TAG = "MapsActivity";
@@ -86,7 +94,12 @@ public class MapsActivity extends AppCompatActivity implements
 
         if (locationPermissionGranted) {
 
+            populatePins(map);
+
             getLastKnownLocation();
+            map.setOnInfoWindowClickListener(MapsActivity.this);
+            map.getUiSettings().setCompassEnabled(true);
+            map.getUiSettings().setZoomControlsEnabled(true);
             map.setMyLocationEnabled(true);
             map.setOnCameraMoveListener(MapsActivity.this);
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
@@ -94,7 +107,7 @@ public class MapsActivity extends AppCompatActivity implements
                 public boolean onMyLocationButtonClick() {
                     Log.d(TAG, "onMyLocationButtonClick: camera locked");
                     cameraZoom = map.getCameraPosition().zoom;
-                    if(cameraZoom < DEFAULT_ZOOM){
+                    if (cameraZoom < DEFAULT_ZOOM) {
                         cameraZoom = DEFAULT_ZOOM;
                     }
                     moveCamera(deviceLocation, cameraZoom);
@@ -105,6 +118,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         }
     }
+
 
     private boolean inBetweenAbsolutes(double absolute, double value) {
         return value > -absolute && value < absolute;
@@ -117,7 +131,9 @@ public class MapsActivity extends AppCompatActivity implements
         debugTextview = findViewById(R.id.debugTextview);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setupManualLock();
         setupModel();
+        setupDebug();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         deviceLocation = new LatLng(49.246292, -123.116226);
@@ -125,6 +141,27 @@ public class MapsActivity extends AppCompatActivity implements
         getLocationPermission();
         createLocationRequest();
 
+    }
+
+    private void setupDebug() {
+        Button button = findViewById(R.id.surreyButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveCamera(new LatLng(49.188808, -122.847992), 12f);
+            }
+        });
+    }
+
+    private void setupManualLock() {
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraLocked = !cameraLocked;
+                moveCamera(deviceLocation, cameraZoom);
+            }
+        });
     }
 
     @Override
@@ -250,6 +287,20 @@ public class MapsActivity extends AppCompatActivity implements
         supportMapFragment.getMapAsync(MapsActivity.this);
     }
 
+    private void populatePins(GoogleMap map) {
+        RestaurantManager restaurants = RestaurantManager.getInstance(this);
+
+        for (Restaurant restaurant : restaurants) {
+            LatLng restaurantLatLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(restaurantLatLng)
+                    .title(restaurant.getName())
+                    .snippet(restaurant.getAddress()));
+            marker.showInfoWindow();
+            marker.setTag(restaurant.getResTrackingNumber());
+        }
+    }
+
     protected void createLocationRequest() {
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(100);
@@ -298,6 +349,12 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
+    public void onInfoWindowClick(Marker marker) {
+        String trackingID = (String) marker.getTag();
+        Intent intent = RestaurantDetails.makeLaunchIntent(MapsActivity.this, trackingID);
+        startActivity(intent);
+    }
+
     //Toolbar setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -337,6 +394,5 @@ public class MapsActivity extends AppCompatActivity implements
         Toast.makeText(this, "onLocationChanged: Called", Toast.LENGTH_SHORT)
                 .show();
     }
-
 
 }
