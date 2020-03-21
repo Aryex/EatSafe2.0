@@ -62,7 +62,8 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 15f;
+    private static final float DEFAULT_ZOOM = 19f;
+    private static final double DEFAULT_PRECISION = 0.0001;
 
     private boolean cameraLocked = true;
 
@@ -284,8 +285,8 @@ public class MapsActivity extends AppCompatActivity implements
         double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
         double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
 
-        if (inbetween(0.0001, latPrecision)
-                && inbetween(0.0001, lngPrecision)) {
+        if (inbetween(DEFAULT_PRECISION, latPrecision)
+                && inbetween(DEFAULT_PRECISION, lngPrecision)) {
             Log.d(TAG, "setOnCameraMoveListener: locked");
             debugDisplay("setOnCameraMoveListener: locked");
             cameraLocked = true;
