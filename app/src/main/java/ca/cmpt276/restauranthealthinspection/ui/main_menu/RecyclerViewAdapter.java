@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final TextView textViewAddress = itemView.findViewById(R.id.recyclerAddress);
         private final TextView textViewIssuesCount = itemView.findViewById(R.id.recyclerIssuesCount);
 
-        private final RelativeLayout parentLayout = itemView.findViewById(R.id.recyclerItemParent);
+        private final CardView parentLayout = itemView.findViewById(R.id.recyclerItemParent);
         private final CardView warningBar = itemView.findViewById(R.id.warningBar);
 
         private RestaurantCardViewHolder(@NonNull View itemView) {

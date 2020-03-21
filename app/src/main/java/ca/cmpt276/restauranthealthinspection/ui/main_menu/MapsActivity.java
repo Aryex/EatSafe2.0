@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -61,7 +62,11 @@ public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         LocationListener,
         GoogleMap.OnCameraMoveListener,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.InfoWindowAdapter {
+
+    //  Surrey Central's Lat Lng
+    public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.188808, -122.847992);
 
     //Debug
     private static final String TAG = "MapsActivity";
@@ -85,6 +90,12 @@ public class MapsActivity extends AppCompatActivity implements
     private LatLng deviceLocation;
     private float cameraZoom = DEFAULT_ZOOM;
 
+    public static Intent makeLaunchIntent(Context context, LatLng position) {
+        Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra("position", position);
+        return intent;
+    }
+
     //What to do when map appear on screen
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -98,6 +109,7 @@ public class MapsActivity extends AppCompatActivity implements
 
             getLastKnownLocation();
             map.setOnInfoWindowClickListener(MapsActivity.this);
+            map.setInfoWindowAdapter(MapsActivity.this);
             map.getUiSettings().setCompassEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
             map.setMyLocationEnabled(true);
@@ -295,8 +307,8 @@ public class MapsActivity extends AppCompatActivity implements
             Marker marker = map.addMarker(new MarkerOptions()
                     .position(restaurantLatLng)
                     .title(restaurant.getName())
-                    .snippet(restaurant.getAddress()));
-            marker.showInfoWindow();
+                    .snippet(restaurant.getAddress() + '\n'
+                            + "Hazard Level: " + restaurant.getHazardLevel()));
             marker.setTag(restaurant.getResTrackingNumber());
         }
     }
@@ -355,25 +367,6 @@ public class MapsActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    //Toolbar setup
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_show_list:
-                Intent intent = RestaurantListActivity.makeLaunchIntent(this);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void setupModel() {
         Log.i("Start parsing", "Starting to parse data....");
 
@@ -393,6 +386,38 @@ public class MapsActivity extends AppCompatActivity implements
         Log.d(TAG, "onLocationChanged: Called");
         Toast.makeText(this, "onLocationChanged: Called", Toast.LENGTH_SHORT)
                 .show();
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        //None
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        View view = getLayoutInflater().inflate(R.layout.info_window_restaurant, null);
+
+        return view;
+    }
+
+    //Toolbar setup
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_show_list:
+                Intent intent = RestaurantListActivity.makeLaunchIntent(this);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
