@@ -57,18 +57,18 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * The map uses Google Map API.
  * Map activity uses the Fused Location API to to track user location.
  * <p>
- * Codes were adapted from the following resources.
+ * Location tracking odes were adapted from the following resources:
  * https://developer.android.com/training/location
  * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+ * <p>
+ * Cluster items codes were adapted from the following resources:
+ * https://stackoverflow.com/questions/25968486/how-to-add-info-window-for-clustering-marker-in-android
+ * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
+ * <p>
+ * note: restaurant tracking id is stored in a cluster marker's snippet.
  */
-public class MapsActivity extends AppCompatActivity implements
-        OnMapReadyCallback,
-        LocationListener,
-        GoogleMap.OnCameraMoveListener,
-        GoogleMap.OnInfoWindowClickListener,
-        GoogleMap.InfoWindowAdapter,
-        ClusterManager.OnClusterClickListener<ClusterMarker>,
-        ClusterManager.OnClusterItemClickListener {
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     //  Surrey Central's Lat Lng
     public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.188808, -122.847992);
@@ -98,7 +98,6 @@ public class MapsActivity extends AppCompatActivity implements
     private LatLng deviceLocation;
     private float cameraZoom = DEFAULT_ZOOM;
 
-
     public static Intent makeLaunchIntent(Context context, LatLng position) {
         Intent intent = new Intent(context, MapsActivity.class);
         intent.putExtra("position", position);
@@ -114,26 +113,38 @@ public class MapsActivity extends AppCompatActivity implements
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
 
-        setupMarkers(map);
-        /*map.setOnInfoWindowClickListener(MapsActivity.this);
-        map.setInfoWindowAdapter(MapsActivity.this);*/
+        setupClusterMarkers(map);
 
-        //markerClusterManager.setOnClusterItemClickListener(MapsActivity.this);
+//      Setup cluster items behaviour
+        markerClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>() {
+            @Override
+            public boolean onClusterItemClick(ClusterMarker item) {
+                clickedClusterItem = new ClusterMarker(item.getPosition(), item.getTitle(), item.getSnippet());
+                return false;
+            }
+        });
 
+        markerClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(com.google.android.gms.maps.model.Marker marker) {
+                String trackingID = (String) clickedClusterItem.getSnippet();
+                Intent intent = RestaurantDetails.makeLaunchIntent(MapsActivity.this, trackingID);
+                startActivity(intent);
+            }
+        });
 
-        markerClusterManager.setOnClusterItemClickListener(MapsActivity.this);
-        markerClusterManager.getMarkerCollection().setInfoWindowAdapter(MapsActivity.this);
-        markerClusterManager.getMarkerCollection().setOnInfoWindowClickListener(MapsActivity.this);
+        markerClusterManager.getMarkerCollection().setInfoWindowAdapter(new MapsActivity.InfoWindowAdapter(this));
 
-        //Map will use markerCluster's implementations.
+//      Map will use markerCluster's implementations.
         map.setOnCameraIdleListener(markerClusterManager);
         map.setOnMarkerClickListener(markerClusterManager);
         map.setOnInfoWindowClickListener(markerClusterManager);
 
+//      Setup position tracking behaviour
         if (locationPermissionGranted) {
             getLastKnownLocation();
             map.setMyLocationEnabled(true);
-            map.setOnCameraMoveListener(MapsActivity.this);
+            map.setOnCameraMoveListener(new MapsActivity.OnCameraMove());
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
@@ -151,7 +162,6 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-
     private boolean inBetweenAbsolutes(double absolute, double value) {
         return value > -absolute && value < absolute;
     }
@@ -163,16 +173,24 @@ public class MapsActivity extends AppCompatActivity implements
         debugTextview = findViewById(R.id.debugTextview);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setupManualLock();
-        setupModel();
-        setupDebug();
 
+        restaurants = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         deviceLocation = new LatLng(49.246292, -123.116226);
 
-        getLocationPermission();
-        createLocationRequest();
+        //Creating location Request
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(100);
+        locationRequest.setFastestInterval(100);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
 
+//      to be deleted
+        setupManualLock();
+        setupDebug();
+
+        getLocationPermission();
     }
 
     private void setupDebug() {
@@ -319,39 +337,18 @@ public class MapsActivity extends AppCompatActivity implements
         supportMapFragment.getMapAsync(MapsActivity.this);
     }
 
-    private void setupMarkers(GoogleMap map) {
-        //      Marker cluster setup
+    private void setupClusterMarkers(GoogleMap map) {
         markerClusterManager = new ClusterManager<ClusterMarker>(this, map);
-
         for (Restaurant restaurant : restaurants) {
 
             double lat = restaurant.getLatitude();
             double lng = restaurant.getLongitude();
-            LatLng restaurantLatLng = new LatLng(lat, lng);
             String name = restaurant.getName();
             String snippet = restaurant.getResTrackingNumber();
 
-            //Setup Markers
-/*            Marker marker = map.addMarker(new MarkerOptions()
-                    .position(restaurantLatLng)
-                    .title(name)
-                    .snippet(snippet));
-            marker.setTag(restaurant.getResTrackingNumber());*/
-
-            //Add marker to ClusterManager
             ClusterMarker clusterMarker = new ClusterMarker(lat, lng, name, snippet);
             markerClusterManager.addItem(clusterMarker);
-
         }
-    }
-
-    protected void createLocationRequest() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(100);
-        locationRequest.setFastestInterval(100);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
     }
 
     private void moveCamera(LatLng newLocation, float zoom) {
@@ -371,129 +368,87 @@ public class MapsActivity extends AppCompatActivity implements
         debugTextview.setText(s);
     }
 
-    @Override
-    public void onCameraMove() {
-        CameraPosition cameraPosition = map.getCameraPosition();
-        LatLng cameraLaLng = cameraPosition.target;
+    public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
 
-        //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
-        double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
-        double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
+        @Override
+        public void onCameraMove() {
+            CameraPosition cameraPosition = map.getCameraPosition();
+            LatLng cameraLaLng = cameraPosition.target;
 
-        if (inBetweenAbsolutes(DEFAULT_PRECISION, latPrecision)
-                && inBetweenAbsolutes(DEFAULT_PRECISION, lngPrecision)) {
-            Log.d(TAG, "setOnCameraMoveListener: locked");
-            debugDisplay("setOnCameraMoveListener: locked");
-            cameraLocked = true;
-        } else {
-            Log.d(TAG, "setOnCameraMoveListener: unlocked");
-            debugDisplay("setOnCameraMoveListener: unlocked");
-            cameraLocked = false;
+            //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
+            double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
+            double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
+
+            if (inBetweenAbsolutes(DEFAULT_PRECISION, latPrecision)
+                    && inBetweenAbsolutes(DEFAULT_PRECISION, lngPrecision)) {
+                Log.d(TAG, "setOnCameraMoveListener: locked");
+                debugDisplay("setOnCameraMoveListener: locked");
+                cameraLocked = true;
+            } else {
+                Log.d(TAG, "setOnCameraMoveListener: unlocked");
+                debugDisplay("setOnCameraMoveListener: unlocked");
+                cameraLocked = false;
+            }
+        }
+    }
+
+    public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private Context context;
+
+        public InfoWindowAdapter(Context context) {
+            this.context = context;
         }
 
-    }
-
-    public void onInfoWindowClick(com.google.android.gms.maps.model.Marker marker) {
-//        String trackingID = (String) marker.getTag();
-        String trackingID = (String) clickedClusterItem.getSnippet();
-        Intent intent = RestaurantDetails.makeLaunchIntent(MapsActivity.this, trackingID);
-        startActivity(intent);
-    }
-
-    private void setupModel() {
-        Log.i("Start parsing", "Starting to parse data....");
-
-        restaurants = RestaurantManager.getInstance(this);
-
-        for (Restaurant r : restaurants) {
-            Log.d("Main Activity", "onCreate: " + r);
+        @Override
+        public View getInfoWindow(com.google.android.gms.maps.model.Marker marker) {
+            //None
+            return null;
         }
 
-        Restaurant restaurant = restaurants.get(2);
-        Log.d("MainActivity", restaurant.getResTrackingNumber());
-        List<Inspection> inspections = restaurant.getInspections();
-    }
+        @Override
+        public View getInfoContents(com.google.android.gms.maps.model.Marker marker) {
+            View view = getLayoutInflater().inflate(R.layout.info_window_restaurant, null);
+            String trackingNumber = (String) clickedClusterItem.getSnippet();
+            Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
 
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: Called");
-        Toast.makeText(this, "onLocationChanged: Called", Toast.LENGTH_SHORT)
-                .show();
-    }
+            String restauranName = restaurant.getName();
+            String address = restaurant.getAddress();
+            String hazardLevel = restaurant.getHazardLevel();
 
-    @Override
-    public View getInfoWindow(com.google.android.gms.maps.model.Marker marker) {
-        //None
-        return null;
-    }
+            TextView textViewRestaurantName = view.findViewById(R.id.infoWindowRestaurantName);
+            textViewRestaurantName.setText(restauranName);
 
-    @Override
-    public View getInfoContents(com.google.android.gms.maps.model.Marker marker) {
-        View view = getLayoutInflater().inflate(R.layout.info_window_restaurant, null);
-//        String trackingNumber = (String) marker.getTag();
-//        Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
-//
-//        String restauranName = restaurant.getName();
-//        String address = restaurant.getAddress();
-//        String hazardLevel = restaurant.getHazardLevel();
-//
-//        TextView textViewRestaurantName = view.findViewById(R.id.infoWindowRestaurantName);
-//        textViewRestaurantName.setText(restauranName);
-//
-//        TextView textViewRestaurantAddr = view.findViewById(R.id.infoWindowAddress);
-//        textViewRestaurantAddr.setText(address);
+            TextView textViewRestaurantAddr = view.findViewById(R.id.infoWindowAddress);
+            textViewRestaurantAddr.setText(address);
 
-        String trackingNumber = (String) clickedClusterItem.getSnippet();
-        Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
+            TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
+            ImageView imageViewHazardIcon = view.findViewById(R.id.infoWindowHazardIcon);
+            CardView warningBar = view.findViewById(R.id.infoWindowWarningBar);
 
-        String restauranName = restaurant.getName();
-        String address = restaurant.getAddress();
-        String hazardLevel = restaurant.getHazardLevel();
+            switch (hazardLevel.toLowerCase()) {
+                case "high":
+                    Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
+                    textViewRestaurantHazardLevel.setText(R.string.hazard_level_high);
+                    imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_high));
+                    warningBar.setCardBackgroundColor(context.getColor(R.color.hazardHighDark));
+                    break;
+                case "moderate":
+                    Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
+                    textViewRestaurantHazardLevel.setText(R.string.hazard_level_medium);
+                    imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_medium));
+                    warningBar.setCardBackgroundColor(context.getColor(R.color.hazardMediumDark));
+                    break;
+                default:
+                    Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
+                    textViewRestaurantHazardLevel.setText(R.string.hazard_level_low);
+                    imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_low));
+                    warningBar.setCardBackgroundColor(context.getColor(R.color.hazardLowDark));
+            }
 
-        TextView textViewRestaurantName = view.findViewById(R.id.infoWindowRestaurantName);
-        textViewRestaurantName.setText(restauranName);
-
-        TextView textViewRestaurantAddr = view.findViewById(R.id.infoWindowAddress);
-        textViewRestaurantAddr.setText(address);
-
-        TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
-        ImageView imageViewHazardIcon = view.findViewById(R.id.infoWindowHazardIcon);
-        CardView warningBar = view.findViewById(R.id.infoWindowWarningBar);
-
-        switch (hazardLevel.toLowerCase()) {
-            case "high":
-                Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
-                textViewRestaurantHazardLevel.setText(R.string.hazard_level_high);
-                imageViewHazardIcon.setImageDrawable(this.getDrawable(R.drawable.icon_hazard_high));
-                warningBar.setCardBackgroundColor(this.getColor(R.color.hazardHighDark));
-                break;
-            case "moderate":
-                Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
-                textViewRestaurantHazardLevel.setText(R.string.hazard_level_medium);
-                imageViewHazardIcon.setImageDrawable(this.getDrawable(R.drawable.icon_hazard_medium));
-                warningBar.setCardBackgroundColor(this.getColor(R.color.hazardMediumDark));
-                break;
-            default:
-                Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
-                textViewRestaurantHazardLevel.setText(R.string.hazard_level_low);
-                imageViewHazardIcon.setImageDrawable(this.getDrawable(R.drawable.icon_hazard_low));
-                warningBar.setCardBackgroundColor(this.getColor(R.color.hazardLowDark));
+            return view;
         }
-
-        return view;
     }
-
-    @Override
-    public boolean onClusterClick(Cluster<ClusterMarker> cluster) {
-        return false;
-    }
-
-    @Override
-    public boolean onClusterItemClick(ClusterItem item) {
-        clickedClusterItem = new ClusterMarker(item.getPosition(), item.getTitle(), item.getSnippet());
-        return false;
-    }
-
 
     //Toolbar setup
     @Override
@@ -513,6 +468,5 @@ public class MapsActivity extends AppCompatActivity implements
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 }
