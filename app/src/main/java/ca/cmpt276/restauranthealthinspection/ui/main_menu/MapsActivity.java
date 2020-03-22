@@ -3,6 +3,7 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +79,8 @@ public class MapsActivity extends AppCompatActivity implements
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 19f;
     private static final double DEFAULT_PRECISION = 0.0001;
+
+    private RestaurantManager restaurants;
 
     private boolean cameraLocked = true;
 
@@ -300,8 +304,6 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     private void populatePins(GoogleMap map) {
-        RestaurantManager restaurants = RestaurantManager.getInstance(this);
-
         for (Restaurant restaurant : restaurants) {
             LatLng restaurantLatLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
             Marker marker = map.addMarker(new MarkerOptions()
@@ -370,7 +372,7 @@ public class MapsActivity extends AppCompatActivity implements
     private void setupModel() {
         Log.i("Start parsing", "Starting to parse data....");
 
-        RestaurantManager restaurants = RestaurantManager.getInstance(this);
+        restaurants = RestaurantManager.getInstance(this);
 
         for (Restaurant r : restaurants) {
             Log.d("Main Activity", "onCreate: " + r);
@@ -397,6 +399,43 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public View getInfoContents(Marker marker) {
         View view = getLayoutInflater().inflate(R.layout.info_window_restaurant, null);
+        String trackingNumber = (String) marker.getTag();
+        Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
+
+        String restauranName = restaurant.getName();
+        String address = restaurant.getAddress();
+        String hazardLevel = restaurant.getHazardLevel();
+
+        TextView textViewRestaurantName = view.findViewById(R.id.infoWindowRestaurantName);
+        textViewRestaurantName.setText(restauranName);
+
+        TextView textViewRestaurantAddr = view.findViewById(R.id.infoWindowAddress);
+        textViewRestaurantAddr.setText(address);
+
+        TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
+        ImageView imageViewHazardIcon = view.findViewById(R.id.infoWindowHazardIcon);
+        CardView warningBar = view.findViewById(R.id.infoWindowWarningBar);
+
+
+        switch (hazardLevel.toLowerCase()) {
+            case "high":
+                Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
+                textViewRestaurantHazardLevel.setText(R.string.hazard_level_high);
+                imageViewHazardIcon.setImageDrawable(this.getDrawable(R.drawable.icon_hazard_high));
+                warningBar.setCardBackgroundColor(this.getColor(R.color.hazardHighDark));
+                break;
+            case "moderate":
+                Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
+                textViewRestaurantHazardLevel.setText(R.string.hazard_level_medium);
+                imageViewHazardIcon.setImageDrawable(this.getDrawable(R.drawable.icon_hazard_medium));
+                warningBar.setCardBackgroundColor(this.getColor(R.color.hazardMediumDark));
+                break;
+            default:
+                Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
+                textViewRestaurantHazardLevel.setText(R.string.hazard_level_low);
+                imageViewHazardIcon.setImageDrawable(this.getDrawable(R.drawable.icon_hazard_low));
+                warningBar.setCardBackgroundColor(this.getColor(R.color.hazardLowDark));
+        }
 
         return view;
     }

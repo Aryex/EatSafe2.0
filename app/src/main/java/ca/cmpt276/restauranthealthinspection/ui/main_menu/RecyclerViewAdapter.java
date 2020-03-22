@@ -73,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final TextView textViewAddress = itemView.findViewById(R.id.recyclerAddress);
         private final TextView textViewIssuesCount = itemView.findViewById(R.id.recyclerIssuesCount);
 
-        private final CardView parentLayout = itemView.findViewById(R.id.recyclerItemParent);
+        private final RelativeLayout parentLayout = itemView.findViewById(R.id.recyclerItemParent);
         private final CardView warningBar = itemView.findViewById(R.id.warningBar);
 
         private RestaurantCardViewHolder(@NonNull View itemView) {

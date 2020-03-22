@@ -9,7 +9,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/warningBarNew"
+        android:id="@+id/infoWindowWarningBar"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         card_view:cardBackgroundColor="@color/hazardLowDark"
@@ -23,7 +23,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:id="@+id/hazardIcon"
+                android:id="@+id/infoWindowHazardIcon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_margin="5dp"
@@ -32,11 +32,11 @@
                 tools:srcCompat="@drawable/icon_hazard_low" />
 
             <TextView
-                android:id="@+id/textViewHazardLevel"
+                android:id="@+id/infoWindowHazardLevel"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
+                android:layout_marginBottom="3dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/roboto_light"
                 android:text="@string/hazard_level_low"
@@ -67,12 +67,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/restaurant_details_title"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                android:id="@+id/infoWindowRestaurantName"/>
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/default_address"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="10dp"
+                android:id="@+id/infoWindowAddress"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

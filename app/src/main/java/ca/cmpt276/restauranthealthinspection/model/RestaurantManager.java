@@ -97,4 +97,14 @@ public class RestaurantManager implements Iterable<Restaurant> {
         }
         return NULL;
     }
+
+    public Restaurant getRestaurant(String trackingID) {
+        int size = restaurantCount();
+        for(Restaurant restaurant : restaurants){
+            if(restaurant.getResTrackingNumber().equals(trackingID)){
+                return restaurant;
+            }
+        }
+        return new Restaurant("none", "none","none","none","none",0,0);
+    }
 }
