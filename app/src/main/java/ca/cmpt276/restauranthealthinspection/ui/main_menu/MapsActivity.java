@@ -37,12 +37,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.List;
-import java.util.WeakHashMap;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
@@ -65,7 +66,9 @@ public class MapsActivity extends AppCompatActivity implements
         LocationListener,
         GoogleMap.OnCameraMoveListener,
         GoogleMap.OnInfoWindowClickListener,
-        GoogleMap.InfoWindowAdapter {
+        GoogleMap.InfoWindowAdapter,
+        ClusterManager.OnClusterClickListener<ClusterMarker>,
+        ClusterManager.OnClusterItemClickListener {
 
     //  Surrey Central's Lat Lng
     public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.188808, -122.847992);
@@ -85,14 +88,16 @@ public class MapsActivity extends AppCompatActivity implements
     private boolean cameraLocked = true;
 
     private GoogleMap map;
+    private ClusterManager<ClusterMarker> markerClusterManager;
+    private ClusterMarker clickedClusterItem;
+
     private boolean locationPermissionGranted;
     private FusedLocationProviderClient fusedLocationProviderClient;
-
-
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private LatLng deviceLocation;
     private float cameraZoom = DEFAULT_ZOOM;
+
 
     public static Intent makeLaunchIntent(Context context, LatLng position) {
         Intent intent = new Intent(context, MapsActivity.class);
@@ -106,16 +111,27 @@ public class MapsActivity extends AppCompatActivity implements
         Log.d(TAG, "onMapReady: map loaded");
         Toast.makeText(this, "Eat Safe!", Toast.LENGTH_SHORT).show();
         map = googleMap;
+        map.getUiSettings().setCompassEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+
+        setupMarkers(map);
+        /*map.setOnInfoWindowClickListener(MapsActivity.this);
+        map.setInfoWindowAdapter(MapsActivity.this);*/
+
+        //markerClusterManager.setOnClusterItemClickListener(MapsActivity.this);
+
+
+        markerClusterManager.setOnClusterItemClickListener(MapsActivity.this);
+        markerClusterManager.getMarkerCollection().setInfoWindowAdapter(MapsActivity.this);
+        markerClusterManager.getMarkerCollection().setOnInfoWindowClickListener(MapsActivity.this);
+
+        //Map will use markerCluster's implementations.
+        map.setOnCameraIdleListener(markerClusterManager);
+        map.setOnMarkerClickListener(markerClusterManager);
+        map.setOnInfoWindowClickListener(markerClusterManager);
 
         if (locationPermissionGranted) {
-
-            populatePins(map);
-
             getLastKnownLocation();
-            map.setOnInfoWindowClickListener(MapsActivity.this);
-            map.setInfoWindowAdapter(MapsActivity.this);
-            map.getUiSettings().setCompassEnabled(true);
-            map.getUiSettings().setZoomControlsEnabled(true);
             map.setMyLocationEnabled(true);
             map.setOnCameraMoveListener(MapsActivity.this);
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
@@ -303,15 +319,29 @@ public class MapsActivity extends AppCompatActivity implements
         supportMapFragment.getMapAsync(MapsActivity.this);
     }
 
-    private void populatePins(GoogleMap map) {
+    private void setupMarkers(GoogleMap map) {
+        //      Marker cluster setup
+        markerClusterManager = new ClusterManager<ClusterMarker>(this, map);
+
         for (Restaurant restaurant : restaurants) {
-            LatLng restaurantLatLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
-            Marker marker = map.addMarker(new MarkerOptions()
+
+            double lat = restaurant.getLatitude();
+            double lng = restaurant.getLongitude();
+            LatLng restaurantLatLng = new LatLng(lat, lng);
+            String name = restaurant.getName();
+            String snippet = restaurant.getResTrackingNumber();
+
+            //Setup Markers
+/*            Marker marker = map.addMarker(new MarkerOptions()
                     .position(restaurantLatLng)
-                    .title(restaurant.getName())
-                    .snippet(restaurant.getAddress() + '\n'
-                            + "Hazard Level: " + restaurant.getHazardLevel()));
-            marker.setTag(restaurant.getResTrackingNumber());
+                    .title(name)
+                    .snippet(snippet));
+            marker.setTag(restaurant.getResTrackingNumber());*/
+
+            //Add marker to ClusterManager
+            ClusterMarker clusterMarker = new ClusterMarker(lat, lng, name, snippet);
+            markerClusterManager.addItem(clusterMarker);
+
         }
     }
 
@@ -363,8 +393,9 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
-    public void onInfoWindowClick(Marker marker) {
-        String trackingID = (String) marker.getTag();
+    public void onInfoWindowClick(com.google.android.gms.maps.model.Marker marker) {
+//        String trackingID = (String) marker.getTag();
+        String trackingID = (String) clickedClusterItem.getSnippet();
         Intent intent = RestaurantDetails.makeLaunchIntent(MapsActivity.this, trackingID);
         startActivity(intent);
     }
@@ -391,15 +422,28 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public View getInfoWindow(Marker marker) {
+    public View getInfoWindow(com.google.android.gms.maps.model.Marker marker) {
         //None
         return null;
     }
 
     @Override
-    public View getInfoContents(Marker marker) {
+    public View getInfoContents(com.google.android.gms.maps.model.Marker marker) {
         View view = getLayoutInflater().inflate(R.layout.info_window_restaurant, null);
-        String trackingNumber = (String) marker.getTag();
+//        String trackingNumber = (String) marker.getTag();
+//        Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
+//
+//        String restauranName = restaurant.getName();
+//        String address = restaurant.getAddress();
+//        String hazardLevel = restaurant.getHazardLevel();
+//
+//        TextView textViewRestaurantName = view.findViewById(R.id.infoWindowRestaurantName);
+//        textViewRestaurantName.setText(restauranName);
+//
+//        TextView textViewRestaurantAddr = view.findViewById(R.id.infoWindowAddress);
+//        textViewRestaurantAddr.setText(address);
+
+        String trackingNumber = (String) clickedClusterItem.getSnippet();
         Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
 
         String restauranName = restaurant.getName();
@@ -415,7 +459,6 @@ public class MapsActivity extends AppCompatActivity implements
         TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
         ImageView imageViewHazardIcon = view.findViewById(R.id.infoWindowHazardIcon);
         CardView warningBar = view.findViewById(R.id.infoWindowWarningBar);
-
 
         switch (hazardLevel.toLowerCase()) {
             case "high":
@@ -440,6 +483,18 @@ public class MapsActivity extends AppCompatActivity implements
         return view;
     }
 
+    @Override
+    public boolean onClusterClick(Cluster<ClusterMarker> cluster) {
+        return false;
+    }
+
+    @Override
+    public boolean onClusterItemClick(ClusterItem item) {
+        clickedClusterItem = new ClusterMarker(item.getPosition(), item.getTitle(), item.getSnippet());
+        return false;
+    }
+
+
     //Toolbar setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -458,5 +513,6 @@ public class MapsActivity extends AppCompatActivity implements
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
 }
