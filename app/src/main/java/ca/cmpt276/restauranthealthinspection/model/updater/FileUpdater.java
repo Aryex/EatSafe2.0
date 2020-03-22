@@ -34,7 +34,6 @@ public class FileUpdater {
                 .addInterceptor(logging)
                 .build();
 
-
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("http://data.surrey.ca")
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -64,5 +63,29 @@ public class FileUpdater {
                 Log.e("APICouldNotConnect", "Could not connect to api to API");
             }
         });
+
+        call = apiInterface.callInspections();
+        call.enqueue(new Callback<JsonInfo>() {
+            @Override
+            public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
+                Log.i("APIConnected", "Response code: " + response.code());
+                JsonInfo jsonInfo = response.body();
+
+                Result result = jsonInfo.getResult();
+                List<Resource> resources = result.getResources();
+
+                Log.i("test", "Format: " + resources.get(0).getFormat());
+                Log.i("test", "URL: " + resources.get(0).getUrl());
+                Log.i("test", "Last modified: " + resources.get(0).getLastModified());
+            }
+
+            @Override
+            public void onFailure(Call<JsonInfo> call, Throwable throwable) {
+
+            }
+        });
+
+
+
     }
 }
