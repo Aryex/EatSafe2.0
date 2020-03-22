@@ -37,7 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RestaurantCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.recycler_item_main, parent, false);
+                .inflate(R.layout.info_window_restaurant, parent, false);
         return new RestaurantCardViewHolder(view);
     }
 
@@ -66,15 +66,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     class RestaurantCardViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView hazardIcon = itemView.findViewById(R.id.hazardIcon);
-        private final TextView textViewRestaurantName = itemView.findViewById(R.id.recyclerRestaurantName);
-        private final TextView textViewInspectionDate = itemView.findViewById(R.id.recyclerInspectionDate);
-        private final TextView textViewHazardLevel = itemView.findViewById(R.id.textViewHazardLevel);
-        private final TextView textViewAddress = itemView.findViewById(R.id.recyclerAddress);
-        private final TextView textViewIssuesCount = itemView.findViewById(R.id.recyclerIssuesCount);
+//        private final ImageView hazardIcon = itemView.findViewById(R.id.hazardIcon);
+//        private final TextView textViewRestaurantName = itemView.findViewById(R.id.recyclerRestaurantName);
+//        private final TextView textViewInspectionDate = itemView.findViewById(R.id.recyclerInspectionDate);
+//        private final TextView textViewHazardLevel = itemView.findViewById(R.id.textViewHazardLevel);
+//        private final TextView textViewAddress = itemView.findViewById(R.id.recyclerAddress);
+//        private final TextView textViewIssuesCount = itemView.findViewById(R.id.recyclerIssuesCount);
+//
+//        private final RelativeLayout parentLayout = itemView.findViewById(R.id.recyclerItemParent);
+//        private final CardView warningBar = itemView.findViewById(R.id.warningBar);
 
-        private final RelativeLayout parentLayout = itemView.findViewById(R.id.recyclerItemParent);
-        private final CardView warningBar = itemView.findViewById(R.id.warningBar);
+        private final ImageView hazardIcon = itemView.findViewById(R.id.infoWindowHazardIcon);
+        private final TextView textViewRestaurantName = itemView.findViewById(R.id.infoWindowRestaurantName);
+        private final TextView textViewInspectionDate = itemView.findViewById(R.id.infoWindowInspectionDate);
+        private final TextView textViewHazardLevel = itemView.findViewById(R.id.infoWindowHazardLevel);
+        private final TextView textViewAddress = itemView.findViewById(R.id.infoWindowAddress);
+        private final TextView textViewIssuesCount = itemView.findViewById(R.id.infoWindowIssuesNum);
+        private final CardView parentLayout = itemView.findViewById(R.id.infoWindowParentViewCardView);
+        private final CardView warningBar = itemView.findViewById(R.id.infoWindowWarningBar);
 
         private RestaurantCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,10 +96,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             if (restaurant.hasBeenInspected()) {
                 String latestInspectionDate = restaurant.getLatestInspectionDate();
-                textViewInspectionDate.setText(String.format(context.getString(R.string.last_inspected_on), latestInspectionDate));
+                textViewInspectionDate.setText(String.format(latestInspectionDate));
 
-                String latestInspectionTotalIssues = restaurant.getLatestInspectionTotalIssues();
-                textViewIssuesCount.setText(String.format(context.getString(R.string.found_num_issues), latestInspectionTotalIssues));
+                String totalIssues = restaurant.getLatestInspectionTotalIssues();
+                textViewIssuesCount.setText(totalIssues);
 
                 RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
                 setupWarningBar(hazardLevel);
@@ -100,7 +109,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 textViewIssuesCount.setText(R.string.empty_string);
                 setupWarningBar(RestaurantListActivity.HazardLevel.LOW);
             }
-
         }
 
         private void setupWarningBar(RestaurantListActivity.HazardLevel hazardLevel) {

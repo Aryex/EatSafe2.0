@@ -1,83 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.appcompat.widget.LinearLayoutCompat
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:id="@+id/infoWindowParentViewCardView"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="10dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/infoWindowWarningBar"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        card_view:cardBackgroundColor="@color/hazardLowDark"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:id="@+id/infoWindowHazardIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="5dp"
-                android:contentDescription="@string/desc_hazard_icon"
-                card_view:srcCompat="@drawable/icon_hazard_low"
-                tools:srcCompat="@drawable/icon_hazard_low" />
-
-            <TextView
-                android:id="@+id/infoWindowHazardLevel"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="3dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/roboto_light"
-                android:text="@string/hazard_level_low"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-
-    </androidx.cardview.widget.CardView>
     <androidx.appcompat.widget.LinearLayoutCompat
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="5dp"/>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="vertical"
+        android:layout_height="wrap_content"
+        >
+        <androidx.cardview.widget.CardView
+            android:id="@+id/infoWindowWarningBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardBackgroundColor="@color/hazardLowDark"
+            >
 
-            <com.google.android.material.textview.MaterialTextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/restaurant_details_title"
-                android:layout_marginStart="10dp"
-                android:textStyle="bold"
-                android:id="@+id/infoWindowRestaurantName"/>
-            <com.google.android.material.textview.MaterialTextView
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/infoWindowHazardIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="5dp"
+                    android:contentDescription="@string/desc_hazard_icon"
+                    card_view:srcCompat="@drawable/icon_hazard_low"
+                    tools:srcCompat="@drawable/icon_hazard_low" />
+
+                <TextView
+                    android:id="@+id/infoWindowHazardLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="3dp"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/hazard_level_low"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:padding="5dp"
+                card_view:srcCompat="@drawable/logo_mc_donald" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/default_address"
-                android:layout_marginStart="10dp"
-                android:id="@+id/infoWindowAddress"/>
+                android:paddingLeft="5dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mc Donalds"
+                    android:textStyle="bold"
+                    android:id="@+id/infoWindowRestaurantName"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_address"
+                    android:id="@+id/infoWindowAddress"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Inspected on: "
+                        />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_date"
+                        android:id="@+id/infoWindowInspectionDate"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Found "
+                        />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:id="@+id/infoWindowIssuesNum"
+                        />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=" isuues"
+                        />
+                </LinearLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
-
     </androidx.appcompat.widget.LinearLayoutCompat>
-</androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.cardview.widget.CardView>
+
 
