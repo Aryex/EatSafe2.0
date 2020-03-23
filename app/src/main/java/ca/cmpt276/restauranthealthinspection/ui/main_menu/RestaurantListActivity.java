@@ -53,11 +53,6 @@ public class RestaurantListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finishAffinity();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0);
     }
 }
