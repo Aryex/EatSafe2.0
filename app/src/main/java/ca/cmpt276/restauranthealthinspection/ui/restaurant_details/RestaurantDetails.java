@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -12,12 +14,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
+import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.inspection_details.InspectionDetails;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
 
 /**
  * Display details of single restaurant
@@ -51,6 +57,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
         extractIntent();
         setupTextViews();
+        setupCoordToMap();
 
         if (inspectionList.size() != 0) {
             TextView noInspectionText = findViewById(R.id.noInspectionTV);
@@ -58,6 +65,23 @@ public class RestaurantDetails extends AppCompatActivity {
             populateListView();
             registerClickCallback();
         }
+
+
+    }
+
+    private void setupCoordToMap() {
+        LinearLayout linearLayout = findViewById(R.id.restaurantDetailCoordLayout);
+        final Context context = this;
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Restaurant restaurant = manager.get(index);
+                double lat = restaurant.getLatitude();
+                double lng = restaurant.getLongitude();
+                Intent intent = MapsActivity.makeLaunchIntent(context, lat, lng, trackingID);
+                startActivity(intent);
+            }
+        });
     }
 
     private void extractIntent() {

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -21,11 +22,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -40,13 +39,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.ClusterRenderer;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-import java.util.List;
+
+import java.util.ArrayList;
 
 import ca.cmpt276.restauranthealthinspection.R;
-import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
@@ -63,13 +63,14 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * Cluster items codes were adapted from the following resources:
  * https://stackoverflow.com/questions/25968486/how-to-add-info-window-for-clustering-marker-in-android
  * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
+ * https://stackoverflow.com/questions/36902890/how-i-can-call-showinfowindow-in-a-marker-within-cluster-manager
  * <p>
  * note: restaurant tracking id is stored in a cluster marker's snippet.
  */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     //  Surrey Central's Lat Lng
-    public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.188808, -122.847992);
+    public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.1866939, -122.8494363);
 
     //Debug
     private static final String TAG = "MapsActivity";
@@ -85,20 +86,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private boolean cameraLocked = true;
 
-    private GoogleMap map;
-    private ClusterManager<ClusterMarker> markerClusterManager;
-    private ClusterMarker clickedClusterItem;
+    private static GoogleMap map;
+    private static ClusterManager<ClusterMarker> clusterManager;
+    private static ArrayList<ClusterMarker> clusterMarkerList;
+    private static ClusterMarker clickedClusterItem;
+    private static DefaultClusterRenderer defaultRenderer;
 
     private boolean locationPermissionGranted;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-    private LatLng deviceLocation;
+    private LatLng deviceLocation = DEFAULT_LAT_LNG;// SFU Surrey;
     private float cameraZoom = DEFAULT_ZOOM;
 
-    public static Intent makeLaunchIntent(Context context, LatLng position) {
+    private static String INTENT_KEY_LAT = "lat";
+    private static String INTENT_KEY_LNG = "lng";
+    private static String INTENT_KEY_RESTAURANT_ID = "id";
+    private boolean restaurantRequestedShowInfo = false;
+    private ClusterMarker restaurantRequestedClusterItem;
+
+
+    public static Intent makeLaunchIntent(Context context, double lat, double lng, String trackingId) {
         Intent intent = new Intent(context, MapsActivity.class);
-        intent.putExtra("position", position);
+        intent.putExtra(INTENT_KEY_LAT, lat);
+        intent.putExtra(INTENT_KEY_LNG, lng);
+        intent.putExtra(INTENT_KEY_RESTAURANT_ID, trackingId);
         return intent;
     }
 
@@ -111,10 +123,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
 
-        setupClusterMarkers(map);
-
+        clusterManager = new ClusterManager<ClusterMarker>(this, map);
+        defaultRenderer = new DefaultClusterRenderer(this, map, clusterManager);
+        clusterManager.setRenderer(defaultRenderer);
+        clusterMarkerList = new ArrayList<>();
+        setupClusterMarkers();
 //      Setup cluster items behaviour
-        markerClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>() {
+        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>() {
             @Override
             public boolean onClusterItemClick(ClusterMarker item) {
                 clickedClusterItem = new ClusterMarker(item.getPosition(), item.getTitle(), item.getSnippet());
@@ -122,7 +137,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        markerClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        clusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(com.google.android.gms.maps.model.Marker marker) {
                 String trackingID = (String) clickedClusterItem.getSnippet();
@@ -131,16 +146,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        markerClusterManager.getMarkerCollection().setInfoWindowAdapter(new MapsActivity.InfoWindowAdapter(this));
+        clusterManager.getMarkerCollection().setInfoWindowAdapter(new MapsActivity.InfoWindowAdapter(this));
 
 //      Map will use markerCluster's implementations.
-        map.setOnCameraIdleListener(markerClusterManager);
-        map.setOnMarkerClickListener(markerClusterManager);
-        map.setOnInfoWindowClickListener(markerClusterManager);
+        map.setOnCameraIdleListener(clusterManager);
+        map.setOnMarkerClickListener(clusterManager);
+        map.setOnInfoWindowClickListener(clusterManager);
 
 //      Setup position tracking behaviour
         if (locationPermissionGranted) {
             getLastKnownLocation();
+
+
             map.setMyLocationEnabled(true);
             map.setOnCameraMoveListener(new MapsActivity.OnCameraMove());
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
@@ -151,13 +168,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (cameraZoom < DEFAULT_ZOOM) {
                         cameraZoom = DEFAULT_ZOOM;
                     }
-                    moveCamera(deviceLocation, cameraZoom);
+                    moveCamera(deviceLocation, cameraZoom, map);
                     cameraLocked = true;
                     return true;
                 }
             });
 
         }
+
     }
 
     private boolean inBetweenAbsolutes(double absolute, double value) {
@@ -174,7 +192,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         restaurants = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        deviceLocation = new LatLng(49.1866939, -122.8494363); // SFU Surrey
 
         //Creating location Request
         locationRequest = LocationRequest.create();
@@ -196,7 +213,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveCamera(new LatLng(49.188808, -122.847992), 12f);
+                moveCamera(new LatLng(49.188808, -122.847992), 12f, map);
             }
         });
     }
@@ -207,7 +224,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 cameraLocked = !cameraLocked;
-                moveCamera(deviceLocation, cameraZoom);
+                moveCamera(deviceLocation, cameraZoom, map);
             }
         });
     }
@@ -239,8 +256,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for (Location location : locationResult.getLocations()) {
                     Log.d(TAG, "onLocationResult: called + cameraLocked: " + cameraLocked);
 
-                    //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
-
                     if (cameraLocked) {
                         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         double latPrecision = deviceLocation.latitude - location.getLatitude();
@@ -248,7 +263,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         if (!deviceLocation.equals(newLocation)) {
                             deviceLocation = newLocation;
-                            moveCamera(newLocation, cameraZoom);
+                            moveCamera(newLocation, cameraZoom, map);
                         }
                     }
                 }
@@ -265,11 +280,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onSuccess(Location location) {
                         // Got the last known location which may be null
                         if (location != null) {
-                            // Logic to handle location object
-                            Log.d(TAG, "getLastKnownLocation: got current location");
+
                             LatLng lastKnownLocation = new LatLng(location.getLatitude(), location.getLongitude());
                             deviceLocation = lastKnownLocation;
-                            moveCamera(lastKnownLocation, 12f);
+                            moveCamera(lastKnownLocation, 12f, map);
+
+                            Log.d(TAG, "getLastKnownLocation: got current location");
+                            LatLng latLng;
+                            Intent intent = getIntent();
+                            if (intent.hasExtra(INTENT_KEY_LAT) && intent.hasExtra(INTENT_KEY_LNG)) {
+                                latLng = new LatLng(intent.getDoubleExtra(INTENT_KEY_LAT, 0), intent.getDoubleExtra(INTENT_KEY_LNG, 0));
+                                String trackingId = intent.getStringExtra(INTENT_KEY_RESTAURANT_ID);
+                                Log.d(TAG, "getLastKnownLocation: THERE IS INTENT");
+                                for (ClusterMarker marker : clusterMarkerList) {
+                                    if (marker.getSnippet().equals(trackingId)) {
+                                        Log.d(TAG, "getLastKnownLocation: Mark Found");
+                                        restaurantRequestedClusterItem = marker;
+                                        restaurantRequestedShowInfo = true;
+                                        break;
+                                    }
+                                    Log.d(TAG, "getLastKnownLocation: Marker not found");
+                                }
+                                moveCamera(latLng,cameraZoom,map);
+                            }
+
                         } else {
                             Log.d(TAG, "getLastKnownLocation: current location is null");
                         }
@@ -332,8 +366,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         supportMapFragment.getMapAsync(MapsActivity.this);
     }
 
-    private void setupClusterMarkers(GoogleMap map) {
-        markerClusterManager = new ClusterManager<ClusterMarker>(this, map);
+    private void setupClusterMarkers() {
         for (Restaurant restaurant : restaurants) {
 
             double lat = restaurant.getLatitude();
@@ -342,11 +375,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String snippet = restaurant.getResTrackingNumber();
 
             ClusterMarker clusterMarker = new ClusterMarker(lat, lng, name, snippet);
-            markerClusterManager.addItem(clusterMarker);
+            clusterMarkerList.add(clusterMarker);
+            clusterManager.addItem(clusterMarker);
         }
     }
 
-    private void moveCamera(LatLng newLocation, float zoom) {
+    private static void moveCamera(LatLng newLocation, float zoom, GoogleMap map) {
         Log.d(TAG, "moveCamera: called");
         //Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
@@ -375,12 +409,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (inBetweenAbsolutes(DEFAULT_PRECISION, latPrecision)
                     && inBetweenAbsolutes(DEFAULT_PRECISION, lngPrecision)) {
-                Log.d(TAG, "setOnCameraMoveListener: locked");
-                debugDisplay("setOnCameraMoveListener: locked");
+                Log.d(TAG, "onCameraMove: locked");
+                debugDisplay("onCameraMove: locked");
                 cameraLocked = true;
+
+                Marker marker = defaultRenderer.getMarker(restaurantRequestedClusterItem);
+                if (marker != null) {
+                    Log.d(TAG, "onCameraMove: THERE'S MARKER !");
+                } else {
+                    Log.d(TAG, "onCameraMove: MARKER NULL");
+                }
+
             } else {
-                Log.d(TAG, "setOnCameraMoveListener: unlocked");
-                debugDisplay("setOnCameraMoveListener: unlocked");
+                Log.d(TAG, "onCameraMove: unlocked");
+                debugDisplay("onCameraMove: unlocked");
                 cameraLocked = false;
             }
         }
@@ -403,7 +445,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public View getInfoContents(com.google.android.gms.maps.model.Marker marker) {
             View view = getLayoutInflater().inflate(R.layout.info_window_restaurant, null);
-            String trackingNumber = (String) clickedClusterItem.getSnippet();
+            String trackingNumber;
+            if (clickedClusterItem != null) {
+                trackingNumber = (String) clickedClusterItem.getSnippet();
+
+            } else {
+                trackingNumber = (String) marker.getSnippet();
+            }
             Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
 
             String restaurantName = restaurant.getName();
@@ -450,6 +498,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             return view;
         }
+
     }
 
     //Toolbar setup
