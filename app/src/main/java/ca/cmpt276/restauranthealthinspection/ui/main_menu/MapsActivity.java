@@ -87,8 +87,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
-    private JsonInspection jsonInspection;
-    private JsonRestaurant jsonRestaurant;
+
 
     //What to do when map appear on screen
     @Override
@@ -112,8 +111,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
 
         connectToServer();
-
-
 
         setupModel();
 
@@ -364,12 +361,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Result result = jsonInfo.getResult();
                 List<Resource> resources = result.getResources();
 
-                JsonRestaurant jsonRestaurant = new JsonRestaurant(
-                        resources.get(0).getFormat(),
-                        resources.get(0).getUrl(),
-                        resources.get(0).getLastModified(),
-                        resources.get(0).getPosition()
-                );
 
                 Log.i("jsonRestaurant", "Format: " + resources.get(0).getFormat());
                 Log.i("jsonRestaurant", "URL: " + resources.get(0).getUrl());
@@ -393,13 +384,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Result result = jsonInfo.getResult();
                 List<Resource> resources = result.getResources();
 
-                JsonInspection jsonInspection = new JsonInspection(
-                        resources.get(0).getFormat(),
-                        resources.get(0).getUrl(),
-                        resources.get(0).getLastModified(),
-                        resources.get(0).getPosition()
-                );
-
                 Log.i("jsonInspection", "Format: " + resources.get(0).getFormat());
                 Log.i("jsonInspection", "URL: " + resources.get(0).getUrl());
                 Log.i("jsonInspection", "Last modified: " + resources.get(0).getLastModified());
@@ -411,10 +395,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(MapsActivity.this, R.string.api_error, Toast.LENGTH_LONG).show();
             }
         });
-    }
-    private int getHoursInBetween(long lastModified) {
-        long hours = Calendar.getInstance().getTimeInMillis() - lastModified;
-
-        return (int) Math.round(hours / (60.0 * 60  * 1000)); // 60 seconds * 60 minutes * 24 hours * 1000 ms per second
     }
 }
