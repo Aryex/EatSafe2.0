@@ -117,6 +117,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
 
             description.setText(layout.getContext().getString(R.string.hazardLevelDisplay, hazardRating));
             description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
+            layout.setForeground(null);
 
             switch (inspection.getHazardRating()) {
                 case Inspection.HAZARD_RATING_LOW:
