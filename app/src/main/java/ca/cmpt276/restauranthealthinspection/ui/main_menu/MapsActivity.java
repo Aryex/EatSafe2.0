@@ -73,7 +73,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Debug
     private static final String TAG = "MapsActivity";
-    private TextView debugTextview;
+    private TextView debugTextView;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -168,7 +168,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        debugTextview = findViewById(R.id.debugTextview);
+        debugTextView = findViewById(R.id.debugTextview);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -359,7 +359,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void debugDisplay(String s) {
-        debugTextview.setText(s);
+        debugTextView.setText(s);
     }
 
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
