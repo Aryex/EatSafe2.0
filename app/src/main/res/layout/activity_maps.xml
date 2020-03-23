@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
             android:layout_marginTop="21dp"
-            android:text="Debug Lock status "
+            android:text="@string/debug_lock_status"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +49,7 @@
             android:layout_marginStart="17dp"
             android:layout_marginBottom="17dp"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="20dp"
-            android:text="moveToSurrey"
+            android:text="@string/move_to_surrey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/floatingActionButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>

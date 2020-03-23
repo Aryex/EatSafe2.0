@@ -51,7 +51,6 @@ import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
-
 /**
  * Map activity serves as the first entry point into the app.
  * The map uses Google Map API.
@@ -67,7 +66,6 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * <p>
  * note: restaurant tracking id is stored in a cluster marker's snippet.
  */
-
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     //  Surrey Central's Lat Lng
@@ -104,11 +102,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return intent;
     }
 
-    //What to do when map appear on screen
+    // What to do when map appear on screen
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: map loaded");
-        Toast.makeText(this, "Eat Safe!", Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(this, R.string.eat_safe, Toast.LENGTH_SHORT).show();
         map = googleMap;
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -176,7 +174,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         restaurants = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        deviceLocation = new LatLng(49.246292, -123.116226);
+        deviceLocation = new LatLng(49.1866939, -122.8494363); // SFU Surrey
 
         //Creating location Request
         locationRequest = LocationRequest.create();
@@ -312,22 +310,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "onRequestPermissionsResult: called");
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
-                            locationPermissionGranted = false;
-                            return;
-                        }
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0) {
+                for (int grantResult : grantResults) {
+                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                        locationPermissionGranted = false;
+                        return;
                     }
-                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
-                    locationPermissionGranted = true;
-                    createMap();
                 }
+                Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                locationPermissionGranted = true;
+                createMap();
             }
-            default:
         }
     }
 
@@ -355,7 +350,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "moveCamera: called");
         //Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
-
     }
 
     private void startLocationUpdates() {
@@ -396,7 +390,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         private Context context;
 
-        public InfoWindowAdapter(Context context) {
+        InfoWindowAdapter(Context context) {
             this.context = context;
         }
 
@@ -459,14 +453,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_show_list:
-                Intent intent = RestaurantListActivity.makeLaunchIntent(this);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.menu_item_show_list) {
+            Intent intent = RestaurantListActivity.makeLaunchIntent(this);
+            startActivity(intent);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
-
 }

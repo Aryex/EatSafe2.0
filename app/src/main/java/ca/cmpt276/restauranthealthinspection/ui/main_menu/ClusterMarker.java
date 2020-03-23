@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
  * Reference:
  * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
  */
+@SuppressWarnings("WeakerAccess")
 public class ClusterMarker implements com.google.maps.android.clustering.ClusterItem {
     private final LatLng position;
     private final String title;
@@ -37,5 +38,4 @@ public class ClusterMarker implements com.google.maps.android.clustering.Cluster
     public String getSnippet() {
         return snippet;
     }
-
 }

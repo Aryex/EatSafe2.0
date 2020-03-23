@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
     android:id="@+id/infoWindowParentViewCardView"
-    android:layout_marginTop="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginBottom="10dp"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardElevation="5dp"
-    card_view:cardCornerRadius="10dp">
+    card_view:cardCornerRadius="10dp"
+    card_view:cardElevation="5dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:orientation="vertical">
+
         <androidx.cardview.widget.CardView
             android:id="@+id/infoWindowWarningBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            card_view:cardCornerRadius="10dp"
             card_view:cardBackgroundColor="@color/hazardLowDark"
-            >
+            card_view:cardCornerRadius="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,10 +59,11 @@
 
 
         </androidx.cardview.widget.CardView>
+
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="75dp"
@@ -73,59 +72,61 @@
                 card_view:srcCompat="@drawable/logo_mc_donald" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:paddingLeft="5dp">
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/infoWindowRestaurantName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mc Donalds"
-                    android:textStyle="bold"
-                    android:id="@+id/infoWindowRestaurantName"/>
+                    android:text="@string/mcdonald_s"
+                    android:textStyle="bold" />
+
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/infoWindowAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/default_address"
-                    android:id="@+id/infoWindowAddress"/>
+                    android:text="@string/default_address" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Inspected on: "
-                        />
+                        android:text="@string/inspected_on" />
+
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_date"
                         android:id="@+id/infoWindowInspectionDate"
-                        />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_date" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Found "
-                        />
+                        android:text="@string/found" />
+
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="3"
                         android:id="@+id/infoWindowIssuesNum"
-                        />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/three" />
+
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" isuues"
-                        />
+                        android:text="@string/issues" />
                 </LinearLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
