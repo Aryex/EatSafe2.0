@@ -1,21 +1,17 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -32,24 +28,35 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.util.Calendar;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
-import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
+import ca.cmpt276.restauranthealthinspection.model.updater.APIInterface;
+import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
+import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInspection;
+import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonRestaurant;
+import ca.cmpt276.restauranthealthinspection.model.updater.pojos.Resource;
+import ca.cmpt276.restauranthealthinspection.model.updater.pojos.Result;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterDialogFragment;
-
-import static android.telephony.CellLocation.requestLocationUpdate;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -80,6 +87,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
+    private JsonInspection jsonInspection;
+    private JsonRestaurant jsonRestaurant;
+
     //What to do when map appear on screen
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -90,7 +100,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (locationPermissionGranted) {
             getDeviceCurrentLocation();
             map.setMyLocationEnabled(true);
-
         }
     }
 
@@ -102,9 +111,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FileUpdater.connectToServer();
+        connectToServer();
 
-        showUpdaterDialog();
+
 
         setupModel();
 
@@ -308,9 +317,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         RestaurantManager restaurants = RestaurantManager.getInstance(this);
 
-        for (Restaurant r : restaurants) {
-            Log.d("Main Activity", "onCreate: " + r);
-        }
+//        for (Restaurant r : restaurants) {
+//            Log.d("Main Activity", "onCreate: " + r);
+//        }
 
         Restaurant restaurant = restaurants.get(2);
         Log.d("MainActivity", restaurant.getResTrackingNumber());
@@ -322,5 +331,90 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "onLocationChanged: Called");
         Toast.makeText(this, "onLocationChanged: Called", Toast.LENGTH_SHORT)
                 .show();
+    }
+
+    public void connectToServer() {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .create();
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("http://data.surrey.ca")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client);
+
+        Retrofit retrofit = builder.build();
+
+        APIInterface apiInterface = retrofit.create(APIInterface.class);
+        Call<JsonInfo> call = apiInterface.callRestaurants();
+
+        call.enqueue(new Callback<JsonInfo>() {
+            @Override
+            public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
+                Log.i("APIConnected", "Response code: " + response.code());
+                JsonInfo jsonInfo = response.body();
+
+                Result result = jsonInfo.getResult();
+                List<Resource> resources = result.getResources();
+
+                JsonRestaurant jsonRestaurant = new JsonRestaurant(
+                        resources.get(0).getFormat(),
+                        resources.get(0).getUrl(),
+                        resources.get(0).getLastModified(),
+                        resources.get(0).getPosition()
+                );
+
+                Log.i("jsonRestaurant", "Format: " + resources.get(0).getFormat());
+                Log.i("jsonRestaurant", "URL: " + resources.get(0).getUrl());
+                Log.i("jsonRestaurant", "Last modified: " + resources.get(0).getLastModified());
+            }
+
+            @Override
+            public void onFailure(Call<JsonInfo> call, Throwable t) {
+                Log.e("APICouldNotConnect", "Could not connect to api to API");
+                Toast.makeText(MapsActivity.this, R.string.api_error, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        call = apiInterface.callInspections();
+        call.enqueue(new Callback<JsonInfo>() {
+            @Override
+            public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
+                Log.i("APIConnected", "Response code: " + response.code());
+                JsonInfo jsonInfo = response.body();
+
+                Result result = jsonInfo.getResult();
+                List<Resource> resources = result.getResources();
+
+                JsonInspection jsonInspection = new JsonInspection(
+                        resources.get(0).getFormat(),
+                        resources.get(0).getUrl(),
+                        resources.get(0).getLastModified(),
+                        resources.get(0).getPosition()
+                );
+
+                Log.i("jsonInspection", "Format: " + resources.get(0).getFormat());
+                Log.i("jsonInspection", "URL: " + resources.get(0).getUrl());
+                Log.i("jsonInspection", "Last modified: " + resources.get(0).getLastModified());
+            }
+
+            @Override
+            public void onFailure(Call<JsonInfo> call, Throwable throwable) {
+                Log.e("APICouldNotConnect", "Could not connect to api to API");
+                Toast.makeText(MapsActivity.this, R.string.api_error, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private int getHoursInBetween(long lastModified) {
+        long hours = Calendar.getInstance().getTimeInMillis() - lastModified;
+
+        return (int) Math.round(hours / (60.0 * 60  * 1000)); // 60 seconds * 60 minutes * 24 hours * 1000 ms per second
     }
 }
