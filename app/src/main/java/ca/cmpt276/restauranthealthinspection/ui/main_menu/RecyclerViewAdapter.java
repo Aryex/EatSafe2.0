@@ -106,7 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             } else {
                 //default setup for restaurant with no inspections.
                 textViewInspectionDate.setText(R.string.no_inspections_found);
-                textViewIssuesCount.setText(R.string.empty_string);
+                textViewIssuesCount.setText(R.string.no);
                 setupWarningBar(RestaurantListActivity.HazardLevel.LOW);
             }
         }

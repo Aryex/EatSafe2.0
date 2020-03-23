@@ -79,14 +79,14 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/infoWindowRestaurantName"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mcdonald_s"
                     android:textStyle="bold" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/infoWindowAddress"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/default_address" />
 
