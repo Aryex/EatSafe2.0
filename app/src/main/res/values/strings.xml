@@ -51,8 +51,8 @@
     <string name="move_to_surrey">Move To Surrey</string>
     <string name="debug_lock_status">Debug lock status</string>
     <string name="mcdonald_s">McDonald\'s</string>
-    <string name="inspected_on">Inspected on: </string>
-    <string name="found">Found </string>
-    <string name="three"> 3</string>
-    <string name="issues"> issues.</string>
+    <string name="inspected_on">Inspected on:\u0020</string>
+    <string name="found">Found\u0020</string>
+    <string name="three">3</string>
+    <string name="issues">\u0020issues.</string>
 </resources>
