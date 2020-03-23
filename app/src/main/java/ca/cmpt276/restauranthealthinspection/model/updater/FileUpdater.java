@@ -1,5 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.model.updater;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,7 +23,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FileUpdater {
-    public static void connectToServer() {
+    public static void connectToServer(Context context) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .create();
@@ -61,6 +62,7 @@ public class FileUpdater {
             @Override
             public void onFailure(Call<JsonInfo> call, Throwable t) {
                 Log.e("APICouldNotConnect", "Could not connect to api to API");
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -81,7 +83,8 @@ public class FileUpdater {
 
             @Override
             public void onFailure(Call<JsonInfo> call, Throwable throwable) {
-
+                Log.e("APICouldNotConnect", "Could not connect to api to API");
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
             }
         });
 
