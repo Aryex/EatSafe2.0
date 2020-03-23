@@ -3,6 +3,8 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -44,5 +46,21 @@ public class RestaurantListActivity extends AppCompatActivity {
 
     public enum HazardLevel {
         LOW, MEDIUM, HIGH
+    }
+
+    //Menu setup
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_restuarant, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_return_map) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
