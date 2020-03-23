@@ -421,7 +421,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             TextView textViewInspectionDate = view.findViewById(R.id.infoWindowInspectionDate);
             textViewInspectionDate.setText(lastInspected);
 
-            TextView textViewTotalIssues= view.findViewById(R.id.infoWindowIssuesNum);
+            TextView textViewTotalIssues = view.findViewById(R.id.infoWindowIssuesNum);
             textViewTotalIssues.setText(lastInspectedTotalIssues);
 
             TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
