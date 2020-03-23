@@ -406,15 +406,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String trackingNumber = (String) clickedClusterItem.getSnippet();
             Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
 
-            String restauranName = restaurant.getName();
+            String restaurantName = restaurant.getName();
             String address = restaurant.getAddress();
             String hazardLevel = restaurant.getHazardLevel();
+            String lastInspected = restaurant.getLatestInspectionDate();
+            String lastInspectedTotalIssues = restaurant.getLatestInspectionTotalIssues();
 
             TextView textViewRestaurantName = view.findViewById(R.id.infoWindowRestaurantName);
-            textViewRestaurantName.setText(restauranName);
+            textViewRestaurantName.setText(restaurantName);
 
-            TextView textViewRestaurantAddr = view.findViewById(R.id.infoWindowAddress);
-            textViewRestaurantAddr.setText(address);
+            TextView textViewRestaurantAddress = view.findViewById(R.id.infoWindowAddress);
+            textViewRestaurantAddress.setText(address);
+
+            TextView textViewInspectionDate = view.findViewById(R.id.infoWindowInspectionDate);
+            textViewInspectionDate.setText(lastInspected);
+
+            TextView textViewTotalIssues= view.findViewById(R.id.infoWindowIssuesNum);
+            textViewTotalIssues.setText(lastInspectedTotalIssues);
 
             TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
             ImageView imageViewHazardIcon = view.findViewById(R.id.infoWindowHazardIcon);
