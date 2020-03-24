@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -41,7 +42,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
 
@@ -55,14 +55,13 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * The map uses Google Map API.
  * Map activity uses the Fused Location API to to track user location.
  * <p>
- * Location tracking odes were adapted from the following resources:
+ * Location tracking Codes were adapted from the following resources:
  * https://developer.android.com/training/location
  * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
  * <p>
  * Cluster items codes were adapted from the following resources:
  * https://stackoverflow.com/questions/25968486/how-to-add-info-window-for-clustering-marker-in-android
  * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
- * https://stackoverflow.com/questions/36902890/how-i-can-call-showinfowindow-in-a-marker-within-cluster-manager
  * <p>
  * note: restaurant tracking id is stored in a cluster marker's snippet.
  */
@@ -74,36 +73,37 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Debug
     private static final String TAG = "MapsActivity";
     private TextView debugTextView;
+    private boolean debugOn = false;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 19f;
-    private static final double DEFAULT_PRECISION = 0.0001;
 
     private RestaurantManager restaurants;
 
+    private static final float DEFAULT_ZOOM_FOCUS = 19f;
+    private static final float DEFAULT_ZOOM_HIGH = 12f;
+    private static final double DEFAULT_PRECISION = 0.0001;
+    private float currentCameraZoom = DEFAULT_ZOOM_FOCUS;
     private boolean cameraLocked = true;
 
     private static GoogleMap map;
     private static ClusterManager<MyClusterItem> clusterManager;
     private static ArrayList<MyClusterItem> myClusterItemList;
     private static MyClusterItem clickedClusterItem;
-    private static DefaultClusterRenderer defaultRenderer;
-    private static boolean clusterManagerRendered = false;
+    private static Marker requestedMarker;
+    private static boolean clusterItemsRendered = false;
 
     private boolean locationPermissionGranted;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private LatLng deviceLocation = DEFAULT_LAT_LNG;// SFU Surrey;
-    private float cameraZoom = DEFAULT_ZOOM;
+
 
     private static String INTENT_KEY_LAT = "lat";
     private static String INTENT_KEY_LNG = "lng";
     private static String INTENT_KEY_RESTAURANT_ID = "id";
-    private boolean restaurantRequestedShowInfo = false;
-    private MyClusterItem restaurantRequestedClusterItem;
 
     public static Intent makeLaunchIntent(Context context, double lat, double lng, String trackingId) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -113,7 +113,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return intent;
     }
 
-    public static BitmapDescriptor getBitmapDescriptor(String hazardlevel) {
+    public static BitmapDescriptor getHazardLevelBitmapDescriptor(String hazardlevel) {
         switch (hazardlevel.toLowerCase()) {
             case "moderate":
                 return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
@@ -128,39 +128,59 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: map loaded");
-        //    Toast.makeText(this, R.string.eat_safe, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.eat_safe, Toast.LENGTH_SHORT).show();
         map = googleMap;
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, cameraZoom));
-        map.getUiSettings().setCompassEnabled(true);
+        map.getUiSettings().setMapToolbarEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
 
-        LatLng latLng;
         Intent data = getIntent();
-
         if (data.hasExtra(INTENT_KEY_RESTAURANT_ID)) {
+            //initialize camera position above default position.
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM_HIGH));
             createRequestedMarker(data);
-
         } else {
-
             populateMap();
+            setupLocationTracking();
+            moveCamera(deviceLocation, DEFAULT_ZOOM_HIGH);
         }
+    }
 
-//      Setup cluster items behaviour
-
+    private void setupLocationTracking() {
+        if (locationPermissionGranted) {
+            getLastKnownLocation();
+            map.setMyLocationEnabled(true);
+            map.setOnCameraMoveListener(new OnCameraMove());
+            map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    Log.d(TAG, "onMyLocationButtonClick: camera locked");
+                    currentCameraZoom = map.getCameraPosition().zoom;
+                    //Note: smaller zoom == higher camera
+                    if (currentCameraZoom != DEFAULT_ZOOM_FOCUS) {
+                        currentCameraZoom = DEFAULT_ZOOM_FOCUS;
+                    }
+                    moveCamera(deviceLocation, DEFAULT_ZOOM_FOCUS);
+                    cameraLocked = true;
+                    return true;
+                }
+            });
+//          When btn pressed, move camera to user location and zoom
+        }
     }
 
     private void createRequestedMarker(Intent data) {
         LatLng latLng;
         Log.d(TAG, "onMapReady: THERE IS INTENT");
         cameraLocked = false;
-        clusterManagerRendered = false;
+        clusterItemsRendered = false;
+
         latLng = new LatLng(data.getDoubleExtra(INTENT_KEY_LAT, 0), data.getDoubleExtra(INTENT_KEY_LNG, 0));
         String trackingId = data.getStringExtra(INTENT_KEY_RESTAURANT_ID);
 
         String hazardLevel = restaurants.getRestaurant(trackingId).getHazardLevel();
-        BitmapDescriptor markerIcon = getBitmapDescriptor(hazardLevel);
+        BitmapDescriptor markerIcon = getHazardLevelBitmapDescriptor(hazardLevel);
 
-        Marker marker = map.addMarker(new MarkerOptions()
+        requestedMarker = map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title("Title")
                 .snippet(trackingId)
@@ -185,67 +205,72 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.setOnInfoWindowCloseListener(new GoogleMap.OnInfoWindowCloseListener() {
             @Override
             public void onInfoWindowClose(Marker marker) {
-                if (!clusterManagerRendered) {
+                if (!clusterItemsRendered) {
                     marker.remove();
                     //renderer on update on move.
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom - 0.5f));
                     populateMap();
-                    clusterManagerRendered = true;
+                    setupLocationTracking();
                 }
-
             }
         });
-
         map.setInfoWindowAdapter(new InfoWindowAdapter(this));
-        marker.showInfoWindow();
-        moveCamera(latLng, cameraZoom, map);
+        requestedMarker.showInfoWindow();
+        moveCamera(latLng, currentCameraZoom);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        debugTextView = findViewById(R.id.debugTextview);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setupDebug(debugOn);
 
         restaurants = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        //Creating location Request
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(100);
-        locationRequest.setFastestInterval(100);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-
-//      to be deleted
-        setupManualLock();
-        setupDebug();
+        setupLocationRequest();
 
         getLocationPermission();
     }
 
-    private void setupDebug() {
+    private void setupLocationRequest() {
+        locationRequest = LocationRequest.create();
+        this.locationRequest.setInterval(100);
+        this.locationRequest.setFastestInterval(100);
+        this.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(this.locationRequest);
+    }
+
+    private void setupDebug(boolean debugOn) {
+        debugTextView = findViewById(R.id.debugTextview);
         Button button = findViewById(R.id.surreyButton);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+
+        if (!debugOn) {
+            button.setVisibility(View.GONE);
+            floatingActionButton.setVisibility(View.GONE);
+            debugTextView.setVisibility(View.GONE);
+            return;
+        }
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveCamera(new LatLng(49.188808, -122.847992), 12f, map);
+                moveCamera(new LatLng(49.188808, -122.847992), 12f);
             }
         });
-    }
 
-    private void setupManualLock() {
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cameraLocked = !cameraLocked;
-                moveCamera(deviceLocation, cameraZoom, map);
+                moveCamera(deviceLocation, currentCameraZoom);
             }
         });
+
+
     }
 
     @Override
@@ -258,13 +283,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-
         //Stop updating location.
         this.fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     private void populateMap() {
-        Log.d(TAG, "onMapReady: got current location");
+        clusterItemsRendered = true;
         clusterManager = new ClusterManager<MyClusterItem>(this, map);
         clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
         myClusterItemList = new ArrayList<>();
@@ -289,32 +313,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.setOnCameraIdleListener(clusterManager);
         map.setOnMarkerClickListener(clusterManager);
         map.setOnInfoWindowClickListener(clusterManager);
-
-//      Setup position tracking behaviour
-        if (locationPermissionGranted) {
-            getLastKnownLocation();
-            map.setMyLocationEnabled(true);
-            map.setOnCameraMoveListener(new OnCameraMove());
-            map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-                @Override
-                public boolean onMyLocationButtonClick() {
-                    Log.d(TAG, "onMyLocationButtonClick: camera locked");
-                    cameraZoom = map.getCameraPosition().zoom;
-                    if (cameraZoom < DEFAULT_ZOOM) {
-                        cameraZoom = DEFAULT_ZOOM;
-                    }
-                    moveCamera(deviceLocation, cameraZoom, map);
-                    cameraLocked = true;
-                    return true;
-                }
-            });
-        }
     }
 
-    private boolean inBetweenAbsolutes(double absolute, double value) {
-        return value > -absolute && value < absolute;
+    private boolean approximateEqual(double value1, double value2, double precision) {
+        double valueDiff = value1 - value2;
+        return (valueDiff > -precision && valueDiff < precision);
     }
 
+    /**
+     * Adapted from:
+     * https://developer.android.com/training/location/request-updates
+     */
     private void makeLocationCallback() {
         Log.d(TAG, "setupLocationCallBack: called");
         locationCallback = new LocationCallback() {
@@ -331,10 +340,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         double latPrecision = deviceLocation.latitude - location.getLatitude();
                         double lngPrecision = deviceLocation.longitude - location.getLongitude();
-
                         if (!deviceLocation.equals(newLocation)) {
                             deviceLocation = newLocation;
-                            moveCamera(newLocation, cameraZoom, map);
+                            moveCamera(newLocation, currentCameraZoom);
                         }
                     }
                 }
@@ -342,9 +350,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         };
     }
 
+    /**
+     * Reference:
+     * https://developer.android.com/training/location
+     * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+     */
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: Called");
-
         fusedLocationProviderClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
@@ -360,10 +372,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 });
     }
 
+    /**
+     * Reference:
+     * https://developer.android.com/training/location
+     * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+     */
     private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting location permission");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
+
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION)
@@ -375,6 +393,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 //If we do not have location permission, request one.
                 //override onRequestPermissionsResult() to check.
                 Log.d(TAG, "getLocationPermission: locationPermission not granted");
+                //Android will create the dialog to ask for permission
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
@@ -383,12 +402,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             //If we do not have location permission, request one.
             //override onRequestPermissionsResult() to check.
             Log.d(TAG, "getLocationPermission: locationPermission not granted");
+            //Android will create the dialog to ask for permission
             ActivityCompat.requestPermissions(this,
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
+    /**
+     * Reference:
+     * https://developer.android.com/training/location
+     * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -409,6 +434,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Reference:
+     * https://developer.android.com/training/location
+     * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+     */
     private void createMap() {
         Log.d(TAG, "createMap: creating map");
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -430,9 +460,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private static void moveCamera(LatLng newLocation, float zoom, GoogleMap map) {
-//        Log.d(TAG, "moveCamera: called");
-        //Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
+    private static void moveCamera(LatLng newLocation, float zoom) {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
     }
 
@@ -447,36 +475,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
-
         @Override
         public void onCameraMove() {
             CameraPosition cameraPosition = map.getCameraPosition();
             LatLng cameraLaLng = cameraPosition.target;
 
-            //Log.d(TAG, "setOnCameraMoveListener: device: " + deviceLocation + " / camera: " + cameraLaLng);
-            double latPrecision = deviceLocation.latitude - cameraLaLng.latitude;
-            double lngPrecision = deviceLocation.longitude - cameraLaLng.longitude;
-
-            if (inBetweenAbsolutes(DEFAULT_PRECISION, latPrecision)
-                    && inBetweenAbsolutes(DEFAULT_PRECISION, lngPrecision)) {
-//                Log.d(TAG, "onCameraMove: locked");
+            if (approximateEqual(deviceLocation.latitude, cameraLaLng.latitude, DEFAULT_PRECISION)
+                    && approximateEqual(deviceLocation.longitude, cameraLaLng.longitude, DEFAULT_PRECISION)) {
                 debugDisplay("onCameraMove: locked");
                 cameraLocked = true;
-
-//                if (marker != null) {
-//                    Log.d(TAG, "onCameraMove: THERE'S MARKER !");
-//                } else {
-//                    Log.d(TAG, "onCameraMove: MARKER NULL");
-//                }
-
             } else {
-//                Log.d(TAG, "onCameraMove: unlocked");
                 debugDisplay("onCameraMove: unlocked");
                 cameraLocked = false;
             }
         }
     }
 
+    // Adapter to render view for info window
     public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         private Context context;
 
@@ -494,7 +509,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public View getInfoContents(com.google.android.gms.maps.model.Marker marker) {
             View view = getLayoutInflater().inflate(R.layout.info_window_restaurant, null);
             String trackingNumber;
-            if (!clusterManagerRendered) {
+            if (!clusterItemsRendered) {
                 Log.d(TAG, "InfoWindowAdapter: cluster not rendered");
                 trackingNumber = (String) marker.getSnippet();
             } else {

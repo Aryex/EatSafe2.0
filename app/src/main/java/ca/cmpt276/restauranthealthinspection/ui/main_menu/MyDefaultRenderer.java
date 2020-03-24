@@ -3,7 +3,6 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 import android.content.Context;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -20,6 +19,6 @@ class MyDefaultRenderer extends DefaultClusterRenderer<MyClusterItem> {
 
         markerOptions.title(item.getTitle());
         markerOptions.snippet(item.getSnippet());
-        markerOptions.icon(MapActivity.getBitmapDescriptor(hazardLevel));
+        markerOptions.icon(MapActivity.getHazardLevelBitmapDescriptor(hazardLevel));
     }
 }
