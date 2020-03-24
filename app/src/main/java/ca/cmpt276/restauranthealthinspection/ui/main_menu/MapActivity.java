@@ -113,6 +113,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return intent;
     }
 
+    public static BitmapDescriptor getBitmapDescriptor(String hazardlevel) {
+        switch (hazardlevel.toLowerCase()) {
+            case "moderate":
+                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+            case "high":
+                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+            default:
+                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+        }
+    }
+
     // What to do when map appear on screen
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -190,69 +201,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         moveCamera(latLng, cameraZoom, map);
     }
 
-    public static BitmapDescriptor getBitmapDescriptor(String hazardlevel) {
-        switch (hazardlevel.toLowerCase()) {
-            case "moderate":
-                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-            case "high":
-                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-            default:
-                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-        }
-    }
-
-    private void populateMap() {
-        Log.d(TAG, "onMapReady: got current location");
-        clusterManager = new ClusterManager<MyClusterItem>(this, map);
-        clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
-        myClusterItemList = new ArrayList<>();
-
-        setupClusterMarkers();
-
-        clusterManager.setOnClusterItemClickListener(item -> {
-            clickedClusterItem = new MyClusterItem(item.getPosition(), item.getTitle(), item.getSnippet(), item.getHazardLevel());
-            return false;
-        });
-
-        clusterManager.getMarkerCollection().setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) marker -> {
-            String trackingID = (String) clickedClusterItem.getSnippet();
-            Intent startIntent = RestaurantDetails.makeLaunchIntent(MapActivity.this, trackingID);
-            startActivity(startIntent);
-        });
-
-        //set clusterManager's infoWindowAdapter
-        clusterManager.getMarkerCollection().setInfoWindowAdapter(new InfoWindowAdapter(this));
-
-//      Map will use markerCluster's implementations.
-        map.setOnCameraIdleListener(clusterManager);
-        map.setOnMarkerClickListener(clusterManager);
-        map.setOnInfoWindowClickListener(clusterManager);
-
-//      Setup position tracking behaviour
-        if (locationPermissionGranted) {
-            getLastKnownLocation();
-            map.setMyLocationEnabled(true);
-            map.setOnCameraMoveListener(new OnCameraMove());
-            map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-                @Override
-                public boolean onMyLocationButtonClick() {
-                    Log.d(TAG, "onMyLocationButtonClick: camera locked");
-                    cameraZoom = map.getCameraPosition().zoom;
-                    if (cameraZoom < DEFAULT_ZOOM) {
-                        cameraZoom = DEFAULT_ZOOM;
-                    }
-                    moveCamera(deviceLocation, cameraZoom, map);
-                    cameraLocked = true;
-                    return true;
-                }
-            });
-        }
-    }
-
-    private boolean inBetweenAbsolutes(double absolute, double value) {
-        return value > -absolute && value < absolute;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -313,6 +261,58 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         //Stop updating location.
         this.fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    private void populateMap() {
+        Log.d(TAG, "onMapReady: got current location");
+        clusterManager = new ClusterManager<MyClusterItem>(this, map);
+        clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
+        myClusterItemList = new ArrayList<>();
+
+        setupClusterMarkers();
+
+        clusterManager.setOnClusterItemClickListener(item -> {
+            clickedClusterItem = new MyClusterItem(item.getPosition(), item.getTitle(), item.getSnippet(), item.getHazardLevel());
+            return false;
+        });
+
+        clusterManager.getMarkerCollection().setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) marker -> {
+            String trackingID = (String) clickedClusterItem.getSnippet();
+            Intent startIntent = RestaurantDetails.makeLaunchIntent(MapActivity.this, trackingID);
+            startActivity(startIntent);
+        });
+
+        //set clusterManager's infoWindowAdapter
+        clusterManager.getMarkerCollection().setInfoWindowAdapter(new InfoWindowAdapter(this));
+
+//      Map will use markerCluster's implementations.
+        map.setOnCameraIdleListener(clusterManager);
+        map.setOnMarkerClickListener(clusterManager);
+        map.setOnInfoWindowClickListener(clusterManager);
+
+//      Setup position tracking behaviour
+        if (locationPermissionGranted) {
+            getLastKnownLocation();
+            map.setMyLocationEnabled(true);
+            map.setOnCameraMoveListener(new OnCameraMove());
+            map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    Log.d(TAG, "onMyLocationButtonClick: camera locked");
+                    cameraZoom = map.getCameraPosition().zoom;
+                    if (cameraZoom < DEFAULT_ZOOM) {
+                        cameraZoom = DEFAULT_ZOOM;
+                    }
+                    moveCamera(deviceLocation, cameraZoom, map);
+                    cameraLocked = true;
+                    return true;
+                }
+            });
+        }
+    }
+
+    private boolean inBetweenAbsolutes(double absolute, double value) {
+        return value > -absolute && value < absolute;
     }
 
     private void makeLocationCallback() {
