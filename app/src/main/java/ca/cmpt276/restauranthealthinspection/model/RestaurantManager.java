@@ -22,6 +22,7 @@ import static java.sql.Types.NULL;
  * Contains a singleton to store and retain restaurants.
  */
 public class RestaurantManager implements Iterable<Restaurant> {
+    private static String TAG = "RestaurantManager";
 
     private static List<Restaurant> restaurants = new ArrayList<>();
 
@@ -32,6 +33,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
     public static RestaurantManager getInstance(Context context) {
         if (instance == null) {
+            Log.i(TAG, "getInstance: Starting to parse data....");
             instance = new RestaurantManager();
 
             InputStreamReader inspectionDataReader = new InputStreamReader(context
@@ -96,5 +98,15 @@ public class RestaurantManager implements Iterable<Restaurant> {
                 return i;
         }
         return NULL;
+    }
+
+    public Restaurant getRestaurant(String trackingID) {
+        int size = restaurantCount();
+        for(Restaurant restaurant : restaurants){
+            if(restaurant.getResTrackingNumber().equals(trackingID)){
+                return restaurant;
+            }
+        }
+        return new Restaurant("none", "none","none","none","none",0,0);
     }
 }
