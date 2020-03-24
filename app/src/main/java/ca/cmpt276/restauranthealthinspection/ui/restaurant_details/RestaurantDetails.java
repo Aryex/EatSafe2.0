@@ -1,5 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.ui.restaurant_details;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +15,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
@@ -23,7 +22,7 @@ import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.inspection_details.InspectionDetails;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 
 /**
  * Display details of single restaurant
@@ -78,8 +77,9 @@ public class RestaurantDetails extends AppCompatActivity {
                 Restaurant restaurant = manager.get(index);
                 double lat = restaurant.getLatitude();
                 double lng = restaurant.getLongitude();
-                Intent intent = MapsActivity.makeLaunchIntent(context, lat, lng, trackingID);
-                startActivity(intent);
+                Intent intent = MapActivity.makeLaunchIntent(context, lat, lng, trackingID);
+                setResult(Activity.RESULT_OK,intent);
+                finish();
             }
         });
     }
