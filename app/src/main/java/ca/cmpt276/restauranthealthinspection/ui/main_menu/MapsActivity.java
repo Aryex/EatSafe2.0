@@ -157,7 +157,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (locationPermissionGranted) {
             getLastKnownLocation();
 
-
             map.setMyLocationEnabled(true);
             map.setOnCameraMoveListener(new MapsActivity.OnCameraMove());
             map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
@@ -173,9 +172,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     return true;
                 }
             });
-
         }
-
     }
 
     private boolean inBetweenAbsolutes(double absolute, double value) {
@@ -254,7 +251,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    Log.d(TAG, "onLocationResult: called + cameraLocked: " + cameraLocked);
+//                    Log.d(TAG, "onLocationResult: called + cameraLocked: " + cameraLocked);
 
                     if (cameraLocked) {
                         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -301,7 +298,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     }
                                     Log.d(TAG, "getLastKnownLocation: Marker not found");
                                 }
-                                moveCamera(latLng,cameraZoom,map);
+                                moveCamera(latLng, cameraZoom, map);
                             }
 
                         } else {
@@ -381,7 +378,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private static void moveCamera(LatLng newLocation, float zoom, GoogleMap map) {
-        Log.d(TAG, "moveCamera: called");
+//        Log.d(TAG, "moveCamera: called");
         //Toast.makeText(this, "moveCamera: called", Toast.LENGTH_SHORT).show();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
     }
@@ -409,19 +406,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (inBetweenAbsolutes(DEFAULT_PRECISION, latPrecision)
                     && inBetweenAbsolutes(DEFAULT_PRECISION, lngPrecision)) {
-                Log.d(TAG, "onCameraMove: locked");
+//                Log.d(TAG, "onCameraMove: locked");
                 debugDisplay("onCameraMove: locked");
                 cameraLocked = true;
 
                 Marker marker = defaultRenderer.getMarker(restaurantRequestedClusterItem);
-                if (marker != null) {
-                    Log.d(TAG, "onCameraMove: THERE'S MARKER !");
-                } else {
-                    Log.d(TAG, "onCameraMove: MARKER NULL");
-                }
+//                if (marker != null) {
+//                    Log.d(TAG, "onCameraMove: THERE'S MARKER !");
+//                } else {
+//                    Log.d(TAG, "onCameraMove: MARKER NULL");
+//                }
 
             } else {
-                Log.d(TAG, "onCameraMove: unlocked");
+//                Log.d(TAG, "onCameraMove: unlocked");
                 debugDisplay("onCameraMove: unlocked");
                 cameraLocked = false;
             }
