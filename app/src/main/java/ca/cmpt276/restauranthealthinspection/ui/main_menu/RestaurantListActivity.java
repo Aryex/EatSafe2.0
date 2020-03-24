@@ -51,6 +51,12 @@ public class RestaurantListActivity extends AppCompatActivity {
         LOW, MEDIUM, HIGH
     }
 
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+        System.exit(0);
+    }
+
     //Menu setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
