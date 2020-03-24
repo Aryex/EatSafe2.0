@@ -179,6 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void populateMap() {
         Log.d(TAG, "onMapReady: got current location");
         clusterManager = new ClusterManager<ClusterMarker>(this, map);
+        clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
         clusterMarkerList = new ArrayList<>();
 
         setupClusterMarkers();
