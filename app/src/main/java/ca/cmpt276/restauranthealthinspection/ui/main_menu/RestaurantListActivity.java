@@ -40,19 +40,6 @@ public class RestaurantListActivity extends AppCompatActivity {
         setupRecyclerView();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        switch (requestCode) {
-            case (MapActivity.REQUEST_CODE_RESTAURANT_COORD):
-                if (resultCode == Activity.RESULT_OK) {
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
-                }
-                break;
-        }
-    }
-
     private void setupRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewMain);
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(this, restaurants);
