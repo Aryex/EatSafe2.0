@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -38,11 +37,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-
 
 import java.util.ArrayList;
 
@@ -426,7 +422,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
         private Context context;
 
         InfoWindowAdapter(Context context) {
@@ -500,7 +495,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             return view;
         }
-
     }
 
     //Toolbar setup
