@@ -78,7 +78,7 @@ public class RestaurantDetails extends AppCompatActivity {
                 double lng = restaurant.getLongitude();
                 Intent intent = MapsActivity.makeLaunchIntent(context, lat, lng, trackingID);
                 startActivity(intent);
-                finishAffinity();
+                finishAffinity(); // Pop stack
             }
         });
     }

@@ -464,10 +464,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             textViewRestaurantAddress.setText(address);
 
             TextView textViewInspectionDate = view.findViewById(R.id.infoWindowInspectionDate);
-            textViewInspectionDate.setText(lastInspected);
-
             TextView textViewTotalIssues = view.findViewById(R.id.infoWindowIssuesNum);
-            textViewTotalIssues.setText(lastInspectedTotalIssues);
+
+            if (restaurant.hasBeenInspected()) {
+                textViewInspectionDate.setText(lastInspected);
+                textViewTotalIssues.setText(lastInspectedTotalIssues);
+            } else {
+                textViewInspectionDate.setText(R.string.no_inspections_found);
+                textViewTotalIssues.setText(R.string.no);
+            }
 
             TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
             ImageView imageViewHazardIcon = view.findViewById(R.id.infoWindowHazardIcon);
