@@ -497,6 +497,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+        System.exit(0);
+    }
+
     //Toolbar setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
