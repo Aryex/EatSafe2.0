@@ -3,14 +3,13 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.*;
@@ -30,12 +29,11 @@ public class RestaurantListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_restaurant_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         restaurants = RestaurantManager.getInstance(this);
-
         setupRecyclerView();
     }
 
@@ -54,5 +52,21 @@ public class RestaurantListActivity extends AppCompatActivity {
     public void onBackPressed() {
         finishAffinity();
         System.exit(0);
+    }
+
+    //Menu setup
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_restuarant, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_return_map) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
