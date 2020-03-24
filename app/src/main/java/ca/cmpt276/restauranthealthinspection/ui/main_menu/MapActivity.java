@@ -207,8 +207,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onInfoWindowClose(Marker marker) {
                 if (!clusterItemsRendered) {
                     marker.remove();
-                    //renderer on update on move.
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom - 0.5f));
+                    //renderer will update on move.
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom));
                     populateMap();
                     setupLocationTracking();
                 }
