@@ -128,7 +128,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: map loaded");
- 
+
         map = googleMap;
         map.getUiSettings().setMapToolbarEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -196,7 +196,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                String trackingID = (String) marker.getSnippet();
+                String trackingID = marker.getSnippet();
                 Intent startIntent = RestaurantDetails.makeLaunchIntent(MapActivity.this, trackingID);
                 startActivity(startIntent);
             }
@@ -269,8 +269,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 moveCamera(deviceLocation, currentCameraZoom);
             }
         });
-
-
     }
 
     @Override
