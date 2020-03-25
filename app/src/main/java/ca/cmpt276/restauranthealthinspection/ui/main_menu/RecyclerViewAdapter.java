@@ -84,7 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             if (restaurant.hasBeenInspected()) {
                 String latestInspectionDate = restaurant.getLatestInspectionDate();
-                textViewInspectionDate.setText(String.format(latestInspectionDate));
+                textViewInspectionDate.setText(latestInspectionDate);
 
                 String totalIssues = restaurant.getLatestInspectionTotalIssues();
                 textViewIssuesCount.setText(totalIssues);

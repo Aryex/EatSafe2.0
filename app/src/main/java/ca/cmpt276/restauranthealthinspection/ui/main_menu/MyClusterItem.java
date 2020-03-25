@@ -7,21 +7,24 @@ import com.google.android.gms.maps.model.LatLng;
  * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
  */
 @SuppressWarnings("WeakerAccess")
-public class ClusterMarker implements com.google.maps.android.clustering.ClusterItem {
+public class MyClusterItem implements com.google.maps.android.clustering.ClusterItem {
     private final LatLng position;
     private final String title;
     private final String snippet;
+    private final String hazardLevel;
 
-    public ClusterMarker(double lat, double lng, String title, String snippet) {
+    public MyClusterItem(double lat, double lng, String title, String snippet, String hazardLevel) {
         this.position = new LatLng(lat, lng);
         this.title = title;
         this.snippet = snippet;
+        this.hazardLevel = hazardLevel;
     }
 
-    public ClusterMarker(LatLng position, String title, String snippet) {
+    public MyClusterItem(LatLng position, String title, String snippet, String hazardLevel) {
         this.position = position;
         this.title = title;
         this.snippet = snippet;
+        this.hazardLevel = hazardLevel;
     }
 
     @Override
@@ -37,5 +40,9 @@ public class ClusterMarker implements com.google.maps.android.clustering.Cluster
     @Override
     public String getSnippet() {
         return snippet;
+    }
+
+    public String getHazardLevel() {
+        return hazardLevel;
     }
 }
