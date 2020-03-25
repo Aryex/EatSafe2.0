@@ -36,7 +36,7 @@ class Parser {
     // Parse ViolLump and add violations to inspection
     private static void parseViolationsInto(List<Inspection> inspections) {
         for (Inspection ins : inspections) {
-            Log.d("parseViolationsInto ", ins.toString());
+//            Log.d("parseViolationsInto ", ins.toString());
 
             String violLump = ins.getViolLump();
             if (!violLump.isEmpty()) {
@@ -136,7 +136,6 @@ class Parser {
     private static Violation parseVioChunk(String vioChunk) {
         String[] dataCols = vioChunk.split(",");
         Violation vio = new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
-        Log.d("parseVioChunk", vio.toString());
         return vio;
     }
 
