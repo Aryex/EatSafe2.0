@@ -72,6 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final TextView textViewIssuesCount = itemView.findViewById(R.id.infoWindowIssuesNum);
         private final CardView parentLayout = itemView.findViewById(R.id.infoWindowParentViewCardView);
         private final CardView warningBar = itemView.findViewById(R.id.infoWindowWarningBar);
+        private final ImageView logoIV = itemView.findViewById(R.id.logoImageView);
 
         private RestaurantCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             textViewRestaurantName.setText(restaurant.getName());
             textViewAddress.setText(restaurant.getAddress());
+            logoIV.setImageResource(restaurant.getLogo());
 
             if (restaurant.hasBeenInspected()) {
                 String latestInspectionDate = restaurant.getLatestInspectionDate();

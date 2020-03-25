@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import ca.cmpt276.restauranthealthinspection.R;
+
 /**
  * Represents each restaurant.
  */
@@ -26,6 +28,8 @@ public class Restaurant implements Iterable<Inspection> {
 
     private List<Inspection> inspections = new ArrayList<>();
 
+    private int logo;
+
     // ****************************************
     // Methods for List<Inspection> inspections
     // ****************************************
@@ -40,6 +44,58 @@ public class Restaurant implements Iterable<Inspection> {
         this.resType = resType;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.logo = setLogo(name);
+    }
+
+    private int setLogo(String name) {
+        String macs = "Mac's Convenience";
+        String timHortons1 = "Tim Horton's";
+        String timHortons2 = "Tim Hortons";
+        String starbucks = "Starbucks";
+        String sevenEleven = "7-Eleven";
+        String dq = "Dairy Queen";
+        String bostonPizza = "Boston Pizza";
+        String subway = "Subway";
+        String mcDonald = "McDonald's";
+        String blenz = "Blenz";
+        String burgerKing = "Burger King";
+        String freshii = "Freshii";
+        String a_w1 = "A&W";
+        String a_w2 = "A & W";
+
+        if (hasIcon(name, macs)) {
+            return R.drawable.logo_macs;
+        } else if (hasIcon(name, starbucks)) {
+            return R.drawable.logo_starbucks;
+        } else if (hasIcon(name, sevenEleven)) {
+            return R.drawable.logo_7_eleven;
+        } else if (hasIcon(name, dq)) {
+            return R.drawable.logo_dq;
+        } else if (hasIcon(name, bostonPizza)) {
+            return R.drawable.logo_boston_pizza;
+        } else if (hasIcon(name, subway)) {
+            return R.drawable.logo_subway;
+        } else if (hasIcon(name, mcDonald)) {
+            return R.drawable.logo_mc_donald;
+        } else if (hasIcon(name, blenz)) {
+            return R.drawable.logo_blenz_coffee;
+        } else if (hasIcon(name, burgerKing)) {
+            return R.drawable.logo_burger_king;
+        } else if (hasIcon(name, freshii)) {
+            return R.drawable.logo_freshii;
+        } else if (hasIcon(name, a_w1)
+                || hasIcon(name, a_w2)) {
+            return R.drawable.logo_a_w;
+        } else if (hasIcon(name, timHortons1)
+                || hasIcon(name, timHortons2)) {
+            return R.drawable.logo_tim_hortons;
+        } else {
+            return R.drawable.logo_unavailable;
+        }
+    }
+
+    private boolean hasIcon(String name, String company) {
+        return name.contains(company);
     }
 
     void add(Inspection inspection) {
@@ -64,6 +120,9 @@ public class Restaurant implements Iterable<Inspection> {
     // **************
     // Other methods
     // **************
+    public int getLogo() {
+        return logo;
+    }
 
     public String getAddress() {
         return address + ", " + city + ", " + "BC";
