@@ -95,7 +95,7 @@ public class Restaurant implements Iterable<Inspection> {
     }
 
     private boolean hasIcon(String name, String company) {
-        return name.toLowerCase().contains(company.toLowerCase());
+        return name.contains(company);
     }
 
     void add(Inspection inspection) {
