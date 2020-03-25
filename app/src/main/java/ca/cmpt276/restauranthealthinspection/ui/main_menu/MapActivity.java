@@ -128,7 +128,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: map loaded");
-        Toast.makeText(this, R.string.eat_safe, Toast.LENGTH_SHORT).show();
+ 
         map = googleMap;
         map.getUiSettings().setMapToolbarEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
