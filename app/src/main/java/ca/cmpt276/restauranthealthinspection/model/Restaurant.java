@@ -49,42 +49,53 @@ public class Restaurant implements Iterable<Inspection> {
 
     private int setLogo(String name) {
         String macs = "Mac's Convenience";
-        String timHortons = "Tim Horton's";
+        String timHortons1 = "Tim Horton's";
+        String timHortons2 = "Tim Hortons";
         String starbucks = "Starbucks";
         String sevenEleven = "7-Eleven";
         String dq = "Dairy Queen";
         String bostonPizza = "Boston Pizza";
         String subway = "Subway";
         String mcDonald = "McDonald's";
-        String blenz = "Blenz Coffee";
+        String blenz = "Blenz";
         String burgerKing = "Burger King";
         String freshii = "Freshii";
+        String a_w1 = "A&W";
+        String a_w2 = "A & W";
 
-        if (name.toLowerCase().contains(macs.toLowerCase())) {
+        if (hasIcon(name, macs)) {
             return R.drawable.logo_macs;
-        } else if (name.toLowerCase().contains(timHortons.toLowerCase())) {
-            return R.drawable.logo_tim_hortons;
-        } else if (name.toLowerCase().contains(starbucks.toLowerCase())) {
+        } else if (hasIcon(name, starbucks)) {
             return R.drawable.logo_starbucks;
-        } else if (name.toLowerCase().contains(sevenEleven.toLowerCase())) {
+        } else if (hasIcon(name, sevenEleven)) {
             return R.drawable.logo_7_eleven;
-        } else if (name.toLowerCase().contains(dq.toLowerCase())) {
+        } else if (hasIcon(name, dq)) {
             return R.drawable.logo_dq;
-        } else if (name.toLowerCase().contains(bostonPizza.toLowerCase())) {
+        } else if (hasIcon(name, bostonPizza)) {
             return R.drawable.logo_boston_pizza;
-        } else if (name.toLowerCase().contains(subway.toLowerCase())) {
+        } else if (hasIcon(name, subway)) {
             return R.drawable.logo_subway;
-        } else if (name.toLowerCase().contains(mcDonald.toLowerCase())) {
+        } else if (hasIcon(name, mcDonald)) {
             return R.drawable.logo_mc_donald;
-        } else if (name.toLowerCase().contains(blenz.toLowerCase())) {
+        } else if (hasIcon(name, blenz)) {
             return R.drawable.logo_blenz_coffee;
-        } else if (name.toLowerCase().contains(burgerKing.toLowerCase())) {
+        } else if (hasIcon(name, burgerKing)) {
             return R.drawable.logo_burger_king;
-        } else if (name.toLowerCase().contains(freshii.toLowerCase())) {
+        } else if (hasIcon(name, freshii)) {
             return R.drawable.logo_freshii;
+        } else if (hasIcon(name, a_w1)
+                || hasIcon(name, a_w2)) {
+            return R.drawable.logo_a_w;
+        } else if (hasIcon(name, timHortons1)
+                || hasIcon(name, timHortons2)) {
+            return R.drawable.logo_tim_hortons;
         } else {
             return R.drawable.logo_unavailable;
         }
+    }
+
+    private boolean hasIcon(String name, String company) {
+        return name.toLowerCase().contains(company.toLowerCase());
     }
 
     void add(Inspection inspection) {
