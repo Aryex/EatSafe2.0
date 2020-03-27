@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.CheckUpdateFragment;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterFragment;
 
 import android.content.Intent;
@@ -42,10 +43,14 @@ public class WelcomeActivity extends AppCompatActivity {
 //                }
 //            }, 1000);
 //        }
+//
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        UpdaterFragment updaterFragment = new UpdaterFragment();
+//        updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        UpdaterFragment updaterFragment = new UpdaterFragment();
-        updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
+        CheckUpdateFragment checkUpdateFragment = new CheckUpdateFragment();
+        checkUpdateFragment.show(fragmentManager, CheckUpdateFragment.TAG);
 
     }
 

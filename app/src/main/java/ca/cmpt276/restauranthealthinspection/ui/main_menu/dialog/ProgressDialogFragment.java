@@ -20,13 +20,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
+import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 public class ProgressDialogFragment extends DialogFragment {
 
     public static final String TAG = "downloading";
 
     private ProgressBar progressBar;
+
+    private Call<ResponseBody> restaurantsCall;
+    private Call<ResponseBody> inspectionsCall;
+    private Call<JsonInfo> urlCall;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -37,6 +44,17 @@ public class ProgressDialogFragment extends DialogFragment {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                urlCall.cancel();
+                if (restaurantsCall != null) {
+                    restaurantsCall.cancel();
+                }
+                if (inspectionsCall != null) {
+                    inspectionsCall.cancel();
+                }
+
+                Intent i = MapsActivity.makeLaunchIntent(getContext());
+                startActivity(i);
 
             }
         };
@@ -54,21 +72,24 @@ public class ProgressDialogFragment extends DialogFragment {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                progressBar.setProgress(percent);
 
-                if (progressBar.getProgress() == 100) {
-                    Toast.makeText(getContext(), "Files downloaded", Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    progressBar.setProgress(percent);
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent i = MapsActivity.makeLaunchIntent(getContext());
-                            startActivity(i);
-                        }
-                    }, 1000);
+                    if (progressBar.getProgress() == 100) {
+                        FileUpdater.completeDownload(getContext());
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = MapsActivity.makeLaunchIntent(getContext());
+                                startActivity(i);
+                            }
+                        }, 1000);
 
-                    onStop();
+                        onStop();
+                    }
                 }
+
             }
         });
     }
@@ -78,4 +99,27 @@ public class ProgressDialogFragment extends DialogFragment {
         return progressBar.getProgress();
     }
 
+    public Call<ResponseBody> getRestaurantsCall() {
+        return restaurantsCall;
+    }
+
+    public void setRestaurantsCall(Call<ResponseBody> restaurantsCall) {
+        this.restaurantsCall = restaurantsCall;
+    }
+
+    public Call<ResponseBody> getInspectionsCall() {
+        return inspectionsCall;
+    }
+
+    public void setInspectionsCall(Call<ResponseBody> inspectionsCall) {
+        this.inspectionsCall = inspectionsCall;
+    }
+
+    public Call<JsonInfo> getUrlCall() {
+        return urlCall;
+    }
+
+    public void setUrlCall(Call<JsonInfo> urlCall) {
+        this.urlCall = urlCall;
+    }
 }

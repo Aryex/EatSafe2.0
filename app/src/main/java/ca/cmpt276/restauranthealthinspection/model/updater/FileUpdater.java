@@ -1,11 +1,9 @@
 package ca.cmpt276.restauranthealthinspection.model.updater;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,11 +15,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Date;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.Resource;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.CheckUpdateFragment;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.ProgressDialogFragment;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -34,8 +32,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FileUpdater {
 
+    public static final String TEMP_RESTAURANTS_FILE = "temp_restaurants.csv";
+    public static final String TEMP_INSPECTIONS_FILE = "temp_inspections.csv";
     public static final String RESTAURANTS_FILE = "restaurants.csv";
     public static final String INSPECTIONS_FILE = "inspections.csv";
+
+    private static final String FILE_UPDATING_KEY = "file updating";
+    private static final String TEMP_LAST_MODIFIED_KEY = "temp_last_modified";
+    private static final String LAST_MODIFIED_KEY = "last_modified";
+
 
     public static long lastUpdated(Context context) {
         File restaurantsFile = new File(context.getApplicationContext().getFilesDir(), RESTAURANTS_FILE);
@@ -58,6 +63,39 @@ public class FileUpdater {
         }, 500);
     }
 
+    public static void lastDateServerModified(CheckUpdateFragment checkUpdateFragment) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        Call<JsonInfo> inspectionsUrlCall = retrofit.create(APIService.class).getInspectionsUrl();
+        inspectionsUrlCall.enqueue(new Callback<JsonInfo>() {
+            @Override
+            public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
+                List<Resource> resources = response.body().getResult().getResources();
+                long lastServerModified = resources.get(0).getLastModified().getTime();
+                long lastLocalModified = getLastLocalModified(checkUpdateFragment.getContext());
+
+                if (lastLocalModified != lastServerModified) {
+                    checkUpdateFragment.update();
+                    setTempServerModified(checkUpdateFragment.getContext(), lastServerModified);
+                }
+                else {
+                    checkUpdateFragment.cancel();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonInfo> call, Throwable t) {
+                checkUpdateFragment.cancel();
+            }
+        });
+    }
+
     private static void downloadFiles(Context context, ProgressDialogFragment progressDialogFragment) {
 
         Gson gson = new GsonBuilder()
@@ -68,9 +106,9 @@ public class FileUpdater {
                 .baseUrl(APIService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        APIService apiService = retrofit.create(APIService.class);
+        Call<JsonInfo> inspectionsUrlCall = retrofit.create(APIService.class).getInspectionsUrl();
 
-        apiService.getInspectionsUrl().enqueue(new Callback<JsonInfo>() {
+        inspectionsUrlCall.enqueue(new Callback<JsonInfo>() {
 
             @Override
             public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
@@ -83,7 +121,9 @@ public class FileUpdater {
                     getInspections(url, context, progressDialogFragment);
                 }
 
-                apiService.getRestaurantsUrl().enqueue(new Callback<JsonInfo>() {
+                Call<JsonInfo> restaurantsUrlCall = retrofit.create(APIService.class).getRestaurantsUrl();
+
+                restaurantsUrlCall.enqueue(new Callback<JsonInfo>() {
                     @Override
                     public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
 
@@ -110,6 +150,8 @@ public class FileUpdater {
 
             }
         });
+
+        progressDialogFragment.setUrlCall(inspectionsUrlCall);
     }
 
     private static OkHttpClient getOkHttpClient(DownloadListener downloadListener) {
@@ -145,11 +187,12 @@ public class FileUpdater {
 
 //                        progressDialogFragment.setProgress(percent);
 //                        Log.d("test", percent + "");
+
                     }
                 }))
                 .build();
-        APIService apiService = retrofit.create(APIService.class);
-        apiService.downloadInspections(url).enqueue(new Callback<ResponseBody>() {
+        Call<ResponseBody> restaurantsCall = retrofit.create(APIService.class).downloadInspections(url);
+        restaurantsCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -167,14 +210,17 @@ public class FileUpdater {
             }
         });
 
+        progressDialogFragment.setRestaurantsCall(restaurantsCall);
+        Log.d("test", "set restaurants");
+
     }
 
     private static void getInspections(String url, Context context, ProgressDialogFragment progressDialogFragment) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(APIService.BASE_URL)
                 .build();
-        APIService apiService = retrofit.create(APIService.class);
-        apiService.downloadInspections(url).enqueue(new Callback<ResponseBody>() {
+        Call<ResponseBody> inspectionsCall = retrofit.create(APIService.class).downloadInspections(url);
+        inspectionsCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -191,6 +237,9 @@ public class FileUpdater {
                 throwable.printStackTrace();
             }
         });
+
+        progressDialogFragment.setInspectionsCall(inspectionsCall);
+        Log.d("test", "set inspections");
     }
 
 
@@ -223,5 +272,26 @@ public class FileUpdater {
         }
         return true;
 
+    }
+
+    private static void setTempServerModified(Context context, long l) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(FILE_UPDATING_KEY, Context.MODE_PRIVATE).edit();
+        editor.putLong(TEMP_LAST_MODIFIED_KEY, l);
+        editor.apply();
+    }
+
+    private static long getLastLocalModified(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_UPDATING_KEY, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong(LAST_MODIFIED_KEY, 0L);
+    }
+
+    public static void completeDownload(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(FILE_UPDATING_KEY, Context.MODE_PRIVATE).edit();
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_UPDATING_KEY, Context.MODE_PRIVATE);
+        long tempLastModified = sharedPreferences.getLong(TEMP_LAST_MODIFIED_KEY, 0L);
+
+        editor.putLong(LAST_MODIFIED_KEY, tempLastModified);
+        editor.apply();
     }
 }

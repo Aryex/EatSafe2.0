@@ -133,7 +133,6 @@ public class RestaurantManager implements Iterable<Restaurant> {
     }
 
     public Restaurant getRestaurant(String trackingID) {
-        int size = restaurantCount();
         for(Restaurant restaurant : restaurants){
             if(restaurant.getResTrackingNumber().equals(trackingID)){
                 return restaurant;
