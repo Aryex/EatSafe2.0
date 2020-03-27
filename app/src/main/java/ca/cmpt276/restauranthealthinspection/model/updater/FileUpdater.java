@@ -13,9 +13,11 @@ import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
@@ -35,8 +37,14 @@ public class FileUpdater {
     public static final String RESTAURANTS_FILE = "restaurants.csv";
     public static final String INSPECTIONS_FILE = "inspections.csv";
 
-    public static boolean checkUpdate() {
-        return true;
+    public static long lastUpdated(Context context) {
+        File restaurantsFile = new File(context.getApplicationContext().getFilesDir(), RESTAURANTS_FILE);
+        File inspectionsFile = new File(context.getApplicationContext().getFilesDir(), INSPECTIONS_FILE);
+
+        if (restaurantsFile.exists() && inspectionsFile.exists()) {
+            return Math.max(restaurantsFile.lastModified(), inspectionsFile.lastModified());
+        }
+        return 0L;
     }
 
     public static void startDownloadWithDelay(Context context, ProgressDialogFragment progressDialogFragment) {

@@ -117,8 +117,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public static Intent makeLaunchIntent(Context context) {
-        Intent intent = new Intent(context, MapsActivity.class);
-        return intent;
+        return new Intent(context, MapsActivity.class);
     }
 
     // What to do when map appear on screen
