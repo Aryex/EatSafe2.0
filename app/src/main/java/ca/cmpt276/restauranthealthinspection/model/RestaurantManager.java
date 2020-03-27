@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 
 import static java.sql.Types.NULL;
 
@@ -32,6 +33,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
     private static RestaurantManager instance;
 
     public static RestaurantManager getInstance(Context context) {
+        FileUpdater.downloadAndSave(context);
         if (instance == null) {
             Log.i(TAG, "getInstance: Starting to parse data....");
             instance = new RestaurantManager();

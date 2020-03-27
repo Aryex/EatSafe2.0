@@ -6,10 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -35,39 +34,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-import java.util.Calendar;
-import java.util.List;
 import java.util.ArrayList;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
-import ca.cmpt276.restauranthealthinspection.model.updater.APIInterface;
-import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
-import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInspection;
-import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonRestaurant;
-import ca.cmpt276.restauranthealthinspection.model.updater.pojos.Resource;
-import ca.cmpt276.restauranthealthinspection.model.updater.pojos.Result;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterDialogFragment;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 
 /**
  * Map activity serves as the first entry point into the app.
@@ -85,7 +63,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * <p>
  * note: restaurant tracking id is stored in a cluster marker's snippet.
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, UpdaterDialogFragment.UpdaterDialogListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     //  Surrey Central's Lat Lng
     public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.1866939, -122.8494363);
@@ -205,9 +183,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        connectToServer();
-
-        setupModel();
         restaurants = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -245,29 +220,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 moveCamera(deviceLocation, cameraZoom, map);
             }
         });
-    }
-
-    public void showUpdaterDialog() {
-        DialogFragment updaterDialog = new UpdaterDialogFragment();
-        updaterDialog.show(getSupportFragmentManager(), "Updater Dialog");
-    }
-
-
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-
-        progressDialog.setTitle("Updating data...");
-        progressDialog.setProgress(0);
-        progressDialog.setMax(100);
-
-        progressDialog.show();
-    }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-        // User touched the dialog's negative button
     }
 
     @Override
@@ -566,94 +518,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-}
-
-    private void setupModel() {
-        Log.i("Start parsing", "Starting to parse data....");
-
-        RestaurantManager restaurants = RestaurantManager.getInstance(this);
-
-//        for (Restaurant r : restaurants) {
-//            Log.d("Main Activity", "onCreate: " + r);
-//        }
-
-        Restaurant restaurant = restaurants.get(2);
-        Log.d("MainActivity", restaurant.getResTrackingNumber());
-        List<Inspection> inspections = restaurant.getInspections();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: Called");
-        Toast.makeText(this, "onLocationChanged: Called", Toast.LENGTH_SHORT)
-                .show();
-    }
-
-    public void connectToServer() {
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                .create();
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://data.surrey.ca")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client);
-
-        Retrofit retrofit = builder.build();
-
-        APIInterface apiInterface = retrofit.create(APIInterface.class);
-        Call<JsonInfo> call = apiInterface.callRestaurants();
-
-        call.enqueue(new Callback<JsonInfo>() {
-            @Override
-            public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
-                Log.i("APIConnected", "Response code: " + response.code());
-                JsonInfo jsonInfo = response.body();
-
-                Result result = jsonInfo.getResult();
-                List<Resource> resources = result.getResources();
-
-
-                Log.i("jsonRestaurant", "Format: " + resources.get(0).getFormat());
-                Log.i("jsonRestaurant", "URL: " + resources.get(0).getUrl());
-                Log.i("jsonRestaurant", "Last modified: " + resources.get(0).getLastModified());
-            }
-
-            @Override
-            public void onFailure(Call<JsonInfo> call, Throwable t) {
-                Log.e("APICouldNotConnect", "Could not connect to api to API");
-                Toast.makeText(MapsActivity.this, R.string.api_error, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        call = apiInterface.callInspections();
-        call.enqueue(new Callback<JsonInfo>() {
-            @Override
-            public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
-                Log.i("APIConnected", "Response code: " + response.code());
-                JsonInfo jsonInfo = response.body();
-
-                Result result = jsonInfo.getResult();
-                List<Resource> resources = result.getResources();
-
-                Log.i("jsonInspection", "Format: " + resources.get(0).getFormat());
-                Log.i("jsonInspection", "URL: " + resources.get(0).getUrl());
-                Log.i("jsonInspection", "Last modified: " + resources.get(0).getLastModified());
-            }
-
-            @Override
-            public void onFailure(Call<JsonInfo> call, Throwable throwable) {
-                Log.e("APICouldNotConnect", "Could not connect to api to API");
-                Toast.makeText(MapsActivity.this, R.string.api_error, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 }
