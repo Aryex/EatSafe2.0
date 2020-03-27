@@ -1,18 +1,13 @@
 package ca.cmpt276.restauranthealthinspection.model.updater;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
@@ -30,28 +25,29 @@ public class FileUpdater {
     private static final String RESTAURANTS_FILE = "restaurants.csv";
     private static final String INSPECTIONS_FILE = "inspections.csv";
 
-    public static void downloadAndSave(Context context) {
+    public static void getFiles(Context context) {
 
-        getUrl(context);
-    }
-
-    private static void getUrl(Context context) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(APIInterface.BASE_URL)
+                .baseUrl(APIService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        APIInterface apiInterface = retrofit.create(APIInterface.class);
-        apiInterface.callInspections().enqueue(new Callback<JsonInfo>() {
+        APIService apiService = retrofit.create(APIService.class);
+        apiService.getInspectionsUrl().enqueue(new Callback<JsonInfo>() {
+
             @Override
             public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
-                Toast.makeText(context, "yes", Toast.LENGTH_SHORT).show();
 
                 List<Resource> resources = response.body().getResult().getResources();
                 Log.d("test", resources.get(0).getUrl());
+                String url = resources.get(0).getUrl();
+
+                if (url != null) {
+                    getInspections(url, context);
+                }
             }
 
             @Override
@@ -60,13 +56,38 @@ public class FileUpdater {
 
             }
         });
+
     }
 
-    private static boolean writeToDisk(ResponseBody body, Context context) {
+    private static void getInspections(String url, Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIService.BASE_URL)
+                .build();
+        APIService apiService = retrofit.create(APIService.class);
+        apiService.downloadInspections(url).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    boolean done = writeInspectionsToDisk(response.body(), context);
+                    Toast.makeText(context, "inspections done", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(context, "Inspections error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, "big error inspections", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private static boolean writeInspectionsToDisk(ResponseBody body, Context context) {
 
         try {
-
-            FileOutputStream fileOutputStream = context.openFileOutput(RESTAURANTS_FILE, Context.MODE_PRIVATE);
+            FileOutputStream fileOutputStream = context.openFileOutput(INSPECTIONS_FILE, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(body.bytes());
             fileOutputStream.close();
