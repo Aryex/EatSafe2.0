@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 
 /**
  * Fragment for a checking update dialog
@@ -65,7 +65,7 @@ public class CheckUpdateFragment extends DialogFragment {
             @Override
             public void run() {
                 if (!doneChecking) {
-                    Intent i = MapsActivity.makeLaunchIntent(getContext());
+                    Intent i = MapActivity.makeLaunchIntent(getContext());
                     startActivity(i);
                     doneChecking = true;
                     onStop();

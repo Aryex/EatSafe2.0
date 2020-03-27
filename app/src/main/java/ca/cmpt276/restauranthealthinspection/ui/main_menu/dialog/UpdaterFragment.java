@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 
 /**
  * Asks user if they want to download data now
@@ -48,7 +48,7 @@ public class UpdaterFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //on cancel start map activity
-                        Intent i = MapsActivity.makeLaunchIntent(getContext());
+                        Intent i = MapActivity.makeLaunchIntent(getContext());
                         startActivity(i);
                     }
                 });

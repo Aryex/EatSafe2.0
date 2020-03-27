@@ -39,7 +39,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     //start map activity
-                    Intent i = MapsActivity.makeLaunchIntent(WelcomeActivity.this);
+                    Intent i = MapActivity.makeLaunchIntent(WelcomeActivity.this);
                     startActivity(i);
                 }
             }, 1000);

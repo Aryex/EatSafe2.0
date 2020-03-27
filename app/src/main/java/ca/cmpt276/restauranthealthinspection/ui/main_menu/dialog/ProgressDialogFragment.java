@@ -15,7 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -53,7 +53,7 @@ public class ProgressDialogFragment extends DialogFragment {
                 }
 
                 //start the map activity
-                Intent i = MapsActivity.makeLaunchIntent(getContext());
+                Intent i = MapActivity.makeLaunchIntent(getContext());
                 startActivity(i);
 
             }
@@ -82,7 +82,7 @@ public class ProgressDialogFragment extends DialogFragment {
                     if (progressBar.getProgress() == 100) {
                         FileUpdater.completeDownload(getContext());
                         getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
-                        Intent i = MapsActivity.makeLaunchIntent(getContext());
+                        Intent i = MapActivity.makeLaunchIntent(getContext());
                         startActivity(i);
                     }
                 }
