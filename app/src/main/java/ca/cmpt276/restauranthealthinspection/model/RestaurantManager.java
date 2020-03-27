@@ -6,6 +6,7 @@ import android.util.Log;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -39,18 +40,37 @@ public class RestaurantManager implements Iterable<Restaurant> {
             Log.i(TAG, "getInstance: Starting to parse data....");
             instance = new RestaurantManager();
 
-            boolean avail = checkFilesAvail();
+            InputStreamReader inspectionDataReader = null;
+            InputStreamReader restaurantDataReader = null;
+            boolean originalFile = true;
 
-            InputStreamReader inspectionDataReader = new InputStreamReader(context
-                    .getResources()
-                    .openRawResource(R.raw.inspectionreports_itr1));
 
-            InputStreamReader restaurantDataReader = new InputStreamReader(context
-                    .getResources()
-                    .openRawResource(R.raw.restaurants_itr1));
+            if(checkFilesAvail(context)) {
+                try {
+                    inspectionDataReader = new InputStreamReader(
+                            context.openFileInput(FileUpdater.INSPECTIONS_FILE));
+
+                    restaurantDataReader = new InputStreamReader(
+                            context.openFileInput(FileUpdater.RESTAURANTS_FILE));
+                    originalFile = false;
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (inspectionDataReader == null || restaurantDataReader == null) {
+                inspectionDataReader = new InputStreamReader(context
+                        .getResources()
+                        .openRawResource(R.raw.inspectionreports_itr1));
+
+                restaurantDataReader = new InputStreamReader(context
+                        .getResources()
+                        .openRawResource(R.raw.restaurants_itr1));
+                originalFile = true;
+            }
 
             try {
-                Parser.parseData(instance, inspectionDataReader, restaurantDataReader);
+                Parser.parseData(instance, inspectionDataReader, restaurantDataReader, originalFile);
                 Log.i("Parse success", "Successfully parsed csv data.");
             } catch (IOException | CsvValidationException e) {
                 Log.e("Parse error", "Error while parsing csv data");
@@ -62,11 +82,10 @@ public class RestaurantManager implements Iterable<Restaurant> {
         return instance;
     }
 
-    private static boolean checkFilesAvail() {
-        File inspections = new File(FileUpdater.INSPECTIONS_FILE);
-        File restaurants = new File(FileUpdater.RESTAURANTS_FILE);
+    private static boolean checkFilesAvail(Context context) {
+        File inspections = new File(context.getApplicationContext().getFilesDir(), FileUpdater.INSPECTIONS_FILE);
+        File restaurants = new File(context.getApplicationContext().getFilesDir(), FileUpdater.RESTAURANTS_FILE);
 
-        Log.d("test", inspections.exists() + " and " + restaurants.exists());
         return inspections.exists() && restaurants.exists();
     }
 

@@ -26,22 +26,26 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void showDialogs() {
-        long current = System.currentTimeMillis();
-        Log.d("test", "" + FileUpdater.lastUpdated(this));
-        if (current - FileUpdater.lastUpdated(this) > UPDATE_TIME_THRESHOLD) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            UpdaterFragment updaterFragment = new UpdaterFragment();
-            updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
-        }
-        else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = MapsActivity.makeLaunchIntent(WelcomeActivity.this);
-                    startActivity(i);
-                }
-            }, 1000);
-        }
+//        long current = System.currentTimeMillis();
+//        Log.d("test", "" + FileUpdater.lastUpdated(this));
+//        if (current - FileUpdater.lastUpdated(this) > UPDATE_TIME_THRESHOLD) {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            UpdaterFragment updaterFragment = new UpdaterFragment();
+//            updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
+//        }
+//        else {
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Intent i = MapsActivity.makeLaunchIntent(WelcomeActivity.this);
+//                    startActivity(i);
+//                }
+//            }, 1000);
+//        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        UpdaterFragment updaterFragment = new UpdaterFragment();
+        updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
 
     }
 

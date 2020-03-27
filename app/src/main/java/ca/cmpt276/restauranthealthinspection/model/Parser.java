@@ -23,9 +23,9 @@ import java.util.Locale;
 class Parser {
     // Parse data from CSV files
     static void parseData(RestaurantManager manager, InputStreamReader inspectionDataReader,
-                          InputStreamReader restaurantDataReader) throws IOException, CsvValidationException {
+                          InputStreamReader restaurantDataReader, boolean originalFile) throws IOException, CsvValidationException {
 
-        List<Inspection> inspections = parseInspections(inspectionDataReader);
+        List<Inspection> inspections = parseInspections(inspectionDataReader, originalFile);
         List<Restaurant> restaurants = parseRestaurants(restaurantDataReader);
 
         parseViolationsInto(inspections);
@@ -35,8 +35,8 @@ class Parser {
 
     // Parse ViolLump and add violations to inspection
     private static void parseViolationsInto(List<Inspection> inspections) {
+
         for (Inspection ins : inspections) {
-//            Log.d("parseViolationsInto ", ins.toString());
 
             String violLump = ins.getViolLump();
             if (!violLump.isEmpty()) {
@@ -95,7 +95,7 @@ class Parser {
     }
 
     // Parses the inspections from data and generate a list containing the inspections
-    private static List<Inspection> parseInspections(InputStreamReader inspectionDataReader) throws IOException {
+    private static List<Inspection> parseInspections(InputStreamReader inspectionDataReader, boolean originalFile) throws IOException {
         List<Inspection> result = new ArrayList<>();
 
         CSVReader reader = new CSVReader(inspectionDataReader);
@@ -104,25 +104,35 @@ class Parser {
         try {
             //skipping the headers
             reader.readNext();
-
             while (((dataCols = reader.readNext()) != null)) {
-                String inspectionTrackingNum = dataCols[0];
-                Calendar calendar = calendarConverter(dataCols[1]);
-                String inspectionType = dataCols[2];
-                int numCritical = Integer.parseInt(dataCols[3]);
-                int numNonCritical = Integer.parseInt(dataCols[4]);
-                String hazardRating = dataCols[5];
-                String vioLump = dataCols[6];
 
-                result.add(new Inspection(
-                        inspectionTrackingNum,
-                        calendar,
-                        inspectionType,
-                        numCritical,
-                        numNonCritical,
-                        hazardRating,
-                        vioLump
-                ));
+                if (!dataCols[0].equals("")) {
+                    String inspectionTrackingNum = dataCols[0];
+                    Calendar calendar = calendarConverter(dataCols[1]);
+                    String inspectionType = dataCols[2];
+                    int numCritical = Integer.parseInt(dataCols[3]);
+                    int numNonCritical = Integer.parseInt(dataCols[4]);
+                    String hazardRating;
+                    String vioLump;
+                    if (originalFile) {
+                        hazardRating = dataCols[5];
+                        vioLump = dataCols[6];
+                    }
+                    else {
+                        hazardRating = dataCols[6];
+                        vioLump = dataCols[5];
+                    }
+                    result.add(new Inspection(
+                            inspectionTrackingNum,
+                            calendar,
+                            inspectionType,
+                            numCritical,
+                            numNonCritical,
+                            hazardRating,
+                            vioLump
+                    ));
+                }
+
             }
         } catch (CsvValidationException | IOException e) {
             e.printStackTrace();
