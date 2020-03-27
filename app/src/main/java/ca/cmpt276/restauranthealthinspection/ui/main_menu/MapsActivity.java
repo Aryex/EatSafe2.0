@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,9 +44,13 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
 
+import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.ProgressDialogFragment;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterFragment;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 /**
@@ -183,7 +189,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        restaurants = RestaurantManager.getInstance(this);
+        getRestaurants();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         //Creating location Request
@@ -199,6 +205,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupDebug();
 
         getLocationPermission();
+    }
+
+    private void getRestaurants() {
+        restaurants = RestaurantManager.getInstance(this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        UpdaterFragment updaterFragment = new UpdaterFragment();
+        updaterFragment.show(fragmentManager, "updating");
+
     }
 
     private void setupDebug() {

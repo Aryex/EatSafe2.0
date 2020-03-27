@@ -62,4 +62,5 @@
     <string name="dialog_button_update">Update</string>
     <string name="dialog_button_cancel">Cancel</string>
     <string name="api_error">Could not connect to api to API</string>
+    <string name="updating">Updating:</string>
 </resources>

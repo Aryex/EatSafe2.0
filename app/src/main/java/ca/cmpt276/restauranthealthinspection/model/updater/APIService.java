@@ -10,7 +10,7 @@ import retrofit2.http.Url;
 
 public interface APIService {
 
-    static String BASE_URL = "http://data.surrey.ca/";
+    String BASE_URL = "http://data.surrey.ca/";
 
     @GET("/api/3/action/package_show?id=fraser-health-restaurant-inspection-reports")
     Call<JsonInfo> getInspectionsUrl();
@@ -22,5 +22,5 @@ public interface APIService {
     Call<ResponseBody> downloadInspections(@Url String file);
 
     @GET
-    Call<ResponseBody> downloadRestaurants(@Url String file);
+    Call<RestaurantsResponseBody> downloadRestaurants(@Url String file);
 }

@@ -33,7 +33,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
     private static RestaurantManager instance;
 
     public static RestaurantManager getInstance(Context context) {
-        FileUpdater.downloadFiles(context);
+
         if (instance == null) {
             Log.i(TAG, "getInstance: Starting to parse data....");
             instance = new RestaurantManager();

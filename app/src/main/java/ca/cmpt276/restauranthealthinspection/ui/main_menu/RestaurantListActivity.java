@@ -1,6 +1,5 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +8,11 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.*;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterDialogFragment;
 
 /**
  * Main menu display a list of restaurants and their appropriate information.
