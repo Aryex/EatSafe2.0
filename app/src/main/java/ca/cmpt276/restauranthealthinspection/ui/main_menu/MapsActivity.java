@@ -211,7 +211,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         restaurants = RestaurantManager.getInstance(this);
         FragmentManager fragmentManager = getSupportFragmentManager();
         UpdaterFragment updaterFragment = new UpdaterFragment();
-        updaterFragment.show(fragmentManager, "updating");
+        updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
 
     }
 
@@ -513,8 +513,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onBackPressed() {
-        finishAffinity();
-        System.exit(0);
+
+        UpdaterFragment test1 = (UpdaterFragment) getSupportFragmentManager().findFragmentByTag(UpdaterFragment.TAG);
+        ProgressDialogFragment test2 = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.TAG);
+
+        if ((test1 != null && test1.isVisible()) || (test2 != null && test2.isVisible())) {
+            super.onBackPressed();
+        }
+        else {
+            finishAffinity();
+            System.exit(0);
+        }
     }
 
     //Toolbar setup

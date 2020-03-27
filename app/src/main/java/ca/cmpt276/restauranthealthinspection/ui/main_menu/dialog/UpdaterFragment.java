@@ -17,6 +17,8 @@ import ca.cmpt276.restauranthealthinspection.R;
 
 public class UpdaterFragment extends DialogFragment {
 
+    public static final String TAG = "updating";
+
     public interface UpdaterDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
         void onDialogNegativeClick(DialogFragment dialog);
@@ -48,7 +50,7 @@ public class UpdaterFragment extends DialogFragment {
 //                        listener.onDialogPositiveClick(UpdaterDialogFragment.this);
                         FragmentManager fragmentManager = getFragmentManager();
                         ProgressDialogFragment progressDialogFragment = new ProgressDialogFragment();
-                        progressDialogFragment.show(fragmentManager, "downloading");
+                        progressDialogFragment.show(fragmentManager, ProgressDialogFragment.TAG);
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,8 @@ import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 
 public class ProgressDialogFragment extends DialogFragment {
+
+    public static final String TAG = "downloading";
 
     private ProgressBar progressBar;
 
@@ -51,7 +54,11 @@ public class ProgressDialogFragment extends DialogFragment {
             @Override
             public void run() {
                 progressBar.setProgress(percent);
-                Log.d("test", Boolean.toString(Looper.myLooper() == Looper.getMainLooper()));
+
+                if (progressBar.getProgress() == 100) {
+                    Toast.makeText(getContext(), "Files downloaded", Toast.LENGTH_SHORT).show();
+                    onStop();
+                }
             }
         });
     }

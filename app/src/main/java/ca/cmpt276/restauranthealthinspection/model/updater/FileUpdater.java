@@ -146,17 +146,15 @@ public class FileUpdater {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     boolean done = writeRestaurantsToDisk(response.body(), context);
-                    Toast.makeText(context, "restaurants done", Toast.LENGTH_SHORT).show();
                     progressDialogFragment.setProgress(progressDialogFragment.getProgress() + 50);
                 }
                 else {
-                    Toast.makeText(context, "restaurants error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Toast.makeText(context, "big error restaurants", Toast.LENGTH_SHORT).show();
                 throwable.printStackTrace();
             }
         });
@@ -173,7 +171,6 @@ public class FileUpdater {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     boolean done = writeInspectionsToDisk(response.body(), context);
-                    Toast.makeText(context, "inspections done", Toast.LENGTH_SHORT).show();
                     progressDialogFragment.setProgress(progressDialogFragment.getProgress() + 50);
                 }
                 else {
@@ -183,7 +180,7 @@ public class FileUpdater {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Toast.makeText(context, "big error inspections", Toast.LENGTH_SHORT).show();
+                throwable.printStackTrace();
             }
         });
     }
