@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 
 import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
 
 public class UpdaterFragment extends DialogFragment {
 
@@ -57,6 +60,9 @@ public class UpdaterFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 //                        listener.onDialogNegativeClick(UpdaterDialogFragment.this);
+
+                        Intent i = MapsActivity.makeLaunchIntent(getContext());
+                        startActivity(i);
                     }
                 });
 

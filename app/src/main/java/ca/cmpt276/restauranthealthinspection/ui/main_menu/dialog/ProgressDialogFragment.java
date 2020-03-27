@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
 
 public class ProgressDialogFragment extends DialogFragment {
 
@@ -57,6 +58,15 @@ public class ProgressDialogFragment extends DialogFragment {
 
                 if (progressBar.getProgress() == 100) {
                     Toast.makeText(getContext(), "Files downloaded", Toast.LENGTH_SHORT).show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i = MapsActivity.makeLaunchIntent(getContext());
+                            startActivity(i);
+                        }
+                    }, 1000);
+
                     onStop();
                 }
             }

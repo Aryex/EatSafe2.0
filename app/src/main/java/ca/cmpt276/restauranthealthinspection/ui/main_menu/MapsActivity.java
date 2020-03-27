@@ -116,6 +116,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return intent;
     }
 
+    public static Intent makeLaunchIntent(Context context) {
+        Intent intent = new Intent(context, MapsActivity.class);
+        return intent;
+    }
+
     // What to do when map appear on screen
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -189,7 +194,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getRestaurants();
+        restaurants = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         //Creating location Request
@@ -205,14 +210,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupDebug();
 
         getLocationPermission();
-    }
-
-    private void getRestaurants() {
-        restaurants = RestaurantManager.getInstance(this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        UpdaterFragment updaterFragment = new UpdaterFragment();
-        updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
-
     }
 
     private void setupDebug() {
@@ -248,7 +245,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onPause();
 
         //Stop updating location.
-        this.fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        if (fusedLocationProviderClient != null) {
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        }
+
     }
 
     private void makeLocationCallback() {
@@ -513,17 +513,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onBackPressed() {
+        finishAffinity();
+        System.exit(0);
 
-        UpdaterFragment test1 = (UpdaterFragment) getSupportFragmentManager().findFragmentByTag(UpdaterFragment.TAG);
-        ProgressDialogFragment test2 = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.TAG);
-
-        if ((test1 != null && test1.isVisible()) || (test2 != null && test2.isVisible())) {
-            super.onBackPressed();
-        }
-        else {
-            finishAffinity();
-            System.exit(0);
-        }
     }
 
     //Toolbar setup

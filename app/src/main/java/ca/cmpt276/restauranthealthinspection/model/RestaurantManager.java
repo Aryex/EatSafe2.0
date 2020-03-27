@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.opencsv.exceptions.CsvValidationException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ public class RestaurantManager implements Iterable<Restaurant> {
             Log.i(TAG, "getInstance: Starting to parse data....");
             instance = new RestaurantManager();
 
+            boolean avail = checkFilesAvail();
+
             InputStreamReader inspectionDataReader = new InputStreamReader(context
                     .getResources()
                     .openRawResource(R.raw.inspectionreports_itr1));
@@ -57,6 +60,14 @@ public class RestaurantManager implements Iterable<Restaurant> {
         }
 
         return instance;
+    }
+
+    private static boolean checkFilesAvail() {
+        File inspections = new File(FileUpdater.INSPECTIONS_FILE);
+        File restaurants = new File(FileUpdater.RESTAURANTS_FILE);
+
+        Log.d("test", inspections.exists() + " and " + restaurants.exists());
+        return inspections.exists() && restaurants.exists();
     }
 
     private RestaurantManager() {

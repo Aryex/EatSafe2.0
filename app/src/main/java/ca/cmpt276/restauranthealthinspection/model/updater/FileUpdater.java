@@ -32,8 +32,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FileUpdater {
 
-    private static final String RESTAURANTS_FILE = "restaurants.csv";
-    private static final String INSPECTIONS_FILE = "inspections.csv";
+    public static final String RESTAURANTS_FILE = "restaurants.csv";
+    public static final String INSPECTIONS_FILE = "inspections.csv";
 
     public static boolean checkUpdate() {
         return true;
