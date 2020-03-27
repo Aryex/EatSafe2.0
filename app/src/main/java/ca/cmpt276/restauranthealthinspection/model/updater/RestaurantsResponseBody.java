@@ -15,6 +15,12 @@ import okio.ForwardingSource;
 import okio.Okio;
 import okio.Source;
 
+/**
+ * Source: https://stackoverflow.com/questions/42118924/android-retrofit-download-progress
+ * Get progress in downloading files, does not work for now due to content length not being
+ * transmitted by server reliably
+ */
+
 public class RestaurantsResponseBody extends ResponseBody {
 
     private ResponseBody responseBody;
@@ -62,6 +68,7 @@ public class RestaurantsResponseBody extends ResponseBody {
                 if (bytesRead == -1) {
                     percent = 100f;
                 } else {
+                    //set percent between 0 and 100
                     percent = (((float) totalRead / contentLength()) * 100);
 
                     Log.d("test", totalRead + " and " + contentLength());

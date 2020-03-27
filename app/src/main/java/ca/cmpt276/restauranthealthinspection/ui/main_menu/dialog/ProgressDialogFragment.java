@@ -25,6 +25,10 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
+/**
+ * Displays progress bar for downloading
+ */
+
 public class ProgressDialogFragment extends DialogFragment {
 
     public static final String TAG = "downloading";
@@ -45,6 +49,7 @@ public class ProgressDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                //cancel all calls
                 urlCall.cancel();
                 if (restaurantsCall != null) {
                     restaurantsCall.cancel();
@@ -53,12 +58,14 @@ public class ProgressDialogFragment extends DialogFragment {
                     inspectionsCall.cancel();
                 }
 
+                //start the map activity
                 Intent i = MapsActivity.makeLaunchIntent(getContext());
                 startActivity(i);
 
             }
         };
 
+        //start download
         FileUpdater.startDownloadWithDelay(view.getContext(), this);
 
         return new AlertDialog.Builder(getActivity())
@@ -69,6 +76,7 @@ public class ProgressDialogFragment extends DialogFragment {
 
     public void setProgress(int percent) {
 
+        //switch to main thread and change progress bar
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -76,47 +84,28 @@ public class ProgressDialogFragment extends DialogFragment {
                 if (getContext() != null) {
                     progressBar.setProgress(percent);
 
+                    //signal the FileUpdater that the download is complete, and change to Map activity
                     if (progressBar.getProgress() == 100) {
                         FileUpdater.completeDownload(getContext());
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = MapsActivity.makeLaunchIntent(getContext());
-                                startActivity(i);
-                            }
-                        }, 1000);
-
-                        onStop();
+                        Intent i = MapsActivity.makeLaunchIntent(getContext());
+                        startActivity(i);
                     }
                 }
-
             }
         });
     }
 
     public int getProgress() {
-
         return progressBar.getProgress();
-    }
-
-    public Call<ResponseBody> getRestaurantsCall() {
-        return restaurantsCall;
     }
 
     public void setRestaurantsCall(Call<ResponseBody> restaurantsCall) {
         this.restaurantsCall = restaurantsCall;
     }
 
-    public Call<ResponseBody> getInspectionsCall() {
-        return inspectionsCall;
-    }
 
     public void setInspectionsCall(Call<ResponseBody> inspectionsCall) {
         this.inspectionsCall = inspectionsCall;
-    }
-
-    public Call<JsonInfo> getUrlCall() {
-        return urlCall;
     }
 
     public void setUrlCall(Call<JsonInfo> urlCall) {

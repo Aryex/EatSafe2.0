@@ -18,6 +18,10 @@ import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
 
+/**
+ * Asks user if they want to download data now
+ */
+
 public class UpdaterFragment extends DialogFragment {
 
     public static final String TAG = "updating";
@@ -29,17 +33,6 @@ public class UpdaterFragment extends DialogFragment {
 
     private UpdaterDialogListener listener;
 
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//
-//        try {
-//            listener = (UpdaterDialogListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(getActivity().toString()
-//                    + " must implement NoticeDialogListener");
-//        }
-//    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -50,7 +43,7 @@ public class UpdaterFragment extends DialogFragment {
                 .setPositiveButton(R.string.dialog_button_update, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        listener.onDialogPositiveClick(UpdaterDialogFragment.this);
+                        //switch fragments
                         FragmentManager fragmentManager = getFragmentManager();
                         ProgressDialogFragment progressDialogFragment = new ProgressDialogFragment();
                         progressDialogFragment.show(fragmentManager, ProgressDialogFragment.TAG);
@@ -59,8 +52,7 @@ public class UpdaterFragment extends DialogFragment {
                 .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        listener.onDialogNegativeClick(UpdaterDialogFragment.this);
-
+                        //on cancel start map activity
                         Intent i = MapsActivity.makeLaunchIntent(getContext());
                         startActivity(i);
                     }

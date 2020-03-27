@@ -16,6 +16,10 @@ import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapsActivity;
 
+/**
+ * Fragment for a checking update dialog
+ */
+
 public class CheckUpdateFragment extends DialogFragment {
 
     public static final String TAG = "check_update";
@@ -27,6 +31,7 @@ public class CheckUpdateFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.checking_updating_fragment, null);
         setCancelable(false);
 
+        //check for new data on separate thread
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -41,6 +46,7 @@ public class CheckUpdateFragment extends DialogFragment {
 
     private void checkForNewData() {
 
+        //get when the server was last changed
         FileUpdater.lastDateServerModified(CheckUpdateFragment.this);
 
         new Handler().postDelayed(new Runnable() {
@@ -55,6 +61,7 @@ public class CheckUpdateFragment extends DialogFragment {
     }
 
     public void cancel() {
+        //change activities
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -64,16 +71,17 @@ public class CheckUpdateFragment extends DialogFragment {
                     doneChecking = true;
                     onStop();
                 }
-
             }
         }, 500);
 
     }
 
+    //go to next fragment and destroy this one
     public void update() {
         FragmentManager fragmentManager = getFragmentManager();
         UpdaterFragment updaterFragment = new UpdaterFragment();
         updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
         doneChecking = true;
+        getFragmentManager().beginTransaction().remove(this).commit();
     }
 }

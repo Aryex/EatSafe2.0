@@ -14,6 +14,10 @@ import android.util.Log;
 
 import java.util.Date;
 
+/**
+ * Welcome activity before the Map Activity
+ */
+
 public class WelcomeActivity extends AppCompatActivity {
 
     private final long UPDATE_TIME_THRESHOLD = 72000000;
@@ -27,30 +31,23 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void showDialogs() {
-//        long current = System.currentTimeMillis();
-//        Log.d("test", "" + FileUpdater.lastUpdated(this));
-//        if (current - FileUpdater.lastUpdated(this) > UPDATE_TIME_THRESHOLD) {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            UpdaterFragment updaterFragment = new UpdaterFragment();
-//            updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
-//        }
-//        else {
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Intent i = MapsActivity.makeLaunchIntent(WelcomeActivity.this);
-//                    startActivity(i);
-//                }
-//            }, 1000);
-//        }
-//
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        UpdaterFragment updaterFragment = new UpdaterFragment();
-//        updaterFragment.show(fragmentManager, UpdaterFragment.TAG);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        CheckUpdateFragment checkUpdateFragment = new CheckUpdateFragment();
-        checkUpdateFragment.show(fragmentManager, CheckUpdateFragment.TAG);
+        long current = System.currentTimeMillis();
+        //if longer than 20 hours
+        if (current - FileUpdater.lastUpdated(this) > UPDATE_TIME_THRESHOLD) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            CheckUpdateFragment checkUpdateFragment = new CheckUpdateFragment();
+            checkUpdateFragment.show(fragmentManager, CheckUpdateFragment.TAG);
+        }
+        else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //start map activity
+                    Intent i = MapsActivity.makeLaunchIntent(WelcomeActivity.this);
+                    startActivity(i);
+                }
+            }, 1000);
+        }
 
     }
 
