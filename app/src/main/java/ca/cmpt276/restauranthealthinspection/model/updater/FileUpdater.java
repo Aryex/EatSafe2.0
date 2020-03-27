@@ -3,8 +3,6 @@ package ca.cmpt276.restauranthealthinspection.model.updater;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

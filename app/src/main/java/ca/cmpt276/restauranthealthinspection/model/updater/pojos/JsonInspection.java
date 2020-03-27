@@ -1,10 +1,7 @@
 package ca.cmpt276.restauranthealthinspection.model.updater.pojos;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class JsonInspection {
     private String format;

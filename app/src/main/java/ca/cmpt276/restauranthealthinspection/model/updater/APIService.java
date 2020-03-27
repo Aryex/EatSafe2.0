@@ -1,7 +1,5 @@
 package ca.cmpt276.restauranthealthinspection.model.updater;
 
-import com.google.gson.JsonElement;
-
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
 import okhttp3.ResponseBody;
 import retrofit2.Call;

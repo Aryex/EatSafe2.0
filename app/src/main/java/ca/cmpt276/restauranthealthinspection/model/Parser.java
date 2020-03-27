@@ -1,12 +1,10 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
-import android.util.Log;
-
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
-import java.io.*;
-
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

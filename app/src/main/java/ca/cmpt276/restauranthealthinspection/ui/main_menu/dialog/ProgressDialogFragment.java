@@ -7,16 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
@@ -87,6 +81,7 @@ public class ProgressDialogFragment extends DialogFragment {
                     //signal the FileUpdater that the download is complete, and change to Map activity
                     if (progressBar.getProgress() == 100) {
                         FileUpdater.completeDownload(getContext());
+                        getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
                         Intent i = MapsActivity.makeLaunchIntent(getContext());
                         startActivity(i);
                     }

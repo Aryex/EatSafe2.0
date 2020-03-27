@@ -1,18 +1,14 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.CheckUpdateFragment;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.UpdaterFragment;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-
-import java.util.Date;
 
 /**
  * Welcome activity before the Map Activity
