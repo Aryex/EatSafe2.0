@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FileUpdater {
 
-//    public static final String TEMP_RESTAURANTS_FILE = "temp_restaurants.csv";
+    //    public static final String TEMP_RESTAURANTS_FILE = "temp_restaurants.csv";
 //    public static final String TEMP_INSPECTIONS_FILE = "temp_inspections.csv";
     public static final String RESTAURANTS_FILE = "restaurants.csv";
     public static final String INSPECTIONS_FILE = "inspections.csv";
@@ -42,7 +42,6 @@ public class FileUpdater {
     private static final String FILE_UPDATING_KEY = "file updating";
     private static final String TEMP_LAST_MODIFIED_KEY = "temp_last_modified";
     private static final String LAST_MODIFIED_KEY = "last_modified";
-
 
     //get when the local files were last modified
     public static long lastUpdated(Context context) {
@@ -88,8 +87,7 @@ public class FileUpdater {
                 if (lastLocalModified != lastServerModified) {
                     checkUpdateFragment.update();
                     setTempServerModified(checkUpdateFragment.getContext(), lastServerModified);
-                }
-                else {
+                } else {
                     checkUpdateFragment.cancel();
                 }
             }
@@ -254,8 +252,7 @@ public class FileUpdater {
             objectOutputStream.writeObject(body.bytes());
             fileOutputStream.close();
             objectOutputStream.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -270,8 +267,7 @@ public class FileUpdater {
             objectOutputStream.writeObject(body.bytes());
             fileOutputStream.close();
             objectOutputStream.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

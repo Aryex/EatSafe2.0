@@ -44,6 +44,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
@@ -425,6 +426,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
                         Log.d(TAG, "onRequestPermissionsResult: permission failed");
                         locationPermissionGranted = false;
+                        createMap();
                         return;
                     }
                 }

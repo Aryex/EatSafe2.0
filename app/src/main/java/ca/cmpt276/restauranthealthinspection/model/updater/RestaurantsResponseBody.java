@@ -31,6 +31,7 @@ public class RestaurantsResponseBody extends ResponseBody {
         this.responseBody = responseBody;
         this.downloadListener = downloadListener;
     }
+
     @Override
     public long contentLength() {
         return responseBody.contentLength();

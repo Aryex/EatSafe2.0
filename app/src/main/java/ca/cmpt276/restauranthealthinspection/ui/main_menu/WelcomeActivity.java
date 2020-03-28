@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.CheckUpdateFragment;
@@ -13,7 +14,6 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.CheckUpdateFrag
 /**
  * Welcome activity before the Map Activity
  */
-
 public class WelcomeActivity extends AppCompatActivity {
 
     private final long UPDATE_TIME_THRESHOLD = 72000000;
@@ -33,8 +33,7 @@ public class WelcomeActivity extends AppCompatActivity {
             FragmentManager fragmentManager = getSupportFragmentManager();
             CheckUpdateFragment checkUpdateFragment = new CheckUpdateFragment();
             checkUpdateFragment.show(fragmentManager, CheckUpdateFragment.TAG);
-        }
-        else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

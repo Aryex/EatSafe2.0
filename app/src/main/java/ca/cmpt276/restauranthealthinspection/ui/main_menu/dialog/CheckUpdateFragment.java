@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
