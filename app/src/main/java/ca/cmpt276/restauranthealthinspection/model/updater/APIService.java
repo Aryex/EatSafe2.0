@@ -8,7 +8,7 @@ import retrofit2.http.Url;
 
 public interface APIService {
 
-    String BASE_URL = "http://data.surrey.ca/";
+    String BASE_URL = "https://data.surrey.ca/";
 
     @GET("/api/3/action/package_show?id=fraser-health-restaurant-inspection-reports")
     Call<JsonInfo> getInspectionsUrl();
