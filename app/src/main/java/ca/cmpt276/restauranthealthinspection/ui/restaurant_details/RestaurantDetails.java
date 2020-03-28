@@ -15,6 +15,7 @@ import java.util.List;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Inspection;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;

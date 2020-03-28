@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 
@@ -23,6 +24,7 @@ public class UpdaterFragment extends DialogFragment {
 
     public interface UpdaterDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
+
         void onDialogNegativeClick(DialogFragment dialog);
     }
 
