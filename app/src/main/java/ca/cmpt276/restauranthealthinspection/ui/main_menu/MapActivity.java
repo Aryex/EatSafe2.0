@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
@@ -68,7 +69,8 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     //  Surrey Central's Lat Lng
-    public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.1866939, -122.8494363);
+    public static final LatLng SFU_SURREY_LAT_LNG = new LatLng(49.1866939, -122.8494363);
+    public static final LatLng BC_LAT_LNG = new LatLng(53.726669, -127.647621);
 
     //Debug
     private static final String TAG = "MapsActivity";
@@ -82,9 +84,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private RestaurantManager restaurants;
 
     private static final float DEFAULT_ZOOM_FOCUS = 19f;
-    private static final float DEFAULT_ZOOM_HIGH = 12f;
+    private static final float DEFAULT_ZOOM_HIGH = 15f;
     private static final double DEFAULT_PRECISION = 0.0001;
-    private float currentCameraZoom = DEFAULT_ZOOM_FOCUS;
+    private boolean onActivityStart = true;
     private boolean cameraLocked = true;
 
     private static GoogleMap map;
@@ -98,7 +100,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-    private LatLng deviceLocation = DEFAULT_LAT_LNG;// SFU Surrey;
+    private LatLng deviceLocation = SFU_SURREY_LAT_LNG;// SFU Surrey;
 
 
     private static String INTENT_KEY_LAT = "lat";
@@ -140,12 +142,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Intent data = getIntent();
         if (data.hasExtra(INTENT_KEY_RESTAURANT_ID)) {
             //initialize camera position above default position.
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM_HIGH));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(SFU_SURREY_LAT_LNG, DEFAULT_ZOOM_HIGH));
             createRequestedMarker(data);
         } else {
             populateMap();
             setupLocationTracking();
-            moveCamera(deviceLocation, DEFAULT_ZOOM_HIGH);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(BC_LAT_LNG, DEFAULT_ZOOM_HIGH));
         }
     }
 
@@ -158,16 +160,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 @Override
                 public boolean onMyLocationButtonClick() {
                     Log.d(TAG, "onMyLocationButtonClick: camera locked");
-                    currentCameraZoom = map.getCameraPosition().zoom;
-                    //Note: smaller zoom == higher camera
-                    if (currentCameraZoom != DEFAULT_ZOOM_FOCUS) {
+                    cameraLocked = true;
+                    float currentCameraZoom = map.getCameraPosition().zoom;
+
+                    if (currentCameraZoom != DEFAULT_ZOOM_FOCUS) { //Note: smaller zoom == higher camera
                         currentCameraZoom = DEFAULT_ZOOM_FOCUS;
                     }
-                    moveCamera(deviceLocation, DEFAULT_ZOOM_FOCUS);
-                    cameraLocked = true;
+                    slideCamera(deviceLocation, currentCameraZoom);
                     return true;
                 }
             });
+            map.setOnCameraIdleListener(() -> onActivityStart = false);
 //          When btn pressed, move camera to user location and zoom
         }
     }
@@ -220,7 +223,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
         map.setInfoWindowAdapter(new InfoWindowAdapter(this));
         requestedMarker.showInfoWindow();
-        moveCamera(latLng, currentCameraZoom);
+        slideCamera(latLng, map.getCameraPosition().zoom);
+        moveCamera(latLng, map.getCameraPosition().zoom);
     }
 
     @Override
@@ -262,7 +266,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveCamera(new LatLng(49.188808, -122.847992), 12f);
+                slideCamera(new LatLng(49.188808, -122.847992), 12f);
             }
         });
 
@@ -270,7 +274,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 cameraLocked = !cameraLocked;
-                moveCamera(deviceLocation, currentCameraZoom);
+                slideCamera(deviceLocation, map.getCameraPosition().zoom);
             }
         });
     }
@@ -286,7 +290,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onPause() {
         super.onPause();
         //Stop updating location.
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        this.fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     private void populateMap() {
@@ -308,6 +312,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             startActivity(startIntent);
         });
 
+        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyClusterItem>() {
+            @Override
+            public boolean onClusterClick(Cluster<MyClusterItem> cluster) {
+
+                return false;
+            }
+        });
+
         //set clusterManager's infoWindowAdapter
         clusterManager.getMarkerCollection().setInfoWindowAdapter(new InfoWindowAdapter(this));
 
@@ -325,6 +337,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Adapted from:
      * https://developer.android.com/training/location/request-updates
+     *
+     * NOTE: locaiton call back are made at OnResume
+     * -> App may not have a location until this is called.
      */
     private void makeLocationCallback() {
         Log.d(TAG, "setupLocationCallBack: called");
@@ -340,11 +355,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                     if (cameraLocked) {
                         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        double latPrecision = deviceLocation.latitude - location.getLatitude();
-                        double lngPrecision = deviceLocation.longitude - location.getLongitude();
                         if (!deviceLocation.equals(newLocation)) {
                             deviceLocation = newLocation;
-                            moveCamera(newLocation, currentCameraZoom);
+                            if (onActivityStart) {
+                                slideCamera(newLocation, DEFAULT_ZOOM_HIGH);
+                            } else {
+                                slideCamera(newLocation, map.getCameraPosition().zoom);
+                            }
                         }
                     }
                 }
@@ -356,6 +373,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      * Reference:
      * https://developer.android.com/training/location
      * https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+     *
+     * NOTE: There maybe no last known location.
      */
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: Called");
@@ -463,8 +482,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private static void moveCamera(LatLng newLocation, float zoom) {
+    private static void slideCamera(LatLng newLocation, float zoom) {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
+    }
+
+    private static void moveCamera(LatLng newLocation, float zoom) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
     }
 
     private void startLocationUpdates() {
