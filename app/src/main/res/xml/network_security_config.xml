@@ -1,0 +1,8 @@
+<network-security-config>
+    <!--Fix HTTPS error obtained from:
+        https://medium.com/@son.rommer/fix-cleartext-traffic-error-in-android-9-pie-2f4e9e2235e6
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">data.surrey.ca</domain>
+    </domain-config>
+</network-security-config>

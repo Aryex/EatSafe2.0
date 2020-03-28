@@ -3,7 +3,12 @@ package ca.cmpt276.restauranthealthinspection.model;
 import android.util.Log;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Represents the inspections that were performed in the restaurant.

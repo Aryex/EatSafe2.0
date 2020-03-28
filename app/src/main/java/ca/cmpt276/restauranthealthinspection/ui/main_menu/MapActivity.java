@@ -1,12 +1,5 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +37,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
@@ -122,6 +122,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             default:
                 return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
         }
+    }
+
+    public static Intent makeLaunchIntent(Context context) {
+        return new Intent(context, MapActivity.class);
     }
 
     // What to do when map appear on screen
@@ -282,7 +286,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onPause() {
         super.onPause();
         //Stop updating location.
-        this.fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     private void populateMap() {
@@ -422,6 +426,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
                         Log.d(TAG, "onRequestPermissionsResult: permission failed");
                         locationPermissionGranted = false;
+                        createMap();
                         return;
                     }
                 }

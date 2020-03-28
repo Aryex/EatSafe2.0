@@ -57,4 +57,12 @@
     <string name="issues">\u0020issues</string>
     <string name="no">no</string>
     <string name="return_to_map">Return to map</string>
+    <string name="update_avaiable">Update available</string>
+    <string name="update_message">An updated version of the inspection data is available. Do you want to update now?</string>
+    <string name="dialog_button_update">Update</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="api_error">Could not connect to api to API</string>
+    <string name="updating">Updating:</string>
+    <string name="welcome">Welcome To EatSafe</string>
+    <string name="checking_for_updates">Checking for updates…</string>
 </resources>
