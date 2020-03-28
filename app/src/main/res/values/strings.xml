@@ -63,6 +63,6 @@
     <string name="dialog_button_cancel">Cancel</string>
     <string name="api_error">Could not connect to api to API</string>
     <string name="updating">Updating:</string>
-    <string name="welcome">Welcome</string>
+    <string name="welcome">Welcome To EatSafe</string>
     <string name="checking_for_updates">Checking for updates…</string>
 </resources>
