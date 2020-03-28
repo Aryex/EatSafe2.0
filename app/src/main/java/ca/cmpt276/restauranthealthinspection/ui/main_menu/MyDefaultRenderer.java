@@ -1,8 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import android.content.Context;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -10,10 +8,8 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 class MyDefaultRenderer extends DefaultClusterRenderer<MyClusterItem> {
-    private Context context;
     public MyDefaultRenderer(Context context, GoogleMap map, ClusterManager<MyClusterItem> clusterManager) {
         super(context, map, clusterManager);
-        this.context = context;
     }
 
     @Override
@@ -25,5 +21,4 @@ class MyDefaultRenderer extends DefaultClusterRenderer<MyClusterItem> {
         markerOptions.snippet(item.getSnippet());
         markerOptions.icon(MapActivity.getHazardLevelBitmapDescriptor(hazardLevel));
     }
-
 }
