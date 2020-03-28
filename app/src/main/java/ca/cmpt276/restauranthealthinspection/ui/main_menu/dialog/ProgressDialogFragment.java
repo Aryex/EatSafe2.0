@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -106,5 +107,10 @@ public class ProgressDialogFragment extends DialogFragment {
 
     public void setUrlCall(Call<JsonInfo> urlCall) {
         this.urlCall = urlCall;
+    }
+
+    public void fail() {
+        Intent i = MapActivity.makeLaunchIntent(getContext());
+        startActivity(i);
     }
 }

@@ -34,8 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FileUpdater {
 
-    //    public static final String TEMP_RESTAURANTS_FILE = "temp_restaurants.csv";
-//    public static final String TEMP_INSPECTIONS_FILE = "temp_inspections.csv";
+    public static final String TEMP_RESTAURANTS_FILE = "temp_restaurants.csv";
+    public static final String TEMP_INSPECTIONS_FILE = "temp_inspections.csv";
     public static final String RESTAURANTS_FILE = "restaurants.csv";
     public static final String INSPECTIONS_FILE = "inspections.csv";
 
@@ -146,6 +146,7 @@ public class FileUpdater {
                     @Override
                     public void onFailure(Call<JsonInfo> call, Throwable throwable) {
                         throwable.printStackTrace();
+                        progressDialogFragment.fail();
                     }
                 });
             }
@@ -153,7 +154,7 @@ public class FileUpdater {
             @Override
             public void onFailure(Call<JsonInfo> call, Throwable throwable) {
                 throwable.printStackTrace();
-
+                progressDialogFragment.fail();
             }
         });
 
@@ -213,6 +214,7 @@ public class FileUpdater {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 throwable.printStackTrace();
+                progressDialogFragment.fail();
             }
         });
 
@@ -238,6 +240,7 @@ public class FileUpdater {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 throwable.printStackTrace();
+                progressDialogFragment.fail();
             }
         });
         progressDialogFragment.setInspectionsCall(inspectionsCall);
@@ -247,7 +250,7 @@ public class FileUpdater {
     private static boolean writeInspectionsToDisk(ResponseBody body, Context context) {
         //write to disk
         try {
-            FileOutputStream fileOutputStream = context.openFileOutput(INSPECTIONS_FILE, Context.MODE_PRIVATE);
+            FileOutputStream fileOutputStream = context.openFileOutput(TEMP_INSPECTIONS_FILE, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(body.bytes());
             fileOutputStream.close();
@@ -262,7 +265,7 @@ public class FileUpdater {
     private static boolean writeRestaurantsToDisk(ResponseBody body, Context context) {
         //write to disk
         try {
-            FileOutputStream fileOutputStream = context.openFileOutput(RESTAURANTS_FILE, Context.MODE_PRIVATE);
+            FileOutputStream fileOutputStream = context.openFileOutput(TEMP_RESTAURANTS_FILE, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(body.bytes());
             fileOutputStream.close();
@@ -288,8 +291,8 @@ public class FileUpdater {
         return sharedPreferences.getLong(LAST_MODIFIED_KEY, 0L);
     }
 
-    //set when server was last modified to temp value
     public static void completeDownload(Context context) {
+        //set when server was last modified to temp value
         SharedPreferences.Editor editor = context.getSharedPreferences(FILE_UPDATING_KEY, Context.MODE_PRIVATE).edit();
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_UPDATING_KEY, Context.MODE_PRIVATE);
@@ -297,5 +300,26 @@ public class FileUpdater {
 
         editor.putLong(LAST_MODIFIED_KEY, tempLastModified);
         editor.apply();
+
+        //delete current restaurants and inspections files
+        File currentRestaurantsFile = new File(context.getApplicationContext().getFilesDir(), RESTAURANTS_FILE);
+        File currentInspectionsFile = new File(context.getApplicationContext().getFilesDir(), INSPECTIONS_FILE);
+
+        if (currentRestaurantsFile.exists()) {
+            currentRestaurantsFile.delete();
+        }
+        if (currentInspectionsFile.exists()) {
+            currentInspectionsFile.delete();
+        }
+
+        //make files downloaded new restaurants and inspections files
+        File newRestaurantsFile = new File(context.getApplicationContext().getFilesDir(), TEMP_RESTAURANTS_FILE);
+        File newInspectionsFile = new File(context.getApplicationContext().getFilesDir(), TEMP_INSPECTIONS_FILE);
+
+        File destRestaurantsFile = new File(context.getApplicationContext().getFilesDir(), RESTAURANTS_FILE);
+        File destInspectionsFile = new File(context.getApplicationContext().getFilesDir(), INSPECTIONS_FILE);
+
+        newRestaurantsFile.renameTo(destRestaurantsFile);
+        newInspectionsFile.renameTo(destInspectionsFile);
     }
 }
