@@ -34,6 +34,7 @@ public class UpdaterFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        setCancelable(false);
 
         builder.setTitle(R.string.update_avaiable)
                 .setMessage(R.string.update_message)
