@@ -1,5 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -9,6 +10,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
+import ca.cmpt276.restauranthealthinspection.R;
 
 /**
  * Represents the inspections that were performed in the restaurant.
@@ -115,10 +118,10 @@ public class Inspection implements Iterable<Violation>, Serializable {
     }
 
     // Needed for displaying date of inspection from current date in MainActivity
-    public String getFromCurrentDate() {
+    public String getFromCurrentDate(Context context) {
         Log.d("Inspection Object", "getFromCurrentDate: " + calendar.getTime());
         if (getDaysInBetween() <= 30) {
-            return getDaysInBetween() + " days";
+            return getDaysInBetween() + context.getString(R.string.restaurant_days);
         }
 
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);

@@ -527,7 +527,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             String restaurantName = restaurant.getName();
             String address = restaurant.getAddress();
             String hazardLevel = restaurant.getHazardLevel();
-            String lastInspected = restaurant.getLatestInspectionDate();
+            String lastInspected = restaurant.getLatestInspectionDate(context);
             String lastInspectedTotalIssues = restaurant.getLatestInspectionTotalIssues();
 
             ImageView logoIV = view.findViewById(R.id.logoImageView);

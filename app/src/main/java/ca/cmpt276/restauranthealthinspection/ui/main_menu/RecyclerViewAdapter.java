@@ -85,7 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             logoIV.setImageResource(restaurant.getLogo());
 
             if (restaurant.hasBeenInspected()) {
-                String latestInspectionDate = restaurant.getLatestInspectionDate();
+                String latestInspectionDate = restaurant.getLatestInspectionDate(context);
                 textViewInspectionDate.setText(latestInspectionDate);
 
                 String totalIssues = restaurant.getLatestInspectionTotalIssues();
