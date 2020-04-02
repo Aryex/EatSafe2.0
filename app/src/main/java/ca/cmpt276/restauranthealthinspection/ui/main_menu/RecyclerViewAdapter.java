@@ -5,12 +5,17 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
@@ -20,13 +25,15 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
 /**
  * RecyclerViewAdapter defines how RecyclerView in main menu will setup each Card view.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> implements Filterable {
 
     private Context context;
     private RestaurantManager restaurantManager;
+    private List<Restaurant> restaurantListFull;
 
     RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
         this.restaurantManager = restaurantManager;
+        this.restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
         this.context = context;
     }
 
@@ -58,6 +65,47 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return restaurantManager.restaurantCount();
     }
+
+    /**
+     *
+     * Filter support
+     */
+    /* Filter implementation's reference:
+     * https://www.youtube.com/redirect?v=sJ-Z9G0SDhc&event=video_description&q=https%3A%2F%2Fcodinginflow.com%2Ftutorials%2Fandroid%2Fsearchview-recyclerview&redir_token=tVrFuM57AHYwXm4Wz_N6gnbE7v18MTU4NTg4OTc0NEAxNTg1ODAzMzQ0
+     */
+    @Override
+    public Filter getFilter() {
+        return restaurantFilter;
+    }
+
+    private Filter restaurantFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Restaurant> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(restaurantListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Restaurant restaurant: restaurantListFull) {
+                    if (restaurant.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(restaurant);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            restaurantManager.setRestaurants((List<Restaurant>)results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     /**
      * RestaurantCardViewHolder setup restaurant cards to be added to Recycler View.

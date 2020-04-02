@@ -140,4 +140,8 @@ public class RestaurantManager implements Iterable<Restaurant> {
         }
         return new Restaurant("none", "none","none","none","none",0,0);
     }
+
+    public void setRestaurants(List<Restaurant> list) {
+        restaurants = list;
+    }
 }

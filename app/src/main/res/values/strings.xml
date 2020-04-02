@@ -66,4 +66,6 @@
     <string name="welcome">Welcome To EatSafe</string>
     <string name="checking_for_updates">Checking for updates…</string>
     <string name="menu_search">search</string>
+    <string name="apply_search">apply</string>
+    <string name="menu_filter">filter</string>
 </resources>

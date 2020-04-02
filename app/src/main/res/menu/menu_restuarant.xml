@@ -6,9 +6,16 @@
         android:title="@string/return_to_map"
         app:showAsAction="never" />
     <item
+        android:id="@+id/menu_filter"
+        android:icon="@drawable/filter_icon"
+        android:orderInCategory="2"
+        android:title="@string/menu_filter"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_action_search"
         android:icon="@android:drawable/ic_menu_search"
         android:orderInCategory="1"
         android:title="@string/menu_search"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 </menu>

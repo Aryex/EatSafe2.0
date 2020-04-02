@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,10 +45,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterFragment;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 /**
@@ -588,6 +591,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        /*final MenuItem searchItem = menu.findItem(R.id.menu_action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });*/
         return true;
     }
 
@@ -597,6 +613,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Intent intent = RestaurantListActivity.makeLaunchIntent(this);
             startActivity(intent);
             return true;
+        }
+        if (item.getItemId() == R.id.menu_filter) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FilterFragment filterFragment = new FilterFragment();
+            filterFragment.show(fragmentManager, FilterFragment.TAG);
         }
         return super.onOptionsItemSelected(item);
     }

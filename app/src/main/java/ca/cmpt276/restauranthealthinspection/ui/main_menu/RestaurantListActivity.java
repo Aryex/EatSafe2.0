@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +26,8 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterFragment;
 public class RestaurantListActivity extends AppCompatActivity {
 
     private RestaurantManager restaurants;
+
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     public static Intent makeLaunchIntent(Context context) {
         return new Intent(context, RestaurantListActivity.class);
@@ -41,7 +46,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewMain);
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(this, restaurants);
+        recyclerViewAdapter = new RecyclerViewAdapter(this, restaurants);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -59,7 +64,26 @@ public class RestaurantListActivity extends AppCompatActivity {
     //Menu setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_restuarant, menu);
+        //getMenuInflater().inflate(R.menu.menu_restuarant, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_restuarant, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                recyclerViewAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return true;
     }
 
@@ -69,10 +93,14 @@ public class RestaurantListActivity extends AppCompatActivity {
             finish();
             return true;
         }
-        if (item.getItemId() == R.id.menu_action_search) {
+        if (item.getItemId() == R.id.menu_filter) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FilterFragment filterFragment = new FilterFragment();
             filterFragment.show(fragmentManager, FilterFragment.TAG);
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_action_search) {
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
