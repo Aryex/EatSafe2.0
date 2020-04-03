@@ -91,7 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String totalIssues = restaurant.getLatestInspectionTotalIssues();
                 textViewIssuesCount.setText(totalIssues);
 
-                RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
+                RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel(context));
                 setupWarningBar(hazardLevel);
             } else {
                 //default setup for restaurant with no inspections.

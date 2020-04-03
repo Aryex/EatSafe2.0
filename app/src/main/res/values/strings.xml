@@ -66,4 +66,7 @@
     <string name="updating">Updating:</string>
     <string name="violation_detail">%1$d - %2$s</string>
     <string name="welcome">Welcome To EatSafe</string>
+    <string name="hazard_rating_low">Low</string>
+    <string name="hazard_rating_medium">Medium</string>
+    <string name="hazard_rating_high">High</string>
 </resources>

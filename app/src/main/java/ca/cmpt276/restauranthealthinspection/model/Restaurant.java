@@ -177,11 +177,11 @@ public class Restaurant implements Iterable<Inspection> {
         return String.valueOf(totalIssues);
     }
 
-    public String getHazardLevel() {
+    public String getHazardLevel(Context context) {
         if (inspections.isEmpty()) {
             return "";
         }
-        return inspections.get(0).getHazardRating();
+        return inspections.get(0).getHazardRating(context);
     }
 
     @Override

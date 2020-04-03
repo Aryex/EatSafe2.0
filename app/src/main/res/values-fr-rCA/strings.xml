@@ -14,7 +14,7 @@
     <string name="date">Date de l\'inspection : %1$s</string>
     <string name="dialog_button_cancel">Annuler</string>
     <string name="dialog_button_update">Mise à jour</string>
-    <string name="found">Trouvé \\ u0020</string>
+    <string name="found">Trouvé\u0020</string>
     <string name="found_num_issues">"Trouvé %s problèmes "</string>
     <string name="hazardLevelDisplay">Niveau de risque : %1$s</string>
     <string name="hazard_level">Niveau de risque : %1$s</string>
@@ -25,16 +25,16 @@
     <string name="inspectionDateDisplay">Date d\'inspection: %1$s</string>
     <string name="inspectionTypeDisplay">Type d\'inspection: %1$</string>
     <string name="inspection_details_title">Détails d\'inspection</string>
-    <string name="issues">\\u0020problèmes</string>
+    <string name="issues">\u0020problèmes</string>
     <string name="last_inspected_on">Dernière inspection en %s</string>
-    <string name="latitude">Latitude:\\n%1$s</string>
-    <string name="longitude">Longitude:\\n%1$s</string>
+    <string name="latitude">Latitude:\n%1$s</string>
+    <string name="longitude">Longitude:\n%1$s</string>
     <string name="name">Nom</string>
     <string name="no_inspection">Aucune inspection trouvée</string>
     <string name="no_inspections_found">Aucune inspection trouvée</string>
     <string name="non_crit_issues">Problèmes non critiques détectés: %1$d</string>
     <string name="non_critical_issues_found">Problèmes non critiques détectés: %1$d</string>
-    <string name="restaurant_days">\\u0020jours</string>
+    <string name="restaurant_days">\u0020jours</string>
     <string name="restaurant_details_title">Détails sur les restaurants</string>
     <string name="return_to_map">Retour à la carte</string>
     <string name="show_list">Afficher tous les restaurants</string>
@@ -44,4 +44,7 @@
     <string name="updating">Mise à jour en ce moment:</string>
     <string name="violation_detail">%1$d - %2$s</string>
     <string name="welcome">Bienvenue chez EatSafe</string>
+    <string name="hazard_rating_low">Faible</string>
+    <string name="hazard_rating_medium">Moyen</string>
+    <string name="hazard_rating_high">"Élevé "</string>
 </resources>

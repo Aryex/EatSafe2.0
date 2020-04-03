@@ -48,7 +48,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
     @Override
     public void onBindViewHolder(@NonNull ViolationViewHolder holder, int position) {
         if (position == 0) {
-            holder.setHazardLevel(inspection.getHazardRating());
+            holder.setHazardLevel(inspection.getHazardRating(context));
         } else {
             Violation violation = inspection.get(position - 1);
             holder.setViews(violation);
@@ -119,7 +119,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
             description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
             layout.setForeground(null);
 
-            switch (inspection.getHazardRating()) {
+            switch (inspection.getHazardRating(context)) {
                 case Inspection.HAZARD_RATING_LOW:
                     icon.setImageResource(R.drawable.icon_hazard_low);
                     layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardLowInspection));

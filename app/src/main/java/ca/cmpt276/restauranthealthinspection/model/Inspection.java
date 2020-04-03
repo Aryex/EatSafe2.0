@@ -92,8 +92,16 @@ public class Inspection implements Iterable<Violation>, Serializable {
         return numNonCritical;
     }
 
-    public String getHazardRating() {
-        return hazardRating;
+    public String getHazardRating(Context context) {
+        switch (hazardRating) {
+            case HAZARD_RATING_LOW:
+                return context.getString(R.string.hazard_rating_low);
+            case HAZARD_RATING_MODERATE:
+                return context.getString(R.string.hazard_rating_medium);
+            case HAZARD_RATING_HIGH:
+                return context.getString(R.string.hazard_rating_high);
+        }
+        return context.getString(R.string.empty_string);
     }
 
     public List<Violation> getViolations() {

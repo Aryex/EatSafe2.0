@@ -61,15 +61,15 @@ public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
         }
 
         Inspection currentInspection = inspectionList.get(position);
-        itemView.setBackgroundColor(getBackgroundColor(currentInspection.getHazardRating()));
+        itemView.setBackgroundColor(getBackgroundColor(currentInspection.getHazardRating(context)));
 
         // Fill the view
         ImageView imageView = itemView.findViewById(R.id.item_icon);
-        imageView.setImageResource(getIconID(currentInspection.getHazardRating()));
+        imageView.setImageResource(getIconID(currentInspection.getHazardRating(context)));
 
         // Hazard level:
         TextView levelText = itemView.findViewById(R.id.levelTV);
-        levelText.setText(context.getString(R.string.hazard_level, currentInspection.getHazardRating()));
+        levelText.setText(context.getString(R.string.hazard_level, currentInspection.getHazardRating(context)));
 
         // Critical issues found:
         TextView critText = itemView.findViewById(R.id.item_crit);
