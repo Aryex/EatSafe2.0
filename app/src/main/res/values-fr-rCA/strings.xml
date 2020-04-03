@@ -50,4 +50,7 @@
     <string name="no">pas des</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Suivi</string>
+    <string name="menu_search">rechercher</string>
+    <string name="apply_search">appliquer</string>
+    <string name="menu_filter">filtrer</string>
 </resources>

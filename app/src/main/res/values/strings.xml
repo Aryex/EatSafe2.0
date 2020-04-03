@@ -71,4 +71,7 @@
     <string name="hazard_rating_high">High</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Follow-Up</string>
+    <string name="menu_search">search</string>
+    <string name="apply_search">apply</string>
+    <string name="menu_filter">filter</string>
 </resources>
