@@ -23,7 +23,7 @@
     <string name="hazard_level_medium">Risque moyen</string>
     <string name="inspected_on">"Inspecté: "</string>
     <string name="inspectionDateDisplay">Date d\'inspection: %1$s</string>
-    <string name="inspectionTypeDisplay">Type d\'inspection: %1$</string>
+    <string name="inspectionTypeDisplay">Type d\'inspection: %1$s</string>
     <string name="inspection_details_title">Détails d\'inspection</string>
     <string name="issues">\u0020problèmes</string>
     <string name="last_inspected_on">Dernière inspection en %s</string>
@@ -41,11 +41,11 @@
     <string name="string_inspectionHazardLevel">Niveau de risque global: %1$s</string>
     <string name="update_available">Mise à jour disponible</string>
     <string name="update_message">Une version mise à jour des données d\'inspection est disponible. Voulez-vous mettre à jour maintenant?</string>
-    <string name="updating">Mise à jour en ce moment:</string>
+    <string name="updating">En cours de mise à jour:</string>
     <string name="violation_detail">%1$d - %2$s</string>
     <string name="welcome">Bienvenue chez EatSafe</string>
     <string name="hazard_rating_low">Faible</string>
     <string name="hazard_rating_medium">Moyen</string>
-    <string name="hazard_rating_high">"Élevé "</string>
+    <string name="hazard_rating_high">Élevé</string>
     <string name="no">pas des</string>
 </resources>

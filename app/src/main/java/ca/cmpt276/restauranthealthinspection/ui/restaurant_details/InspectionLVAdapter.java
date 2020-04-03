@@ -27,29 +27,27 @@ public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
     }
 
     private int getIconID(String hazardLevel) {
-        switch (hazardLevel) {
-            case "Low":
-                return R.drawable.icon_hazard_low;
-            case "Moderate":
-                return R.drawable.icon_hazard_medium;
-            case "High":
-                return R.drawable.icon_hazard_high;
-            default:
+        if (hazardLevel.equals(context.getString(R.string.hazard_rating_low))) {
+            return R.drawable.icon_hazard_low;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+            return R.drawable.icon_hazard_medium;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+            return R.drawable.icon_hazard_high;
         }
+
         return R.drawable.icon_hazard_low;
     }
 
     private int getBackgroundColor(String hazardLevel) {
-        switch (hazardLevel) {
-            case "Low":
-                return context.getResources().getColor(R.color.hazardLowInspection);
-            case "Moderate":
-                return context.getResources().getColor(R.color.hazardMediumInspection);
-            case "High":
-                return context.getResources().getColor(R.color.hazardHighInspection);
-            default:
+        if (hazardLevel.equals(context.getString(R.string.hazard_rating_low))) {
+            return context.getColor(R.color.hazardLowInspection);
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+            return context.getColor(R.color.hazardMediumInspection);
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+            return context.getColor(R.color.hazardHighInspection);
         }
-        return context.getResources().getColor(R.color.hazardLowInspection);
+
+        return context.getColor(R.color.hazardLowInspection);
     }
 
     @Override
