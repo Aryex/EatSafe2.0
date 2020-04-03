@@ -68,4 +68,7 @@
     <string name="menu_search">search</string>
     <string name="apply_search">apply</string>
     <string name="menu_filter">filter</string>
+    <string name="total_crit_vio"><![CDATA[Total # of critical violations <=]]></string>
+    <string name="hazard_desc">Hazard level of most recent inspection</string>
+    <string name="empty_hint" />
 </resources>

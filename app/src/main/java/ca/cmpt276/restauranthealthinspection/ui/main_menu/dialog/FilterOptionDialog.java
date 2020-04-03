@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -18,15 +23,16 @@ import ca.cmpt276.restauranthealthinspection.R;
  * Fragment for a filter dialog
  */
 
-public class FilterOptionDialog extends DialogFragment {
+public class FilterFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "filter";
     private View view;
-    private SearchView searchView;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         view = LayoutInflater.from(getActivity()).inflate(R.layout.filter_fragment, null);
+
+        createSpinner();
 
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
@@ -44,5 +50,24 @@ public class FilterOptionDialog extends DialogFragment {
                     }
                 })
                 .create();
+    }
+
+    private void createSpinner() {
+        Spinner spinner = (Spinner) view.findViewById(R.id.hazard_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.hazard_levels_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        //spinner.setOnItemClickListener();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(view.getContext(), "Hello", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
