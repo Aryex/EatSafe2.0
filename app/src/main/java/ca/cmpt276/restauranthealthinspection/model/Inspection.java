@@ -129,7 +129,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     // Needed for displaying date of inspection from current date in MainActivity
     public String getFromCurrentDate(Context context) {
-        Log.d("Inspection Object", "getFromCurrentDate: " + calendar.getTime());
+//        Log.d("Inspection Object", "getFromCurrentDate: " + calendar.getTime());
         if (getDaysInBetween() <= 30) {
             return getDaysInBetween() + context.getString(R.string.restaurant_days);
         }

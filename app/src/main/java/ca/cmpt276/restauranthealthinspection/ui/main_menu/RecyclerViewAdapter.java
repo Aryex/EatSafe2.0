@@ -125,13 +125,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private RestaurantListActivity.HazardLevel HazardLevelConverter(String hazardLevel) {
-        switch (hazardLevel.toLowerCase()) {
-            case "low":
-                return RestaurantListActivity.HazardLevel.LOW;
-            case "moderate":
-                return RestaurantListActivity.HazardLevel.MEDIUM;
-            default:
-                return RestaurantListActivity.HazardLevel.HIGH;
+        if (hazardLevel.equals(context.getString(R.string.hazard_rating_low))) {
+            return RestaurantListActivity.HazardLevel.LOW;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+            return RestaurantListActivity.HazardLevel.MEDIUM;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+            return RestaurantListActivity.HazardLevel.HIGH;
         }
+
+        // Will crash the program if this part is reached
+        return null;
     }
 }

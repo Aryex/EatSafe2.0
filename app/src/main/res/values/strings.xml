@@ -41,7 +41,7 @@
     <string name="mcdonald_s" translatable="false">McDonald\'s</string>
     <string name="move_to_surrey" translatable="false">Move To Surrey</string>
     <string name="name">Name</string>
-    <string name="no" translatable="false">no</string>
+    <string name="no">no</string>
     <string name="no_inspection">No inspections found</string>
     <string name="no_inspections_found">No inspections found</string>
     <string name="non_crit_issues">Non-critical issues found: %1$d</string>

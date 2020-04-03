@@ -47,4 +47,5 @@
     <string name="hazard_rating_low">Faible</string>
     <string name="hazard_rating_medium">Moyen</string>
     <string name="hazard_rating_high">"Élevé "</string>
+    <string name="no">pas des</string>
 </resources>
