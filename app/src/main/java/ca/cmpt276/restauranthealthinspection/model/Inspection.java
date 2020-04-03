@@ -42,7 +42,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     private static final String HAZARD_RATING_HIGH = "High";
 
-    private static final String FOLlOW_UP_INSPECTION = "Follow-Up";
+    private static final String FOLLOW_UP_INSPECTION = "Follow-Up";
 
     private static final String ROUTINE_INSPECTION = "Routine";
 
@@ -82,7 +82,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     public String getInsType(Context context) {
         switch (insType) {
-            case FOLlOW_UP_INSPECTION:
+            case FOLLOW_UP_INSPECTION:
                 return context.getString(R.string.follow_up_inspection);
             case ROUTINE_INSPECTION:
                 return context.getString(R.string.routine_inspection);
