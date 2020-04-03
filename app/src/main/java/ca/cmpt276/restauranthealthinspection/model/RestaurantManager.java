@@ -32,7 +32,15 @@ public class RestaurantManager implements Iterable<Restaurant> {
     // **********
     // Singleton
     // **********
+
+
+    //mock up. pls delete
     private static RestaurantManager instance;
+    public boolean hasQuery = false;
+    public String query = "";
+    private boolean favorite = false;
+    private String hazardLevel = "empty";
+    private String critSetting = "empty";
 
     public static RestaurantManager getInstance(Context context) {
 
@@ -143,5 +151,42 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
     public void setRestaurants(List<Restaurant> list) {
         restaurants = list;
+    }
+
+
+    /**
+     * MOCK UP, PLS DELETE*/
+    public void showOnlyFavorite(boolean b) {
+        favorite = b;
+    }
+
+    public void setHazardFilter(String low) {
+        hazardLevel = low;
+    }
+
+    public void setCriticalSetting(String less_then, int i) {
+        critSetting = less_then+i;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public String getHazardLevel() {
+        return hazardLevel;
+    }
+
+    public String getCritSetting() {
+        return critSetting;
+    }
+
+    public void clearSettings() {
+        favorite = false;
+        hazardLevel = "empty";
+        critSetting = "empty";
+    }
+
+    public String getState() {
+        return hazardLevel + " " + critSetting;
     }
 }

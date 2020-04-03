@@ -66,6 +66,34 @@
             android:text="@string/move_to_surrey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/floatingActionButton" />
+
+        <TextView
+            android:id="@+id/debugTextViewHzrdLevelOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:text="HazardLevel "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/debugTextview" />
+
+        <TextView
+            android:id="@+id/debugTextViewCritNumOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Number of cirtical condition"
+            app:layout_constraintStart_toStartOf="@+id/debugTextViewHzrdLevelOption"
+            app:layout_constraintTop_toBottomOf="@+id/debugTextViewHzrdLevelOption" />
+
+        <TextView
+            android:id="@+id/debugTextViewFavoriteOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Favorite Option"
+            app:layout_constraintStart_toStartOf="@+id/debugTextViewCritNumOption"
+            app:layout_constraintTop_toBottomOf="@+id/debugTextViewCritNumOption" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

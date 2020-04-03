@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -46,7 +47,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+
+import org.w3c.dom.Text;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
@@ -77,13 +81,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Debug
     private static final String TAG = "MapsActivity";
     private TextView debugTextView;
-    private boolean debugOn = true;
+    private static boolean debugOn = true;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
-    private RestaurantManager restaurants;
+    private RestaurantManager resturantManager;
 
     private static final float DEFAULT_ZOOM_FOCUS = 19f;
     private static final float DEFAULT_ZOOM_HIGH = 12f;
@@ -185,7 +189,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         latLng = new LatLng(data.getDoubleExtra(INTENT_KEY_LAT, 0), data.getDoubleExtra(INTENT_KEY_LNG, 0));
         String trackingId = data.getStringExtra(INTENT_KEY_RESTAURANT_ID);
 
-        String hazardLevel = restaurants.getRestaurant(trackingId).getHazardLevel();
+        String hazardLevel = resturantManager.getRestaurant(trackingId).getHazardLevel();
         BitmapDescriptor markerIcon = getHazardLevelBitmapDescriptor(hazardLevel);
 
         requestedMarker = map.addMarker(new MarkerOptions()
@@ -234,10 +238,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setupDebug(debugOn);
-
-        restaurants = RestaurantManager.getInstance(this);
+        resturantManager = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        setupDebug(debugOn);
         setupLocationRequest();
 
         getLocationPermission();
@@ -252,10 +255,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .addLocationRequest(this.locationRequest);
     }
 
-    private void setupDebug(boolean debugOn) {
+    public void setupDebug(boolean debugOn) {
         debugTextView = findViewById(R.id.debugTextview);
         Button button = findViewById(R.id.surreyButton);
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+
+        TextView textViewDebugHazardLevel = findViewById(R.id.debugTextViewHzrdLevelOption);
+        TextView textViewDebugCritOption = findViewById(R.id.debugTextViewCritNumOption);
+        TextView textViewDebugFavorite = findViewById(R.id.debugTextViewFavoriteOption);
+
+        textViewDebugHazardLevel.setText(resturantManager.getHazardLevel());
+        textViewDebugCritOption.setText(resturantManager.getCritSetting());
+
+        if(resturantManager.isFavorite()){
+            textViewDebugFavorite.setText("true");
+        }else{
+            textViewDebugFavorite.setText("false");
+        }
 
         if (!debugOn) {
             button.setVisibility(View.GONE);
@@ -283,8 +299,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
+        Toast.makeText(this, "On Resume!", Toast.LENGTH_SHORT).show();
         makeLocationCallback();
         startLocationUpdates();
+
     }
 
     @Override
@@ -336,6 +354,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
+                Log.d(TAG, "onLocationResult: manager state" + resturantManager.getState());
                 if (locationResult == null) {
                     Log.d(TAG, "onLocationResult: NULL");
                     return;
@@ -454,7 +473,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void setupClusterMarkers() {
-        for (Restaurant restaurant : restaurants) {
+        for (Restaurant restaurant : resturantManager) {
 
             double lat = restaurant.getLatitude();
             double lng = restaurant.getLongitude();
@@ -527,7 +546,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             Log.d(TAG, "InfoWindowAdapter: filling activity");
 
-            Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
+            Restaurant restaurant = resturantManager.getRestaurant(trackingNumber);
 
             String restaurantName = restaurant.getName();
             String address = restaurant.getAddress();
@@ -608,9 +627,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public boolean onQueryTextChange(String newText) {
                 debugDisplay(newText);
+                resturantManager.query = newText;
                 return false;
             }
         });
+
+        RestaurantManager searchEngine = RestaurantManager.getInstance(this);
+        if(searchEngine.hasQuery){
+           ;//populate map based on serach engine
+        }
+
         return true;
     }
 

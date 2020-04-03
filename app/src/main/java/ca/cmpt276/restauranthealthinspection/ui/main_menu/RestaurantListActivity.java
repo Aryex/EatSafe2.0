@@ -25,7 +25,7 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDia
  */
 public class RestaurantListActivity extends AppCompatActivity {
 
-    private RestaurantManager restaurants;
+    private RestaurantManager restaurantManager;
 
     private RecyclerViewAdapter recyclerViewAdapter;
 
@@ -40,13 +40,13 @@ public class RestaurantListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        restaurants = RestaurantManager.getInstance(this);
+        restaurantManager = RestaurantManager.getInstance(this);
         setupRecyclerView();
     }
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewMain);
-        recyclerViewAdapter = new RecyclerViewAdapter(this, restaurants);
+        recyclerViewAdapter = new RecyclerViewAdapter(this, restaurantManager);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -69,6 +69,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         MenuItem searchItem = menu.findItem(R.id.menu_action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -83,6 +84,11 @@ public class RestaurantListActivity extends AppCompatActivity {
                 return false;
             }
         });
+        RestaurantManager searchEngine = RestaurantManager.getInstance(this);
+        if(searchEngine.hasQuery){
+            searchItem.expandActionView();
+            searchView.setQuery("pizza",true);
+        }
         return true;
     }
 

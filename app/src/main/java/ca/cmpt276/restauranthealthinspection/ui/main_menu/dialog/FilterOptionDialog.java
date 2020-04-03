@@ -23,7 +23,7 @@ import ca.cmpt276.restauranthealthinspection.R;
  * Fragment for a filter dialog
  */
 
-public class FilterFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
+public class FilterOptionDialog extends DialogFragment implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "filter";
     private View view;
