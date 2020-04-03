@@ -7,13 +7,17 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -76,7 +81,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Debug
     private static final String TAG = "MapsActivity";
     private TextView debugTextView;
-    private boolean debugOn = false;
+    private boolean debugOn = true;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -232,6 +237,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         setupDebug(debugOn);
 
         restaurants = RestaurantManager.getInstance(this);
@@ -488,10 +494,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             if (approximateEqual(deviceLocation.latitude, cameraLaLng.latitude, DEFAULT_PRECISION)
                     && approximateEqual(deviceLocation.longitude, cameraLaLng.longitude, DEFAULT_PRECISION)) {
-                debugDisplay("onCameraMove: locked");
+                //debugDisplay("onCameraMove: locked");
                 cameraLocked = true;
             } else {
-                debugDisplay("onCameraMove: unlocked");
+                //debugDisplay("onCameraMove: unlocked");
                 cameraLocked = false;
             }
         }
@@ -590,9 +596,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Toolbar setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        /*final MenuItem searchItem = menu.findItem(R.id.menu_action_search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -601,9 +611,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                debugDisplay(newText);
                 return false;
             }
-        });*/
+        });
         return true;
     }
 
