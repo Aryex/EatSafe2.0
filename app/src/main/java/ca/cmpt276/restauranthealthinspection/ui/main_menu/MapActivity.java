@@ -522,6 +522,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
+    @Override
+    public void onOptionDialogClearAll() {
+        Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
+        //TODO: update list pls
+
+    }
+
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
         @Override
         public void onCameraMove() {

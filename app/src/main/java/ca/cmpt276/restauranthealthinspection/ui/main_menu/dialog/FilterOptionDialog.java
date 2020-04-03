@@ -27,6 +27,7 @@ public class FilterOptionDialog extends DialogFragment {
     public interface OptionDialogListener {
         public void onOptionDialogApply();
         public void onOptionDialogCancel();
+        public void onOptionDialogClearAll();
     }
 
     public static final String TAG = "Option Dialog";
@@ -78,6 +79,15 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Apply");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
                         optionDialogListener.onOptionDialogApply();
+                        dismiss();
+                    }
+                })
+                .setNeutralButton(R.string.clear_all, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: Clear All");
+                        Log.d(TAG, "onClick: hazard level " + hazardLevel);
+                        optionDialogListener.onOptionDialogClearAll();
                         dismiss();
                     }
                 })

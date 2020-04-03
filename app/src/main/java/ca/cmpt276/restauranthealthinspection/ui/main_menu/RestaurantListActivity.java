@@ -56,11 +56,21 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
     @Override
     public void onOptionDialogApply() {
         Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
+        //TODO: update list pls
     }
 
     @Override
     public void onOptionDialogCancel() {
         Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
+        //TODO: update list pls
+
+    }
+
+    @Override
+    public void onOptionDialogClearAll() {
+        Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
+        //TODO: update list pls
+
     }
 
     @Override
