@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -134,19 +136,19 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         int inspectionYear = calendar.get(Calendar.YEAR);
+        Date date = calendar.getTime();
+
         // Not accounting for leap years
         if (getDaysInBetween() <= 365) {
             if (inspectionYear < currentYear) {
-                return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
-                        + " " + calendar.get(Calendar.DAY_OF_MONTH)
-                        + ", " + calendar.get(Calendar.YEAR);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                return simpleDateFormat.format(date);
             }
-            return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
-                    + " " + calendar.get(Calendar.DAY_OF_MONTH);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d", Locale.getDefault());
+            return simpleDateFormat.format(date);
         }
-
-        return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
-                + " " + calendar.get(Calendar.YEAR);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+        return simpleDateFormat.format(date);
     }
 
     @Override
