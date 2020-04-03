@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,10 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -55,7 +51,7 @@ import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterFragment;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 /**
@@ -627,8 +623,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         if (item.getItemId() == R.id.menu_filter) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FilterFragment filterFragment = new FilterFragment();
-            filterFragment.show(fragmentManager, FilterFragment.TAG);
+            FilterOptionDialog filterOptionDialog = new FilterOptionDialog();
+            filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);
         }
         return super.onOptionsItemSelected(item);
     }

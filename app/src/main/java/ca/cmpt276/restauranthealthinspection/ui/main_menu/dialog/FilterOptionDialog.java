@@ -18,7 +18,7 @@ import ca.cmpt276.restauranthealthinspection.R;
  * Fragment for a filter dialog
  */
 
-public class FilterFragment extends DialogFragment {
+public class FilterOptionDialog extends DialogFragment {
 
     public static final String TAG = "filter";
     private View view;

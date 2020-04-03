@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterFragment;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 
 /**
  * Main menu display a list of restaurants and their appropriate information.
@@ -94,8 +94,8 @@ public class RestaurantListActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.menu_filter) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FilterFragment filterFragment = new FilterFragment();
-            filterFragment.show(fragmentManager, FilterFragment.TAG);
+            FilterOptionDialog filterOptionDialog = new FilterOptionDialog();
+            filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);
             return true;
         }
         if (item.getItemId() == R.id.menu_action_search) {
