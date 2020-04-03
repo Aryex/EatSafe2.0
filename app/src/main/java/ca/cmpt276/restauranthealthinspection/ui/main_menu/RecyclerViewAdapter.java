@@ -29,11 +29,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Context context;
     private RestaurantManager restaurantManager;
+
+    // Filter support
     private List<Restaurant> restaurantListFull;
 
     RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
         this.restaurantManager = restaurantManager;
+
+        // Filter support
         this.restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
+
         this.context = context;
     }
 
