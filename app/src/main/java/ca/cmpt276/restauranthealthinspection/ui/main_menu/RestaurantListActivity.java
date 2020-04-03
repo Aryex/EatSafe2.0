@@ -7,10 +7,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +25,7 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDia
  * Main menu display a list of restaurants and their appropriate information.
  * It will also initializes the model.
  */
-public class RestaurantListActivity extends AppCompatActivity {
+public class RestaurantListActivity extends AppCompatActivity implements FilterOptionDialog.OptionDialogListener {
 
     private RestaurantManager restaurantManager;
 
@@ -51,8 +53,14 @@ public class RestaurantListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    public enum HazardLevel {
-        LOW, MEDIUM, HIGH
+    @Override
+    public void onOptionDialogApply() {
+        Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onOptionDialogCancel() {
+        Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -108,5 +116,9 @@ public class RestaurantListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public enum HazardLevel {
+        LOW, MEDIUM, HIGH
     }
 }

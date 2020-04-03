@@ -34,7 +34,9 @@ public class RestaurantManager implements Iterable<Restaurant> {
     // **********
 
 
-    //mock up. pls delete
+    /**
+     * mock up. pls delete
+     * */
     private static RestaurantManager instance;
     public boolean hasQuery = false;
     public String query = "";

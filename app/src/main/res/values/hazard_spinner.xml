@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string-array name="hazard_levels_array">
         <item>Low</item>
         <item>Moderate</item>
         <item>High</item>
     </string-array>
+
+    <string-array name="inequality_array">
+        <item>Less than</item>
+        <item>Greater than</item>
+    </string-array>
+
+
 </resources>

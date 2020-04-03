@@ -73,7 +73,7 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * <p>
  * note: restaurant tracking id is stored in a cluster marker's snippet.
  */
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, FilterOptionDialog.OptionDialogListener {
 
     //  Surrey Central's Lat Lng
     public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.1866939, -122.8494363);
@@ -267,9 +267,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         textViewDebugHazardLevel.setText(resturantManager.getHazardLevel());
         textViewDebugCritOption.setText(resturantManager.getCritSetting());
 
-        if(resturantManager.isFavorite()){
+        if (resturantManager.isFavorite()) {
             textViewDebugFavorite.setText("true");
-        }else{
+        } else {
             textViewDebugFavorite.setText("false");
         }
 
@@ -318,6 +318,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
         myClusterItemList = new ArrayList<>();
 
+        //setup cluster if search engine has query.
         setupClusterMarkers();
 
         clusterManager.setOnClusterItemClickListener(item -> {
@@ -474,17 +475,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void setupClusterMarkers() {
         for (Restaurant restaurant : resturantManager) {
-
-            double lat = restaurant.getLatitude();
-            double lng = restaurant.getLongitude();
-            String name = restaurant.getName();
-            String snippet = restaurant.getResTrackingNumber();
-            String hazardLevel = restaurant.getHazardLevel();
-
-            MyClusterItem myClusterItem = new MyClusterItem(lat, lng, name, snippet, hazardLevel);
+            MyClusterItem myClusterItem = getMyClusterItem(restaurant);
             myClusterItemList.add(myClusterItem);
             clusterManager.addItem(myClusterItem);
         }
+    }
+
+    private MyClusterItem getMyClusterItem(Restaurant restaurant) {
+        double lat = restaurant.getLatitude();
+        double lng = restaurant.getLongitude();
+        String name = restaurant.getName();
+        String snippet = restaurant.getResTrackingNumber();
+        String hazardLevel = restaurant.getHazardLevel();
+
+        return new MyClusterItem(lat, lng, name, snippet, hazardLevel);
     }
 
     private static void moveCamera(LatLng newLocation, float zoom) {
@@ -499,6 +503,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void debugDisplay(String s) {
         debugTextView.setText(s);
+    }
+
+    @Override
+    public void onOptionDialogApply() {
+        Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
+        setupClusterMarkers();
+        //refresh
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+    }
+
+    @Override
+    public void onOptionDialogCancel() {
+        Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
+        clusterManager.clearItems();
+        myClusterItemList.clear();
+        //refresh
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
@@ -633,8 +654,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         RestaurantManager searchEngine = RestaurantManager.getInstance(this);
-        if(searchEngine.hasQuery){
-           ;//populate map based on serach engine
+        if (searchEngine.hasQuery) {
+            ;//populate map based on serach engine
         }
 
         return true;
