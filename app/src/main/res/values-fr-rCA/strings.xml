@@ -48,4 +48,6 @@
     <string name="hazard_rating_medium">Moyen</string>
     <string name="hazard_rating_high">Élevé</string>
     <string name="no">pas des</string>
+    <string name="routine_inspection">Routine</string>
+    <string name="follow_up_inspection">Suivi</string>
 </resources>

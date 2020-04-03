@@ -119,7 +119,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     warningBar.setCardBackgroundColor(context.getColor(R.color.hazardHighDark));
                     hazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_high));
                     break;
-                default:
             }
         }
     }

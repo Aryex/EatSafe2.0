@@ -36,11 +36,15 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     private List<Violation> violations = new ArrayList<>();
 
-    public static final String HAZARD_RATING_LOW = "Low";
+    private static final String HAZARD_RATING_LOW = "Low";
 
-    public static final String HAZARD_RATING_MODERATE = "Moderate";
+    private static final String HAZARD_RATING_MODERATE = "Moderate";
 
-    public static final String HAZARD_RATING_HIGH = "High";
+    private static final String HAZARD_RATING_HIGH = "High";
+
+    private static final String FOLlOW_UP_INSPECTION = "Follow-Up";
+
+    private static final String ROUTINE_INSPECTION = "Routine";
 
     // ****************************************
     // Methods for List<Violation> violations
@@ -76,8 +80,14 @@ public class Inspection implements Iterable<Violation>, Serializable {
     // Other methods
     // **************
 
-    public String getInsType() {
-        return insType;
+    public String getInsType(Context context) {
+        switch (insType) {
+            case FOLlOW_UP_INSPECTION:
+                return context.getString(R.string.follow_up_inspection);
+            case ROUTINE_INSPECTION:
+                return context.getString(R.string.routine_inspection);
+        }
+        return context.getString(R.string.empty_string);
     }
 
     // Calendar contains the data of the inspection

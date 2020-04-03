@@ -69,4 +69,6 @@
     <string name="hazard_rating_low">Low</string>
     <string name="hazard_rating_medium">Medium</string>
     <string name="hazard_rating_high">High</string>
+    <string name="routine_inspection">Routine</string>
+    <string name="follow_up_inspection">Follow-Up</string>
 </resources>
