@@ -129,15 +129,15 @@ public class Inspection implements Iterable<Violation>, Serializable {
         // Not accounting for leap years
         if (getDaysInBetween() <= 365) {
             if (inspectionYear < currentYear) {
-                return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
+                return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
                         + " " + calendar.get(Calendar.DAY_OF_MONTH)
                         + ", " + calendar.get(Calendar.YEAR);
             }
-            return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
+            return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
                     + " " + calendar.get(Calendar.DAY_OF_MONTH);
         }
 
-        return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
+        return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
                 + " " + calendar.get(Calendar.YEAR);
     }
 
@@ -146,7 +146,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
         return "\n\tInspection{" +
                 "insTrackingNumber='" + insTrackingNumber + '\'' +
                 ", year=" + calendar.get(Calendar.YEAR) +
-                ", month=" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA) +
+                ", month=" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) +
                 ", day=" + calendar.get(Calendar.DAY_OF_MONTH) +
                 ", insType='" + insType + '\'' +
                 ", numCritical=" + numCritical +

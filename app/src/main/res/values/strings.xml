@@ -12,17 +12,17 @@
     <string name="crit_issues">Critical issues found: %1$d</string>
     <string name="critical_issues_found">Critical issues found: %1$d</string>
     <string name="date">Inspection date: %1$s</string>
-    <string name="debug_lock_status">Debug lock status</string>
-    <string name="default_address">Address</string>
-    <string name="default_date">November 10th, 2020</string>
-    <string name="default_num_issues">Found 3 issues</string>
-    <string name="desc_hazard_icon">Hazard Icon</string>
-    <string name="desc_recycler_thumbnail">Recycler Thumbnail</string>
-    <string name="description">description</string>
+    <string name="debug_lock_status" translatable="false">Debug lock status</string>
+    <string name="default_address" translatable="false">Address</string>
+    <string name="default_date" translatable="false">November 10th, 2020</string>
+    <string name="default_num_issues" translatable="false">Found 3 issues</string>
+    <string name="desc_hazard_icon" translatable="false">Hazard Icon</string>
+    <string name="desc_recycler_thumbnail" translatable="false">Recycler Thumbnail</string>
+    <string name="description" translatable="false">description</string>
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_button_update">Update</string>
-    <string name="eat_safe">Eat Safe</string>
-    <string name="empty_string" />
+    <string name="eat_safe" translatable="false">Eat Safe</string>
+    <string name="empty_string" translatable="false" />
     <string name="found">Found\u0020</string>
     <string name="found_num_issues">Found %s issues</string>
     <string name="hazardLevelDisplay">Hazard level: %1$s</string>
@@ -38,10 +38,10 @@
     <string name="last_inspected_on">Last inspected on %s</string>
     <string name="latitude"> Latitude:\n%1$s</string>
     <string name="longitude"> Longitude:\n%1$s</string>
-    <string name="mcdonald_s">McDonald\'s</string>
-    <string name="move_to_surrey">Move To Surrey</string>
+    <string name="mcdonald_s" translatable="false">McDonald\'s</string>
+    <string name="move_to_surrey" translatable="false">Move To Surrey</string>
     <string name="name">Name</string>
-    <string name="no">no</string>
+    <string name="no" translatable="false">no</string>
     <string name="no_inspection">No inspections found</string>
     <string name="no_inspections_found">No inspections found</string>
     <string name="non_crit_issues">Non-critical issues found: %1$d</string>
@@ -50,18 +50,18 @@
     <string name="restaurant_details_title">Restaurant Details</string>
     <string name="return_to_map">Return to map</string>
     <string name="show_list">Show all restaurants</string>
-    <string name="string_addressTV">address</string>
+    <string name="string_addressTV" translatable="false">address</string>
     <string name="string_inspectionHazardLevel">Overall Hazard level: %1$s</string>
-    <string name="string_item_crit">crit</string>
-    <string name="string_item_date">date</string>
-    <string name="string_item_noncrit">noncrit</string>
-    <string name="string_latitudeTV">latitude</string>
-    <string name="string_levelTV">level</string>
-    <string name="string_longitudeTV">longitude</string>
-    <string name="string_resNameTV">restaurant</string>
-    <string name="string_textViewInspectionDetails">TextView</string>
-    <string name="three">3</string>
-    <string name="update_avaiable">Update available</string>
+    <string name="string_item_crit" translatable="false">crit</string>
+    <string name="string_item_date" translatable="false">date</string>
+    <string name="string_item_noncrit" translatable="false">noncrit</string>
+    <string name="string_latitudeTV" translatable="false">latitude</string>
+    <string name="string_levelTV" translatable="false">level</string>
+    <string name="string_longitudeTV" translatable="false">longitude</string>
+    <string name="string_resNameTV" translatable="false">restaurant</string>
+    <string name="string_textViewInspectionDetails" translatable="false">TextView</string>
+    <string name="three" translatable="false">3</string>
+    <string name="update_available">Update available</string>
     <string name="update_message">An updated version of the inspection data is available. Do you want to update now?</string>
     <string name="updating">Updating:</string>
     <string name="violation_detail">%1$d - %2$s</string>

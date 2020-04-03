@@ -149,7 +149,7 @@ class Parser {
 
     // Converts the date string into a calendar object
     private static Calendar calendarConverter(String value) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.CANADA);
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
         try {
             Date date = format.parse(value);
