@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.Spinner;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -28,6 +30,8 @@ public class FilterFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         view = LayoutInflater.from(getActivity()).inflate(R.layout.filter_fragment, null);
 
+        createSpinner();
+
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .setTitle("Filter")
@@ -44,5 +48,16 @@ public class FilterFragment extends DialogFragment {
                     }
                 })
                 .create();
+    }
+
+    private void createSpinner() {
+        Spinner spinner = (Spinner) view.findViewById(R.id.hazard_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.hazard_levels_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
     }
 }
