@@ -51,7 +51,7 @@ public class InspectionDetails extends AppCompatActivity {
         setupViolations();
 
         TextView date = findViewById(R.id.inspectionDate);
-        date.setText(inspection.getFromCurrentDate());
+        date.setText(inspection.getFromCurrentDate(this));
 
         TextView type = findViewById(R.id.inspectionType);
         type.setText(this.getString(R.string.inspectionTypeDisplay, inspection.getInsType()));

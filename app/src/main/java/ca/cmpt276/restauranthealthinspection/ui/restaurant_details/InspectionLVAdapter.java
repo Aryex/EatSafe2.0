@@ -81,7 +81,7 @@ public class InspectionLVAdapter extends ArrayAdapter<Inspection> {
 
         // Date:
         TextView dateText = itemView.findViewById(R.id.item_date);
-        dateText.setText(context.getString(R.string.date, currentInspection.getFromCurrentDate()));
+        dateText.setText(context.getString(R.string.date, currentInspection.getFromCurrentDate(getContext())));
 
         return itemView;
     }
