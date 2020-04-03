@@ -20,6 +20,7 @@ import java.util.List;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 /**
@@ -32,12 +33,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // Filter support
     private List<Restaurant> restaurantListFull;
+    private MyFilter myFilter;
 
     RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
         this.restaurantManager = restaurantManager;
 
         // Filter support
         this.restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
+        myFilter = MyFilter.getInstance();
 
         this.context = context;
     }
@@ -107,7 +110,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            restaurantManager.setRestaurants((List<Restaurant>)results.values);
+            List<Restaurant> restaurantList = (List<Restaurant>)results.values;
+
+            restaurantManager.setRestaurants(restaurantList);
+            myFilter.setConstraint(constraint);
+            myFilter.setRestaurantList(restaurantList);
+
             notifyDataSetChanged();
         }
     };

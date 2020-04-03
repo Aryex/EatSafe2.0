@@ -16,16 +16,16 @@ import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 public class MyFilter {
 
     private List<Restaurant> restaurantList;
-    private String constraint;
+    private CharSequence constraint;
 
     /*
      * Singleton support
      */
     private static MyFilter instance;
 
-    public static MyFilter getInstance(List<Restaurant> restaurantList, String constraint) {
+    public static MyFilter getInstance() {
         if (instance == null) {
-            return new MyFilter(restaurantList, constraint);
+            return new MyFilter();
         }
         return instance;
     }
@@ -33,16 +33,24 @@ public class MyFilter {
     /*
      * Normal code
      */
-    private MyFilter(List<Restaurant> restaurantList, String constraint) {
-        this.restaurantList = restaurantList;
-        this.constraint = constraint;
+    private MyFilter() {
+        this.restaurantList = null;
+        this.constraint = "";
     }
 
     public List<Restaurant> getRestaurantList() {
         return restaurantList;
     }
 
-    public String getConstraint() {
+    public CharSequence getConstraint() {
         return constraint;
+    }
+
+    public void setRestaurantList(List<Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
+    }
+
+    public void setConstraint(CharSequence constraint) {
+        this.constraint = constraint;
     }
 }
