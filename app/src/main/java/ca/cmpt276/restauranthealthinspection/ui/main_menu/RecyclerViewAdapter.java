@@ -91,7 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 String totalIssues = restaurant.getLatestInspectionTotalIssues();
                 textViewIssuesCount.setText(totalIssues);
 
-                RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
+                RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel(context));
                 setupWarningBar(hazardLevel);
             } else {
                 //default setup for restaurant with no inspections.
@@ -119,19 +119,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     warningBar.setCardBackgroundColor(context.getColor(R.color.hazardHighDark));
                     hazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_high));
                     break;
-                default:
             }
         }
     }
 
     private RestaurantListActivity.HazardLevel HazardLevelConverter(String hazardLevel) {
-        switch (hazardLevel.toLowerCase()) {
-            case "low":
-                return RestaurantListActivity.HazardLevel.LOW;
-            case "moderate":
-                return RestaurantListActivity.HazardLevel.MEDIUM;
-            default:
-                return RestaurantListActivity.HazardLevel.HIGH;
+        if (hazardLevel.equals(context.getString(R.string.hazard_rating_low))) {
+            return RestaurantListActivity.HazardLevel.LOW;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+            return RestaurantListActivity.HazardLevel.MEDIUM;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+            return RestaurantListActivity.HazardLevel.HIGH;
         }
+
+        // Will crash the program if this part is reached
+        return null;
     }
 }

@@ -36,7 +36,7 @@ public class UpdaterFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         setCancelable(false);
 
-        builder.setTitle(R.string.update_avaiable)
+        builder.setTitle(R.string.update_available)
                 .setMessage(R.string.update_message)
                 .setPositiveButton(R.string.dialog_button_update, new DialogInterface.OnClickListener() {
                     @Override

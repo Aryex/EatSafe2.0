@@ -1,3 +1,4 @@
 Supported languages:
-   - French
+   - English (Default)
+   - French (Canada)
    - (to be added)

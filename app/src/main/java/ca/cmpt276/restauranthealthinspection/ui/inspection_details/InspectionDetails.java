@@ -54,7 +54,7 @@ public class InspectionDetails extends AppCompatActivity {
         date.setText(inspection.getFromCurrentDate(this));
 
         TextView type = findViewById(R.id.inspectionType);
-        type.setText(this.getString(R.string.inspectionTypeDisplay, inspection.getInsType()));
+        type.setText(this.getString(R.string.inspectionTypeDisplay, inspection.getInsType(this)));
 
         TextView critical = findViewById(R.id.numberCritical);
         critical.setText(this.getString(R.string.critical_issues_found, inspection.getNumCritical()));
