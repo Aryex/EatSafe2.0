@@ -39,6 +39,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,10 +48,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-
-import org.w3c.dom.Text;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
@@ -140,7 +138,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: map loaded");
-
         map = googleMap;
         map.getUiSettings().setMapToolbarEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -319,7 +316,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         myClusterItemList = new ArrayList<>();
 
         //setup cluster if search engine has query.
-        setupClusterMarkers();
+        List<Restaurant> restaurantsList = resturantManager.getRestaurants();
+        setupClusterMarkers(restaurantsList);
 
         clusterManager.setOnClusterItemClickListener(item -> {
             clickedClusterItem = new MyClusterItem(item.getPosition(), item.getTitle(), item.getSnippet(), item.getHazardLevel());
@@ -473,15 +471,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         supportMapFragment.getMapAsync(MapActivity.this);
     }
 
-    private void setupClusterMarkers() {
-        for (Restaurant restaurant : resturantManager) {
-            MyClusterItem myClusterItem = getMyClusterItem(restaurant);
+    private void setupClusterMarkers(Iterable<Restaurant> restaurants) {
+        // setup cluster from
+        for (Restaurant restaurant : restaurants) {
+            MyClusterItem myClusterItem = makeMyClusterItem(restaurant);
             myClusterItemList.add(myClusterItem);
             clusterManager.addItem(myClusterItem);
         }
     }
 
-    private MyClusterItem getMyClusterItem(Restaurant restaurant) {
+    private MyClusterItem makeMyClusterItem(Restaurant restaurant) {
         double lat = restaurant.getLatitude();
         double lng = restaurant.getLongitude();
         String name = restaurant.getName();
@@ -508,9 +507,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onOptionDialogApply() {
         Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
-        setupClusterMarkers();
-        //refresh
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+        if(myClusterItemList.isEmpty()){
+            List<Restaurant> restaurantsList = resturantManager.getRestaurants();
+            setupClusterMarkers(restaurantsList);
+            //refresh
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+        }
     }
 
     @Override
