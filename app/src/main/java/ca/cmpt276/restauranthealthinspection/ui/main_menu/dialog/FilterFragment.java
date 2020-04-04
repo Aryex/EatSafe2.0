@@ -37,13 +37,13 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .setTitle("Filter")
-                .setPositiveButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.apply_search, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dismiss();
                     }
                 })
-                .setNegativeButton(R.string.apply_search, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dismiss();
@@ -58,16 +58,14 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
                 R.array.hazard_levels_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        //spinner.setOnItemClickListener();
+        spinner.setOnItemSelectedListener(this);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(view.getContext(), "Hello", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }
