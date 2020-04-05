@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#36B968</color>
+    <color name="colorPrimaryDark">#1E7347</color>
     <color name="colorAccent">#D81B60</color>
     <color name="hazardLowLight">#00c851</color>
     <color name="hazardMediumLight">#ffbb33</color>
@@ -10,6 +10,6 @@
     <color name="hazardMediumDark">#ff8800</color>
     <color name="hazardHighDark">#cc0000</color>
     <color name="hazardLowInspection">#bfffbd</color>
-    <color name="hazardMediumInspection">#ffffdc</color>
+    <color name="hazardMediumInspection">#ffe6b3</color>
     <color name="hazardHighInspection">#ffb7b2</color>
 </resources>
