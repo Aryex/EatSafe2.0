@@ -77,19 +77,15 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selectedLevel = spinner.getItemAtPosition(position).toString();
-        switch (selectedLevel) {
-            case "Low":
-                hazardLevel = "Low";
-                break;
-            case "Moderate":
-                hazardLevel = "Moderate";
-                break;
-            case "High":
-                hazardLevel = "High";
-                break;
-            default:
-                hazardLevel = "";
-                break;
+
+        if (selectedLevel.equals(view.getContext().getString(R.string.hazard_rating_low))) {
+            hazardLevel = view.getContext().getString(R.string.hazard_rating_low);
+        } else if (selectedLevel.equals(view.getContext().getString(R.string.hazard_rating_medium))) {
+            hazardLevel = view.getContext().getString(R.string.hazard_rating_medium);
+        } else if (selectedLevel.equals(view.getContext().getString(R.string.hazard_rating_high))) {
+            hazardLevel = view.getContext().getString(R.string.hazard_rating_high);
+        } else {
+            hazardLevel = view.getContext().getString(R.string.empty_string);
         }
     }
 

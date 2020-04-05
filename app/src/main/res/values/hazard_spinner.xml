@@ -2,7 +2,7 @@
 <resources>
     <string-array name="hazard_levels_array">
         <item>Low</item>
-        <item>Moderate</item>
+        <item>Medium</item>
         <item>High</item>
     </string-array>
 </resources>

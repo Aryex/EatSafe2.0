@@ -54,4 +54,5 @@
     <string name="apply_search">appliquer</string>
     <string name="menu_filter">filtrer</string>
     <string name="hazard_desc"><![CDATA[Niveau de danger de l\'inspection la plus récente >=]]></string>
+    <string name="crit_vio_desc"><![CDATA[Nombre total de violations critiques au cours de la dernière année >=]]></string>
 </resources>
