@@ -113,14 +113,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return intent;
     }
 
-    public static BitmapDescriptor getHazardLevelBitmapDescriptor(String hazardlevel) {
-        switch (hazardlevel.toLowerCase()) {
-            case "moderate":
-                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-            case "high":
-                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-            default:
-                return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+    public static BitmapDescriptor getHazardLevelBitmapDescriptor(String hazardLevel, Context context) {
+
+        if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+            return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+            return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+        } else {
+            return BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
         }
     }
 
@@ -182,7 +182,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         String trackingId = data.getStringExtra(INTENT_KEY_RESTAURANT_ID);
 
         String hazardLevel = restaurants.getRestaurant(trackingId).getHazardLevel(getApplicationContext());
-        BitmapDescriptor markerIcon = getHazardLevelBitmapDescriptor(hazardLevel);
+        BitmapDescriptor markerIcon = getHazardLevelBitmapDescriptor(hazardLevel, getApplicationContext());
 
         requestedMarker = map.addMarker(new MarkerOptions()
                 .position(latLng)
@@ -554,24 +554,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             ImageView imageViewHazardIcon = view.findViewById(R.id.infoWindowHazardIcon);
             CardView warningBar = view.findViewById(R.id.infoWindowWarningBar);
 
-            switch (hazardLevel.toLowerCase()) {
-                case "high":
-                    Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
-                    textViewRestaurantHazardLevel.setText(R.string.hazard_level_high);
-                    imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_high));
-                    warningBar.setCardBackgroundColor(context.getColor(R.color.hazardHighDark));
-                    break;
-                case "moderate":
-                    Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
-                    textViewRestaurantHazardLevel.setText(R.string.hazard_level_medium);
-                    imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_medium));
-                    warningBar.setCardBackgroundColor(context.getColor(R.color.hazardMediumDark));
-                    break;
-                default:
-                    Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
-                    textViewRestaurantHazardLevel.setText(R.string.hazard_level_low);
-                    imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_low));
-                    warningBar.setCardBackgroundColor(context.getColor(R.color.hazardLowDark));
+
+            if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+                textViewRestaurantHazardLevel.setText(R.string.hazard_level_medium);
+                imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_medium));
+                warningBar.setCardBackgroundColor(context.getColor(R.color.hazardMediumDark));
+            } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+                textViewRestaurantHazardLevel.setText(R.string.hazard_level_high);
+                imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_high));
+                warningBar.setCardBackgroundColor(context.getColor(R.color.hazardHighDark));
+            } else {
+                Log.d(TAG, "getInfoContents: hazardLevel " + hazardLevel);
+                textViewRestaurantHazardLevel.setText(R.string.hazard_level_low);
+                imageViewHazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_low));
+                warningBar.setCardBackgroundColor(context.getColor(R.color.hazardLowDark));
             }
 
             return view;

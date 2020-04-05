@@ -8,8 +8,11 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 class MyDefaultRenderer extends DefaultClusterRenderer<MyClusterItem> {
+    private Context context;
+
     public MyDefaultRenderer(Context context, GoogleMap map, ClusterManager<MyClusterItem> clusterManager) {
         super(context, map, clusterManager);
+        this.context = context;
     }
 
     @Override
@@ -19,6 +22,6 @@ class MyDefaultRenderer extends DefaultClusterRenderer<MyClusterItem> {
 
         markerOptions.title(item.getTitle());
         markerOptions.snippet(item.getSnippet());
-        markerOptions.icon(MapActivity.getHazardLevelBitmapDescriptor(hazardLevel));
+        markerOptions.icon(MapActivity.getHazardLevelBitmapDescriptor(hazardLevel, context));
     }
 }
