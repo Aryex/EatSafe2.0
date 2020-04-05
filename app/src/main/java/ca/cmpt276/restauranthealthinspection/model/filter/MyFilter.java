@@ -1,11 +1,14 @@
 package ca.cmpt276.restauranthealthinspection.model.filter;
 
+import android.content.Context;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
+import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 
 /**
  * Singleton class for storing filtered results after searching
@@ -15,17 +18,21 @@ import ca.cmpt276.restauranthealthinspection.model.Restaurant;
  */
 public class MyFilter {
 
+    private RestaurantManager restaurantManager;
     private List<Restaurant> restaurantList;
+    private List<Restaurant> filteredList;
     private CharSequence constraint;
+    private String hazardLevel;
+    private int critVioNum;
 
     /*
      * Singleton support
      */
     private static MyFilter instance;
 
-    public static MyFilter getInstance() {
+    public static MyFilter getInstance(Context context) {
         if (instance == null) {
-            return new MyFilter();
+            return new MyFilter(context);
         }
         return instance;
     }
@@ -33,18 +40,32 @@ public class MyFilter {
     /*
      * Normal code
      */
-    private MyFilter() {
-        this.restaurantList = null;
-        this.constraint = "";
+    private MyFilter(Context context) {
+        restaurantManager = RestaurantManager.getInstance(context);
+        this.restaurantList = new ArrayList<>(restaurantManager.getRestaurants());
+        this.constraint = null;
+        this.hazardLevel = null;
+        this.critVioNum = 0;
     }
 
     public List<Restaurant> getRestaurantList() {
         return restaurantList;
     }
 
+    public List<Restaurant> getFilteredList() {
+        return filteredList;
+    }
+
     public CharSequence getConstraint() {
         return constraint;
     }
+
+    public String getHazardLevel() {
+        return hazardLevel;
+    }
+
+    public int getCritVioNum() { return  critVioNum; }
+
 
     public void setRestaurantList(List<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
@@ -53,4 +74,49 @@ public class MyFilter {
     public void setConstraint(CharSequence constraint) {
         this.constraint = constraint;
     }
+
+    public void setHazardLevel(String hazardLevel) {
+        this.hazardLevel = hazardLevel;
+    }
+
+    public void setCritVioNum(int critVioNum) {
+        this.critVioNum = critVioNum;
+    }
+
+    public void sortByRestaurantName() {
+        filteredList = new ArrayList<>();
+
+        if (constraint == null || constraint.length() == 0) {
+            filteredList.addAll(restaurantList);
+        } else {
+            String filterPattern = constraint.toString().toLowerCase().trim();
+            for (Restaurant restaurant: restaurantList) {
+                if (restaurant.getName().toLowerCase().contains(filterPattern)) {
+                    filteredList.add(restaurant);
+                }
+            }
+        }
+    }
+
+    /*public void sortByHazardLevel() {
+        filteredList = new ArrayList<>();
+
+        if (constraint == null || constraint.length() == 0) {
+            filteredList.addAll(restaurantList);
+        } else {
+            String filterPattern = constraint.toString().toLowerCase().trim();
+            for (Restaurant restaurant: restaurantList) {
+                if (restaurant.getName().toLowerCase().contains(filterPattern)) {
+                    filteredList.add(restaurant);
+                }
+            }
+        }
+    }*/
+
+    /*public void sortByCritVio() {
+        if (critVioNum == 0) {
+            return;
+        }
+
+    }*/
 }

@@ -15,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
@@ -30,17 +31,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Context context;
     private RestaurantManager restaurantManager;
-
-    // Filter support
     private List<Restaurant> restaurantListFull;
+
     private MyFilter myFilter;
 
     RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
         this.restaurantManager = restaurantManager;
 
         // Filter support
-        this.restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
-        myFilter = MyFilter.getInstance();
+        restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
+        myFilter = MyFilter.getInstance(context);
 
         this.context = context;
     }
@@ -89,32 +89,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Filter restaurantFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<Restaurant> filteredList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(restaurantListFull);
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-                for (Restaurant restaurant: restaurantListFull) {
-                    if (restaurant.getName().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(restaurant);
-                    }
-                }
-            }
+            myFilter.setConstraint(constraint);
+            myFilter.sortByRestaurantName();
 
             FilterResults results = new FilterResults();
-            results.values = filteredList;
+            results.values = new ArrayList<>(Collections.unmodifiableList(myFilter.getFilteredList()));
 
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            List<Restaurant> restaurantList = (List<Restaurant>)results.values;
+            List<Restaurant> restaurantList = (List<Restaurant>) results.values;
 
             restaurantManager.setRestaurants(restaurantList);
-            myFilter.setConstraint(constraint);
-            myFilter.setRestaurantList(restaurantList);
 
             notifyDataSetChanged();
         }
