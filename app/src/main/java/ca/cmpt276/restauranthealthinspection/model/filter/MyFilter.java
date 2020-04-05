@@ -83,6 +83,11 @@ public class MyFilter {
         this.critVioNum = critVioNum;
     }
 
+    public void performSorting() {
+        sortByRestaurantName();
+        //sortByHazardLevel();
+    }
+
     public void sortByRestaurantName() {
         filteredList = new ArrayList<>();
 
@@ -99,14 +104,14 @@ public class MyFilter {
     }
 
     /*public void sortByHazardLevel() {
+        List<Restaurant> oldList = filteredList;
         filteredList = new ArrayList<>();
 
-        if (constraint == null || constraint.length() == 0) {
-            filteredList.addAll(restaurantList);
+        if (hazardLevel == null || hazardLevel.length() == 0) {
+            filteredList.addAll(oldList);
         } else {
-            String filterPattern = constraint.toString().toLowerCase().trim();
-            for (Restaurant restaurant: restaurantList) {
-                if (restaurant.getName().toLowerCase().contains(filterPattern)) {
+            for (Restaurant restaurant: oldList) {
+                if (restaurant.getHazardLevel().equals(hazardLevel)) {
                     filteredList.add(restaurant);
                 }
             }

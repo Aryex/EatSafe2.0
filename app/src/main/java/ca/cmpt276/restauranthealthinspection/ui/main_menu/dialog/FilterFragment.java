@@ -4,27 +4,18 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ca.cmpt276.restauranthealthinspection.R;
-import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 
@@ -38,6 +29,9 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     private View view;
     private Spinner spinner;
     private RestaurantManager restaurantManager;
+    private String hazardLevel;
+    private String vioNumString;
+
     /*
      * Filter support
      */
@@ -51,26 +45,23 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         myFilter = MyFilter.getInstance(view.getContext());
 
         createSpinner();
-        getAdvancedOptions();
+        getCritVioOption();
 
-        return new AlertDialog.Builder(getActivity())
-                .setView(view)
-                .setTitle("Filter")
-                .setPositiveButton(R.string.apply_search, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //myFilter.sortByHazardLevel();
-                        //myFilter.sortByHazardLevel();
-                        //myFilter.sortByCritVio();
-                        dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dismiss();
-                    }
-                })
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view);
+        builder.setTitle("Filter");
+        builder.setPositiveButton(R.string.apply_search, (dialogInterface, i) -> {
+            myFilter.setHazardLevel(hazardLevel);
+            setCritVioOption();
+            dismiss();
+        });
+        builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dismiss();
+            }
+        });
+        return builder
                 .create();
     }
 
@@ -85,16 +76,19 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String hazardLevel = spinner.getItemAtPosition(position).toString();
-        switch (hazardLevel.toLowerCase()) {
+        String selectedLevel = spinner.getItemAtPosition(position).toString();
+        switch (selectedLevel) {
             case "Low":
-                myFilter.setHazardLevel("Low");
+                hazardLevel = "Low";
                 break;
             case "Moderate":
-                myFilter.setHazardLevel("Moderate");
+                hazardLevel = "Moderate";
+                break;
+            case "High":
+                hazardLevel = "High";
                 break;
             default:
-                myFilter.setHazardLevel("High");
+                hazardLevel = "";
                 break;
         }
     }
@@ -103,7 +97,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    private void getAdvancedOptions() {
+    private void getCritVioOption() {
         EditText editText = view.findViewById(R.id.crit_vio_editText);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -118,13 +112,15 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
 
             @Override
             public void afterTextChanged(Editable s) {
-                String vioNumString = editText.getText().toString();
-                if (vioNumString != "") {
-                    int critVioNum = Integer.parseInt(vioNumString);
-                    myFilter.setCritVioNum(critVioNum);
-                }
+                vioNumString = editText.getText().toString();
             }
         });
+    }
 
+    private void setCritVioOption() {
+        if (!(vioNumString == null || vioNumString.length() == 0)) {
+            int critVioNum = Integer.parseInt(vioNumString);
+            myFilter.setCritVioNum(critVioNum);
+        }
     }
 }

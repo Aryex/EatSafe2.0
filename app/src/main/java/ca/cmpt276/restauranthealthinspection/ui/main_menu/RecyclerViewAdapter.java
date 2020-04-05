@@ -90,7 +90,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             myFilter.setConstraint(constraint);
-            myFilter.sortByRestaurantName();
+
+            //myFilter.sortByRestaurantName();
+            myFilter.performSorting();
 
             FilterResults results = new FilterResults();
             results.values = new ArrayList<>(Collections.unmodifiableList(myFilter.getFilteredList()));
@@ -101,9 +103,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             List<Restaurant> restaurantList = (List<Restaurant>) results.values;
-
             restaurantManager.setRestaurants(restaurantList);
-
             notifyDataSetChanged();
         }
     };
