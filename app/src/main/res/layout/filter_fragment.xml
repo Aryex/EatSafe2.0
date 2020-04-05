@@ -10,7 +10,7 @@
         android:layout_alignStart="@id/hazard_spinner"
         android:layout_marginTop="60dp"
         android:ems="10"
-        android:hint="@string/empty_hint"
+        android:hint="@string/empty_string"
         android:inputType="number" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="60dp"
         android:gravity="center"
-        android:text="@string/total_crit_vio" />
+        android:text="@string/crit_vio_desc" />
 
     <Spinner
         android:id="@+id/hazard_spinner"
@@ -43,5 +43,5 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:text="@string/hazard_desc" />
+        android:text="@string/hazard_desc"/>
 </RelativeLayout>

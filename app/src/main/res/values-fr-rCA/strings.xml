@@ -53,4 +53,5 @@
     <string name="menu_search">rechercher</string>
     <string name="apply_search">appliquer</string>
     <string name="menu_filter">filtrer</string>
+    <string name="hazard_desc"><![CDATA[Niveau de danger de l\'inspection la plus récente <=]]></string>
 </resources>
