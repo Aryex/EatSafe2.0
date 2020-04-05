@@ -184,7 +184,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         latLng = new LatLng(data.getDoubleExtra(INTENT_KEY_LAT, 0), data.getDoubleExtra(INTENT_KEY_LNG, 0));
         String trackingId = data.getStringExtra(INTENT_KEY_RESTAURANT_ID);
 
-        String hazardLevel = restaurants.getRestaurant(trackingId).getHazardLevel();
+        String hazardLevel = restaurants.getRestaurant(trackingId).getHazardLevel(getApplicationContext());
         BitmapDescriptor markerIcon = getHazardLevelBitmapDescriptor(hazardLevel);
 
         requestedMarker = map.addMarker(new MarkerOptions()
@@ -458,7 +458,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             double lng = restaurant.getLongitude();
             String name = restaurant.getName();
             String snippet = restaurant.getResTrackingNumber();
-            String hazardLevel = restaurant.getHazardLevel();
+            String hazardLevel = restaurant.getHazardLevel(getApplicationContext());
 
             MyClusterItem myClusterItem = new MyClusterItem(lat, lng, name, snippet, hazardLevel);
             myClusterItemList.add(myClusterItem);
@@ -529,8 +529,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             String restaurantName = restaurant.getName();
             String address = restaurant.getAddress();
-            String hazardLevel = restaurant.getHazardLevel();
-            String lastInspected = restaurant.getLatestInspectionDate();
+            String hazardLevel = restaurant.getHazardLevel(context);
+            String lastInspected = restaurant.getLatestInspectionDate(context);
             String lastInspectedTotalIssues = restaurant.getLatestInspectionTotalIssues();
 
             ImageView logoIV = view.findViewById(R.id.logoImageView);

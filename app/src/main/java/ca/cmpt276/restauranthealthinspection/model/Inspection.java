@@ -1,14 +1,19 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
+import ca.cmpt276.restauranthealthinspection.R;
 
 /**
  * Represents the inspections that were performed in the restaurant.
@@ -31,11 +36,15 @@ public class Inspection implements Iterable<Violation>, Serializable {
 
     private List<Violation> violations = new ArrayList<>();
 
-    public static final String HAZARD_RATING_LOW = "Low";
+    private static final String HAZARD_RATING_LOW = "Low";
 
-    public static final String HAZARD_RATING_MODERATE = "Moderate";
+    private static final String HAZARD_RATING_MODERATE = "Moderate";
 
-    public static final String HAZARD_RATING_HIGH = "High";
+    private static final String HAZARD_RATING_HIGH = "High";
+
+    private static final String FOLLOW_UP_INSPECTION = "Follow-Up";
+
+    private static final String ROUTINE_INSPECTION = "Routine";
 
     // ****************************************
     // Methods for List<Violation> violations
@@ -71,8 +80,14 @@ public class Inspection implements Iterable<Violation>, Serializable {
     // Other methods
     // **************
 
-    public String getInsType() {
-        return insType;
+    public String getInsType(Context context) {
+        switch (insType) {
+            case FOLLOW_UP_INSPECTION:
+                return context.getString(R.string.follow_up_inspection);
+            case ROUTINE_INSPECTION:
+                return context.getString(R.string.routine_inspection);
+        }
+        return context.getString(R.string.empty_string);
     }
 
     // Calendar contains the data of the inspection
@@ -89,8 +104,16 @@ public class Inspection implements Iterable<Violation>, Serializable {
         return numNonCritical;
     }
 
-    public String getHazardRating() {
-        return hazardRating;
+    public String getHazardRating(Context context) {
+        switch (hazardRating) {
+            case HAZARD_RATING_LOW:
+                return context.getString(R.string.hazard_rating_low);
+            case HAZARD_RATING_MODERATE:
+                return context.getString(R.string.hazard_rating_medium);
+            case HAZARD_RATING_HIGH:
+                return context.getString(R.string.hazard_rating_high);
+        }
+        return context.getString(R.string.empty_string);
     }
 
     public List<Violation> getViolations() {
@@ -115,27 +138,27 @@ public class Inspection implements Iterable<Violation>, Serializable {
     }
 
     // Needed for displaying date of inspection from current date in MainActivity
-    public String getFromCurrentDate() {
-        Log.d("Inspection Object", "getFromCurrentDate: " + calendar.getTime());
+    public String getFromCurrentDate(Context context) {
+//        Log.d("Inspection Object", "getFromCurrentDate: " + calendar.getTime());
         if (getDaysInBetween() <= 30) {
-            return getDaysInBetween() + " days";
+            return getDaysInBetween() + context.getString(R.string.restaurant_days);
         }
 
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         int inspectionYear = calendar.get(Calendar.YEAR);
+        Date date = calendar.getTime();
+
         // Not accounting for leap years
         if (getDaysInBetween() <= 365) {
             if (inspectionYear < currentYear) {
-                return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
-                        + " " + calendar.get(Calendar.DAY_OF_MONTH)
-                        + ", " + calendar.get(Calendar.YEAR);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                return simpleDateFormat.format(date);
             }
-            return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
-                    + " " + calendar.get(Calendar.DAY_OF_MONTH);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d", Locale.getDefault());
+            return simpleDateFormat.format(date);
         }
-
-        return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA)
-                + " " + calendar.get(Calendar.YEAR);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+        return simpleDateFormat.format(date);
     }
 
     @Override
@@ -143,7 +166,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
         return "\n\tInspection{" +
                 "insTrackingNumber='" + insTrackingNumber + '\'' +
                 ", year=" + calendar.get(Calendar.YEAR) +
-                ", month=" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA) +
+                ", month=" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) +
                 ", day=" + calendar.get(Calendar.DAY_OF_MONTH) +
                 ", insType='" + insType + '\'' +
                 ", numCritical=" + numCritical +

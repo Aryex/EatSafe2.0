@@ -1,0 +1,5 @@
+3rd iteration Scrum's role:
+    - Scrum Master - Alex (mql)
+    - Product Owner - Matthew (mteja)
+    - Team Member - Jenny (buihoaib)
+    - Repository Manager - Anthony (awleung)
