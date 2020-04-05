@@ -131,7 +131,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
     }
 
     // Source : https://stackoverflow.com/questions/7103064/java-calculate-the-number-of-days-between-two-dates/14278129
-    private int getDaysInBetween() {
+    int getDaysInBetween() {
         long days = Calendar.getInstance().getTimeInMillis() - calendar.getTimeInMillis();
 
         return (int) Math.round(days / (60.0 * 60 * 24 * 1000)); // 60 seconds * 60 minutes * 24 hours * 1000 ms per second

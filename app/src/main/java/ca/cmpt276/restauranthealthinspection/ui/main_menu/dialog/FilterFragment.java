@@ -66,7 +66,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     }
 
     private void createSpinner() {
-        spinner = (Spinner) view.findViewById(R.id.hazard_spinner);
+        spinner = view.findViewById(R.id.hazard_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.hazard_levels_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

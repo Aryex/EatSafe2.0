@@ -9,6 +9,7 @@ import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
 
 /**
  * Singleton class for storing filtered results after searching
@@ -18,12 +19,12 @@ import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
  */
 public class MyFilter {
 
-    private RestaurantManager restaurantManager;
     private List<Restaurant> restaurantList;
     private List<Restaurant> filteredList;
     private CharSequence constraint;
     private String hazardLevel;
     private int critVioNum;
+    private Context context;
 
     /*
      * Singleton support
@@ -41,11 +42,12 @@ public class MyFilter {
      * Normal code
      */
     private MyFilter(Context context) {
-        restaurantManager = RestaurantManager.getInstance(context);
+        RestaurantManager restaurantManager = RestaurantManager.getInstance(context);
         this.restaurantList = new ArrayList<>(restaurantManager.getRestaurants());
         this.constraint = null;
         this.hazardLevel = null;
         this.critVioNum = 0;
+        this.context = context;
     }
 
     public List<Restaurant> getRestaurantList() {
@@ -85,10 +87,11 @@ public class MyFilter {
 
     public void performSorting() {
         sortByRestaurantName();
-        //sortByHazardLevel();
+        sortByHazardLevel();
+        sortByCritVio();
     }
 
-    public void sortByRestaurantName() {
+    private void sortByRestaurantName() {
         filteredList = new ArrayList<>();
 
         if (constraint == null || constraint.length() == 0) {
@@ -103,25 +106,35 @@ public class MyFilter {
         }
     }
 
-    /*public void sortByHazardLevel() {
-        List<Restaurant> oldList = filteredList;
-        filteredList = new ArrayList<>();
+    private void sortByHazardLevel() {
+        // hardcoded for testing
+        //hazardLevel = "High";
 
-        if (hazardLevel == null || hazardLevel.length() == 0) {
-            filteredList.addAll(oldList);
-        } else {
+        if (hazardLevel != null && hazardLevel.length() != 0) {
+            List<Restaurant> oldList = filteredList;
+            filteredList = new ArrayList<>();
+
             for (Restaurant restaurant: oldList) {
-                if (restaurant.getHazardLevel().equals(hazardLevel)) {
+                if (restaurant.getHazardLevel(context).equals(hazardLevel)) {
                     filteredList.add(restaurant);
                 }
             }
         }
-    }*/
+    }
 
-    /*public void sortByCritVio() {
-        if (critVioNum == 0) {
-            return;
+    private void sortByCritVio() {
+        // hardcoded for testing
+        //critVioNum = 10;
+
+        if (critVioNum != 0) {
+            List<Restaurant> oldList = filteredList;
+            filteredList = new ArrayList<>();
+
+            for (Restaurant restaurant: oldList) {
+                if (restaurant.getCritVioLastYear() >= critVioNum) {
+                    filteredList.add(restaurant);
+                }
+            }
         }
-
-    }*/
+    }
 }

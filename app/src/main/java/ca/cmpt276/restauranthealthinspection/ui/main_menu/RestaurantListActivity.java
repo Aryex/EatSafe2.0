@@ -64,7 +64,6 @@ public class RestaurantListActivity extends AppCompatActivity {
     //Menu setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.menu_restuarant, menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_restuarant, menu);
 

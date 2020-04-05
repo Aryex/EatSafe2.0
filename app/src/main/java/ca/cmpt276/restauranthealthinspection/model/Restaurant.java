@@ -197,4 +197,16 @@ public class Restaurant implements Iterable<Inspection> {
                 ", inspections=" + inspections +
                 '}';
     }
+
+    public int getCritVioLastYear() {
+        int total = 0;
+        for (Inspection inspection: inspections) {
+            if (inspection.getDaysInBetween() > 365) {
+                break;
+            } else {
+                total += inspection.getNumCritical();
+            }
+        }
+        return total;
+    }
 }

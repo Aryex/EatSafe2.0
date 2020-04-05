@@ -91,7 +91,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected FilterResults performFiltering(CharSequence constraint) {
             myFilter.setConstraint(constraint);
 
-            //myFilter.sortByRestaurantName();
             myFilter.performSorting();
 
             FilterResults results = new FilterResults();
