@@ -2,6 +2,7 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textViewRestaurantName.setText(restaurant.getName());
             textViewAddress.setText(restaurant.getAddress());
             logoIV.setImageResource(restaurant.getLogo());
+
+            //background colour for favourite restaurants, temporary
+            if (restaurantManager.isFavourite(restaurant.getResTrackingNumber())) {
+                parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
+            }
 
             if (restaurant.hasBeenInspected()) {
                 String latestInspectionDate = restaurant.getLatestInspectionDate(context);
