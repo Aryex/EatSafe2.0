@@ -54,4 +54,7 @@
     <string name="apply_search">appliquer</string>
     <string name="menu_filter">filtrer</string>
     <string name="favourite">Restaurant préféré:</string>
+    <string name="hazard_desc">Risque</string>
+    <string name="show_only_favorites">Afficher seulement les favoris</string>
+    <string name="clear_all">Effacer tout</string>
 </resources>
