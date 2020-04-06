@@ -74,4 +74,5 @@
     <string name="menu_search">search</string>
     <string name="apply_search">apply</string>
     <string name="menu_filter">filter</string>
+    <string name="favourite">Favourite restaurant:</string>
 </resources>

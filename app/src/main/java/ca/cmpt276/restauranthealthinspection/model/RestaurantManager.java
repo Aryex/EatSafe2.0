@@ -1,6 +1,7 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.opencsv.exceptions.CsvValidationException;
@@ -11,8 +12,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
@@ -26,8 +29,12 @@ import static java.sql.Types.NULL;
  */
 public class RestaurantManager implements Iterable<Restaurant> {
     private static String TAG = "RestaurantManager";
-
     private static List<Restaurant> restaurants = new ArrayList<>();
+    private static List<Restaurant> favourites = new ArrayList<>();
+
+    private static final String FAVOURITES_FILE = "favourites file";
+    private static final String FAVOURITES_LIST  = "favourites list";
+
 
     // **********
     // Singleton
@@ -77,9 +84,21 @@ public class RestaurantManager implements Iterable<Restaurant> {
                 e.printStackTrace();
                 throw new RuntimeException("Parse error");
             }
+
+            updateFavourites(context);
         }
 
         return instance;
+    }
+
+    private static void updateFavourites(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FAVOURITES_FILE, Context.MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet(FAVOURITES_LIST, null);
+        if (set != null) {
+            for (String s : set) {
+                favourites.add(instance.getRestaurant(s));
+            }
+        }
     }
 
     private static boolean checkFilesAvail(Context context) {
@@ -114,6 +133,10 @@ public class RestaurantManager implements Iterable<Restaurant> {
         return Collections.unmodifiableList(restaurants);
     }
 
+    public List<Restaurant> getFavourites() {
+        return Collections.unmodifiableList(favourites);
+    }
+
     @Override
     public Iterator<Restaurant> iterator() {
         return restaurants.iterator();
@@ -139,5 +162,44 @@ public class RestaurantManager implements Iterable<Restaurant> {
             }
         }
         return new Restaurant("none", "none","none","none","none",0,0);
+    }
+
+    public boolean isFavourite(String trackingID) {
+        for (Restaurant r : favourites) {
+            if (r.getResTrackingNumber().equals(trackingID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void unFavourite(Context context, String trackingID) {
+        Restaurant toRemove = getRestaurant(trackingID);
+        favourites.remove(toRemove);
+
+        Set<String> set = new HashSet<>();
+        for (Restaurant r : favourites) {
+            set.add(r.getResTrackingNumber());
+        }
+
+        SharedPreferences.Editor editor = context.getSharedPreferences(FAVOURITES_FILE, Context.MODE_PRIVATE).edit();
+        editor.putStringSet(FAVOURITES_LIST, set);
+        editor.apply();
+    }
+
+    public void markFavourite(Context context, String trackingID) {
+        Restaurant toFavourite = getRestaurant(trackingID);
+        if (!favourites.contains(toFavourite)) {
+            favourites.add(toFavourite);
+        }
+
+        Set<String> set = new HashSet<>();
+        for (Restaurant r : favourites) {
+            set.add(r.getResTrackingNumber());
+        }
+
+        SharedPreferences.Editor editor = context.getSharedPreferences(FAVOURITES_FILE, Context.MODE_PRIVATE).edit();
+        editor.putStringSet(FAVOURITES_LIST, set);
+        editor.apply();
     }
 }
