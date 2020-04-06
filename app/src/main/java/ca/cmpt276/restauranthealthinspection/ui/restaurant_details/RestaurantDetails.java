@@ -3,12 +3,16 @@ package ca.cmpt276.restauranthealthinspection.ui.restaurant_details;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -56,6 +60,7 @@ public class RestaurantDetails extends AppCompatActivity {
         extractIntent();
         setupTextViews();
         setupCoordToMap();
+        setupMarkFavourite();
 
         if (inspectionList.size() != 0) {
             TextView noInspectionText = findViewById(R.id.noInspectionTV);
@@ -63,6 +68,27 @@ public class RestaurantDetails extends AppCompatActivity {
             populateListView();
             registerClickCallback();
         }
+    }
+
+    private void setupMarkFavourite() {
+        CheckBox checkBox = findViewById(R.id.markFavourite);
+        if (manager.getRestaurant(trackingID).isFavourite()) {
+            checkBox.setChecked(true);
+        }
+        else {
+            checkBox.setChecked(false);
+        }
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBox.isChecked()) {
+                    manager.markFavourite(RestaurantDetails.this, trackingID);
+                }
+                else {
+                    manager.unFavourite(RestaurantDetails.this, trackingID);
+                }
+            }
+        });
     }
 
     private void setupCoordToMap() {

@@ -3,6 +3,7 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -35,6 +36,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         restaurants = RestaurantManager.getInstance(this);
         setupRecyclerView();
+        Log.d("test", "created");
     }
 
     private void setupRecyclerView() {
@@ -52,6 +54,12 @@ public class RestaurantListActivity extends AppCompatActivity {
     public void onBackPressed() {
         finishAffinity();
         System.exit(0);
+    }
+
+    @Override
+    public void onResume() {
+        setupRecyclerView();
+        super.onResume();
     }
 
     //Menu setup
