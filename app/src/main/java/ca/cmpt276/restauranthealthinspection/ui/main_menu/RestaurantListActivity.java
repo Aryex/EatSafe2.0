@@ -113,7 +113,7 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
         RestaurantManager searchEngine = RestaurantManager.getInstance(this);
         if(searchEngine.hasQuery){
             searchItem.expandActionView();
-            searchView.setQuery("pizza",true);
+            searchView.setQuery(getString(R.string.pizza),true);
         }
         return true;
     }

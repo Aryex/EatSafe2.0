@@ -82,4 +82,6 @@
     <string name="show_only_favorites">Show only favorite</string>
     <string name="clear_all">Clear All</string>
     <string name="search_options">Search options</string>
+    <string name="server_timed_out">Server timed out</string>
+    <string name="pizza">pizza</string>
 </resources>

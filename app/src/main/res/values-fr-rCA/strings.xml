@@ -58,4 +58,6 @@
     <string name="show_only_favorites">Afficher seulement les favoris</string>
     <string name="clear_all">Effacer tout</string>
     <string name="search_options">Options de recherche</string>
+    <string name="server_timed_out">Le serveur est en panne de temps</string>
+    <string name="pizza">pizza</string>
 </resources>
