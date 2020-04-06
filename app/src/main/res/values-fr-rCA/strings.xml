@@ -57,4 +57,5 @@
     <string name="hazard_desc">Risque</string>
     <string name="show_only_favorites">Afficher seulement les favoris</string>
     <string name="clear_all">Effacer tout</string>
+    <string name="search_options">Options de recherche</string>
 </resources>

@@ -81,4 +81,5 @@
     <string name="hazard_desc">Hazard</string>
     <string name="show_only_favorites">Show only favorite</string>
     <string name="clear_all">Clear All</string>
+    <string name="search_options">Search options</string>
 </resources>

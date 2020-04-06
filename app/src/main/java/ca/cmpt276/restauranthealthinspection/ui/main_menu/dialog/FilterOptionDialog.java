@@ -63,7 +63,7 @@ public class FilterOptionDialog extends DialogFragment {
         createInputs();
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
-                .setTitle("Search options")
+                .setTitle(R.string.search_options)
                 .setPositiveButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
