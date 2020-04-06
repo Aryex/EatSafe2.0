@@ -139,9 +139,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             return RestaurantListActivity.HazardLevel.MEDIUM;
         } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
             return RestaurantListActivity.HazardLevel.HIGH;
+        }else{
+            return RestaurantListActivity.HazardLevel.LOW;
         }
-
-        // Will crash the program if this part is reached
-        return null;
     }
 }
