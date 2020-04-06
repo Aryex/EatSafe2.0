@@ -48,7 +48,7 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
     @Override
     public void onBindViewHolder(@NonNull ViolationViewHolder holder, int position) {
         if (position == 0) {
-            holder.setHazardLevel(inspection.getHazardRating());
+            holder.setHazardLevel(inspection.getHazardRating(context));
         } else {
             Violation violation = inspection.get(position - 1);
             holder.setViews(violation);
@@ -119,19 +119,17 @@ public class RecyclerViolationAdapter extends RecyclerView.Adapter<RecyclerViola
             description.setTypeface(ResourcesCompat.getFont(layout.getContext(), R.font.roboto_light), Typeface.BOLD);
             layout.setForeground(null);
 
-            switch (inspection.getHazardRating()) {
-                case Inspection.HAZARD_RATING_LOW:
-                    icon.setImageResource(R.drawable.icon_hazard_low);
-                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardLowInspection));
-                    break;
-                case Inspection.HAZARD_RATING_MODERATE:
-                    icon.setImageResource(R.drawable.icon_hazard_medium);
-                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardMediumInspection));
-                    break;
-                case Inspection.HAZARD_RATING_HIGH:
-                    icon.setImageResource(R.drawable.icon_hazard_high);
-                    layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardHighInspection));
-                    break;
+            String hazardLevel = inspection.getHazardRating(context);
+
+            if (hazardLevel.equals(context.getString(R.string.hazard_rating_low))) {
+                icon.setImageResource(R.drawable.icon_hazard_low);
+                layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardLowInspection));
+            } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+                icon.setImageResource(R.drawable.icon_hazard_medium);
+                layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardMediumInspection));
+            } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+                icon.setImageResource(R.drawable.icon_hazard_high);
+                layout.setBackgroundColor(ContextCompat.getColor(layout.getContext(), R.color.hazardHighInspection));
             }
         }
     }

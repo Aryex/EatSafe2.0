@@ -2,6 +2,7 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,14 +146,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textViewAddress.setText(restaurant.getAddress());
             logoIV.setImageResource(restaurant.getLogo());
 
+            //background colour for favourite restaurants, temporary
+            if (restaurant.isFavourite()) {
+                parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
+            }
+
             if (restaurant.hasBeenInspected()) {
-                String latestInspectionDate = restaurant.getLatestInspectionDate();
+                String latestInspectionDate = restaurant.getLatestInspectionDate(context);
                 textViewInspectionDate.setText(latestInspectionDate);
 
                 String totalIssues = restaurant.getLatestInspectionTotalIssues();
                 textViewIssuesCount.setText(totalIssues);
 
-                RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel());
+                RestaurantListActivity.HazardLevel hazardLevel = HazardLevelConverter(restaurant.getHazardLevel(context));
                 setupWarningBar(hazardLevel);
             } else {
                 //default setup for restaurant with no inspections.
@@ -180,19 +186,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     warningBar.setCardBackgroundColor(context.getColor(R.color.hazardHighDark));
                     hazardIcon.setImageDrawable(context.getDrawable(R.drawable.icon_hazard_high));
                     break;
-                default:
             }
         }
     }
 
     private RestaurantListActivity.HazardLevel HazardLevelConverter(String hazardLevel) {
-        switch (hazardLevel.toLowerCase()) {
-            case "low":
-                return RestaurantListActivity.HazardLevel.LOW;
-            case "moderate":
-                return RestaurantListActivity.HazardLevel.MEDIUM;
-            default:
-                return RestaurantListActivity.HazardLevel.HIGH;
+        if (hazardLevel.equals(context.getString(R.string.hazard_rating_low))) {
+            return RestaurantListActivity.HazardLevel.LOW;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_medium))) {
+            return RestaurantListActivity.HazardLevel.MEDIUM;
+        } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
+            return RestaurantListActivity.HazardLevel.HIGH;
+        }else{
+            return RestaurantListActivity.HazardLevel.LOW;
         }
     }
 }

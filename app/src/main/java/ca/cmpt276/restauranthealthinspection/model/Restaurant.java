@@ -1,5 +1,7 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +31,8 @@ public class Restaurant implements Iterable<Inspection> {
     private List<Inspection> inspections = new ArrayList<>();
 
     private int logo;
+
+    private boolean favourite = false;
 
     // ****************************************
     // Methods for List<Inspection> inspections
@@ -160,11 +164,11 @@ public class Restaurant implements Iterable<Inspection> {
         return !inspections.isEmpty();
     }
 
-    public String getLatestInspectionDate() {
+    public String getLatestInspectionDate(Context context) {
         if (inspections.isEmpty()) {
             return "";
         }
-        return inspections.get(0).getFromCurrentDate();
+        return inspections.get(0).getFromCurrentDate(context);
     }
 
     public String getLatestInspectionTotalIssues() {
@@ -175,11 +179,11 @@ public class Restaurant implements Iterable<Inspection> {
         return String.valueOf(totalIssues);
     }
 
-    public String getHazardLevel() {
+    public String getHazardLevel(Context context) {
         if (inspections.isEmpty()) {
             return "";
         }
-        return inspections.get(0).getHazardRating();
+        return inspections.get(0).getHazardRating(context);
     }
 
     @Override
@@ -194,5 +198,13 @@ public class Restaurant implements Iterable<Inspection> {
                 ", longitude=" + longitude +
                 ", inspections=" + inspections +
                 '}';
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 }
