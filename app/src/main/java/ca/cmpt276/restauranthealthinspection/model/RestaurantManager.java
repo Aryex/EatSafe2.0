@@ -96,6 +96,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
         Set<String> set = sharedPreferences.getStringSet(FAVOURITES_LIST, null);
         if (set != null) {
             for (String s : set) {
+                instance.getRestaurant(s).setFavourite(true);
                 favourites.add(instance.getRestaurant(s));
             }
         }
@@ -164,17 +165,9 @@ public class RestaurantManager implements Iterable<Restaurant> {
         return new Restaurant("none", "none","none","none","none",0,0);
     }
 
-    public boolean isFavourite(String trackingID) {
-        for (Restaurant r : favourites) {
-            if (r.getResTrackingNumber().equals(trackingID)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void unFavourite(Context context, String trackingID) {
         Restaurant toRemove = getRestaurant(trackingID);
+        toRemove.setFavourite(false);
         favourites.remove(toRemove);
 
         Set<String> set = new HashSet<>();
@@ -189,6 +182,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
     public void markFavourite(Context context, String trackingID) {
         Restaurant toFavourite = getRestaurant(trackingID);
+        toFavourite.setFavourite(true);
         if (!favourites.contains(toFavourite)) {
             favourites.add(toFavourite);
         }
