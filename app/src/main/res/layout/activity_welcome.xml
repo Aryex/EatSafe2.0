@@ -10,7 +10,7 @@
         android:id="@+id/welcomeMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:text="@string/welcome"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView4"
@@ -19,13 +19,14 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="143dp"
+        android:layout_height="160dp"
         android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_new_round" />
+        app:srcCompat="@drawable/ic_launcher_new_round"
+        android:contentDescription="@string/splash_screen_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
