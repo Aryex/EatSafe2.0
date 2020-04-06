@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="2dp"
-            android:text="HazardLevel "
+            android:text="@string/hazardlevel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/debugTextview" />
 
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Number of cirtical condition"
+            android:text="@string/number_of_critical_condition"
             app:layout_constraintStart_toStartOf="@+id/debugTextViewHzrdLevelOption"
             app:layout_constraintTop_toBottomOf="@+id/debugTextViewHzrdLevelOption" />
 
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Favorite Option"
+            android:text="@string/favorite_option"
             app:layout_constraintStart_toStartOf="@+id/debugTextViewCritNumOption"
             app:layout_constraintTop_toBottomOf="@+id/debugTextViewCritNumOption" />
     </androidx.constraintlayout.widget.ConstraintLayout>
