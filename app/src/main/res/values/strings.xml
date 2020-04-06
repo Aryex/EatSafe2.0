@@ -66,18 +66,14 @@
     <string name="updating">Updating:</string>
     <string name="violation_detail">%1$d - %2$s</string>
     <string name="welcome">Welcome To EatSafe</string>
-    <string name="menu_search">search</string>
-    <string name="apply_search">apply</string>
-    <string name="menu_filter">filter</string>
-    <string name="total_crit_vio" translatable="false"><![CDATA[violations]]></string>
-    <string name="hazard_desc" translatable="false">Hazard level</string>
-    <string name="empty_hint" translatable="false">0</string>
-    <string name="show_only_favorites" translatable="false">Show only favorites</string>
-    <string name="clear_all" translatable="false">Clear All</string>
     <string name="hazard_rating_low">Low</string>
     <string name="hazard_rating_medium">Medium</string>
     <string name="hazard_rating_high">High</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Follow-Up</string>
-    <string name="favourite">Favorite</string>
+    <string name="menu_search">search</string>
+    <string name="apply_search">apply</string>
+    <string name="menu_filter">filter</string>
+    <string name="favourite">Favourite restaurant:</string>
+    <string name="splash_screen_image" translatable="false">Splash screen image</string>
 </resources>
