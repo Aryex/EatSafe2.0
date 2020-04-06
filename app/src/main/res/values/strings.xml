@@ -76,7 +76,7 @@
     <string name="menu_filter">filter</string>
     <string name="favourite">Favourite restaurant:</string>
     <string name="splash_screen_image" translatable="false">Splash screen image</string>
-    <string name="empty_hint">\"\"</string>
+    <string name="empty_hint">0</string>
     <string name="total_crit_vio">violations</string>
     <string name="hazard_desc">Hazard</string>
     <string name="show_only_favorites">Show only favorite</string>
