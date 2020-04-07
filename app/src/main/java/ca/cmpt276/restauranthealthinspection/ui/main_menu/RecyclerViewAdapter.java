@@ -36,7 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Restaurant> restaurants;
     private MyFilter myFilter;
 
-    RecyclerViewAdapter(Context context, List<Restaurant> restaurants) {
+    public RecyclerViewAdapter(Context context, List<Restaurant> restaurants) {
         this.restaurants = restaurants;
 
         // Filter support
