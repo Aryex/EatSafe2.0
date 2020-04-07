@@ -64,21 +64,21 @@ public class FilterOptionDialog extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .setTitle(R.string.search_options)
-                .setPositiveButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d(TAG, "onClick: Cancel");
-                        Log.d(TAG, "onClick: hazard level " + hazardLevel);
-                        optionDialogListener.onOptionDialogCancel();
-                        dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.apply_search, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.apply_search, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Log.d(TAG, "onClick: Apply");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
                         optionDialogListener.onOptionDialogApply();
+                        dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d(TAG, "onClick: Cancel");
+                        Log.d(TAG, "onClick: hazard level " + hazardLevel);
+                        optionDialogListener.onOptionDialogCancel();
                         dismiss();
                     }
                 })
