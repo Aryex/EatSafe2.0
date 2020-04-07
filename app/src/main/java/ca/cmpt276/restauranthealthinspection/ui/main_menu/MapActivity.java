@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,17 +39,21 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
 /**
@@ -65,7 +71,7 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * <p>
  * note: restaurant tracking id is stored in a cluster marker's snippet.
  */
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, FilterOptionDialog.OptionDialogListener {
 
     //  Surrey Central's Lat Lng
     public static final LatLng DEFAULT_LAT_LNG = new LatLng(49.1866939, -122.8494363);
@@ -73,13 +79,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Debug
     private static final String TAG = "MapsActivity";
     private TextView debugTextView;
-    private boolean debugOn = false;
+    private static boolean debugOn = true;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
-    private RestaurantManager restaurants;
+    private RestaurantManager resturantManager;
 
     private static final float DEFAULT_ZOOM_FOCUS = 19f;
     private static final float DEFAULT_ZOOM_HIGH = 12f;
@@ -181,7 +187,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         latLng = new LatLng(data.getDoubleExtra(INTENT_KEY_LAT, 0), data.getDoubleExtra(INTENT_KEY_LNG, 0));
         String trackingId = data.getStringExtra(INTENT_KEY_RESTAURANT_ID);
 
-        String hazardLevel = restaurants.getRestaurant(trackingId).getHazardLevel(getApplicationContext());
+        String hazardLevel = resturantManager.getRestaurant(trackingId).getHazardLevel(getApplicationContext());
         BitmapDescriptor markerIcon = getHazardLevelBitmapDescriptor(hazardLevel, getApplicationContext());
 
         requestedMarker = map.addMarker(new MarkerOptions()
@@ -229,10 +235,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setupDebug(debugOn);
 
-        restaurants = RestaurantManager.getInstance(this);
+        resturantManager = RestaurantManager.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        setupDebug(debugOn);
         setupLocationRequest();
 
         getLocationPermission();
@@ -247,10 +253,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .addLocationRequest(this.locationRequest);
     }
 
-    private void setupDebug(boolean debugOn) {
+    public void setupDebug(boolean debugOn) {
         debugTextView = findViewById(R.id.debugTextview);
         Button button = findViewById(R.id.surreyButton);
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+
+        TextView textViewDebugHazardLevel = findViewById(R.id.debugTextViewHzrdLevelOption);
+        TextView textViewDebugCritOption = findViewById(R.id.debugTextViewCritNumOption);
+        TextView textViewDebugFavorite = findViewById(R.id.debugTextViewFavoriteOption);
+
+        textViewDebugHazardLevel.setText(resturantManager.getHazardLevel());
+        textViewDebugCritOption.setText(resturantManager.getCritSetting());
+
+        if (resturantManager.isFavorite()) {
+            textViewDebugFavorite.setText("true");
+        } else {
+            textViewDebugFavorite.setText("false");
+        }
 
         if (!debugOn) {
             button.setVisibility(View.GONE);
@@ -278,8 +297,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
+        Toast.makeText(this, "On Resume!", Toast.LENGTH_SHORT).show();
         makeLocationCallback();
         startLocationUpdates();
+
     }
 
     @Override
@@ -295,7 +316,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
         myClusterItemList = new ArrayList<>();
 
-        setupClusterMarkers();
+        //setup cluster if search engine has query.
+        List<Restaurant> restaurantsList = resturantManager.getRestaurants();
+        setupClusterMarkers(restaurantsList);
 
         clusterManager.setOnClusterItemClickListener(item -> {
             clickedClusterItem = new MyClusterItem(item.getPosition(), item.getTitle(), item.getSnippet(), item.getHazardLevel());
@@ -303,7 +326,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         clusterManager.getMarkerCollection().setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) marker -> {
-            String trackingID = (String) clickedClusterItem.getSnippet();
+            String trackingID = clickedClusterItem.getSnippet();
             Intent startIntent = RestaurantDetails.makeLaunchIntent(MapActivity.this, trackingID);
             startActivity(startIntent);
         });
@@ -448,19 +471,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         supportMapFragment.getMapAsync(MapActivity.this);
     }
 
-    private void setupClusterMarkers() {
+    private void setupClusterMarkers(Iterable<Restaurant> restaurants) {
+        // setup cluster from
         for (Restaurant restaurant : restaurants) {
-
-            double lat = restaurant.getLatitude();
-            double lng = restaurant.getLongitude();
-            String name = restaurant.getName();
-            String snippet = restaurant.getResTrackingNumber();
-            String hazardLevel = restaurant.getHazardLevel(getApplicationContext());
-
-            MyClusterItem myClusterItem = new MyClusterItem(lat, lng, name, snippet, hazardLevel);
+            MyClusterItem myClusterItem = makeMyClusterItem(restaurant);
             myClusterItemList.add(myClusterItem);
             clusterManager.addItem(myClusterItem);
         }
+    }
+
+    private MyClusterItem makeMyClusterItem(Restaurant restaurant) {
+        double lat = restaurant.getLatitude();
+        double lng = restaurant.getLongitude();
+        String name = restaurant.getName();
+        String snippet = restaurant.getResTrackingNumber();
+        String hazardLevel = restaurant.getHazardLevel(this);
+
+        return new MyClusterItem(lat, lng, name, snippet, hazardLevel);
     }
 
     private static void moveCamera(LatLng newLocation, float zoom) {
@@ -477,6 +504,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         debugTextView.setText(s);
     }
 
+    @Override
+    public void onOptionDialogApply() {
+        Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
+        if(myClusterItemList.isEmpty()){
+            List<Restaurant> restaurantsList = resturantManager.getRestaurants();
+            setupClusterMarkers(restaurantsList);
+            //refresh
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+        }
+    }
+
+    @Override
+    public void onOptionDialogCancel() {
+        Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
+        clusterManager.clearItems();
+        myClusterItemList.clear();
+        //refresh
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+    }
+
+    @Override
+    public void onOptionDialogClearAll() {
+        Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
+        //TODO: update list pls
+
+    }
+
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
         @Override
         public void onCameraMove() {
@@ -485,10 +539,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             if (approximateEqual(deviceLocation.latitude, cameraLaLng.latitude, DEFAULT_PRECISION)
                     && approximateEqual(deviceLocation.longitude, cameraLaLng.longitude, DEFAULT_PRECISION)) {
-                debugDisplay("onCameraMove: locked");
+                //debugDisplay("onCameraMove: locked");
                 cameraLocked = true;
             } else {
-                debugDisplay("onCameraMove: unlocked");
+                //debugDisplay("onCameraMove: unlocked");
                 cameraLocked = false;
             }
         }
@@ -522,7 +576,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             Log.d(TAG, "InfoWindowAdapter: filling activity");
 
-            Restaurant restaurant = restaurants.getRestaurant(trackingNumber);
+            Restaurant restaurant = resturantManager.getRestaurant(trackingNumber);
 
             String restaurantName = restaurant.getName();
             String address = restaurant.getAddress();
@@ -583,7 +637,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Toolbar setup
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                debugDisplay(newText);
+                resturantManager.query = newText;
+                return false;
+            }
+        });
+
+        RestaurantManager searchEngine = RestaurantManager.getInstance(this);
+        if (searchEngine.hasQuery) {
+            //populate map based on search engine
+        }
+
         return true;
     }
 
@@ -593,6 +672,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Intent intent = RestaurantListActivity.makeLaunchIntent(this);
             startActivity(intent);
             return true;
+        }
+        if (item.getItemId() == R.id.menu_filter) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FilterOptionDialog filterOptionDialog = new FilterOptionDialog();
+            filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);
         }
         return super.onOptionsItemSelected(item);
     }
