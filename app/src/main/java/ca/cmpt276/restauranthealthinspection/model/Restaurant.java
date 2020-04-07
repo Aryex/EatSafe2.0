@@ -32,6 +32,8 @@ public class Restaurant implements Iterable<Inspection> {
 
     private int logo;
 
+    private boolean favourite = false;
+
     // ****************************************
     // Methods for List<Inspection> inspections
     // ****************************************
@@ -196,6 +198,14 @@ public class Restaurant implements Iterable<Inspection> {
                 ", longitude=" + longitude +
                 ", inspections=" + inspections +
                 '}';
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 
     public int getCritVioLastYear() {

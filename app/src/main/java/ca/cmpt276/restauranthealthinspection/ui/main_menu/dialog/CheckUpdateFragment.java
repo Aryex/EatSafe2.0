@@ -53,7 +53,7 @@ public class CheckUpdateFragment extends DialogFragment {
             @Override
             public void run() {
                 if (!doneChecking) {
-                    Toast.makeText(getContext(), "Server timed out", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.server_timed_out, Toast.LENGTH_SHORT).show();
                     cancel();
                 }
             }

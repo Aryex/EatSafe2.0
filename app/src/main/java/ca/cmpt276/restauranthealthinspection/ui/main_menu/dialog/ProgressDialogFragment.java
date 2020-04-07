@@ -27,7 +27,7 @@ import retrofit2.Call;
 
 public class ProgressDialogFragment extends DialogFragment {
 
-    public static final String TAG = "downloading";
+    static final String TAG = "downloading";
 
     private ProgressBar progressBar;
 

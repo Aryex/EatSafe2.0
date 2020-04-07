@@ -20,7 +20,7 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 
 public class UpdaterFragment extends DialogFragment {
 
-    public static final String TAG = "updating";
+    static final String TAG = "updating";
 
     public interface UpdaterDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);

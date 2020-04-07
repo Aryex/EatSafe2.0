@@ -71,9 +71,34 @@
     <string name="hazard_rating_high">High</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Follow-Up</string>
-    <string name="menu_search">search</string>
-    <string name="apply_search">apply</string>
-    <string name="menu_filter">filter</string>
-    <string name="hazard_desc">Hazard level of most recent inspection</string>
+    <string name="menu_search">Search</string>
+    <string name="apply_search">Apply</string>
+    <string name="menu_filter">Filter</string>
+    <string name="favourite">Favourite restaurant:</string>
+    <string name="splash_screen_image" translatable="false">Splash screen image</string>
+    <string name="empty_hint" translatable="false">0</string>
+    <string name="total_crit_vio" translatable="false">violations</string>
+    <string name="hazard_desc">Hazard</string>
+    <string name="show_only_favorites">Show only favorite</string>
+    <string name="clear_all">Clear All</string>
+    <string name="search_options">Search options</string>
+    <string name="server_timed_out">Server timed out</string>
+    <string name="pizza">pizza</string>
+    <string name="number_of_critical_condition" translatable="false">Number of critical condition</string>
+    <string name="favorite_option" translatable="false">Favorite Option</string>
+    <string name="hazardlevel" translatable="false">HazardLevel</string>
+    <string name="less_than">Less than</string>
+    <string name="greater_than">Greater than</string>
+    <string-array name="hazard_levels_array">
+        <item>@string/hazard_rating_low</item>
+        <item>@string/hazard_rating_medium</item>
+        <item>@string/hazard_rating_high</item>
+        <item>@string/hazard_rating_all</item>
+    </string-array>
+    <string-array name="inequality_array">
+        <item>@string/less_than</item>
+        <item>@string/greater_than</item>
+    </string-array>
     <string name="crit_vio_desc"><![CDATA[Total # of critical violations within the last year >=]]></string>
+    <string name="hazard_rating_all">All</string>
 </resources>
