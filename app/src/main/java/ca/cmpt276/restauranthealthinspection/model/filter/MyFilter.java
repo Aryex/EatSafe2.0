@@ -21,7 +21,7 @@ public class MyFilter {
 
     private List<Restaurant> restaurantList;
     private List<Restaurant> filteredList;
-    private CharSequence constraint;
+    private String constraint;
     private String hazardLevel;
     private int critVioNum;
     private Context context;
@@ -59,7 +59,7 @@ public class MyFilter {
         return filteredList;
     }
 
-    public CharSequence getConstraint() {
+    public String getConstraint() {
         return constraint;
     }
 
@@ -67,7 +67,7 @@ public class MyFilter {
         return hazardLevel;
     }
 
-    public int getCritVioNum() { return  critVioNum; }
+    public int getCritVioNum() { return critVioNum; }
 
 
     public void setRestaurantList(List<Restaurant> restaurantList) {
@@ -75,7 +75,7 @@ public class MyFilter {
     }
 
     public void setConstraint(CharSequence constraint) {
-        this.constraint = constraint;
+        this.constraint = constraint.toString();
     }
 
     public void setHazardLevel(String hazardLevel) {

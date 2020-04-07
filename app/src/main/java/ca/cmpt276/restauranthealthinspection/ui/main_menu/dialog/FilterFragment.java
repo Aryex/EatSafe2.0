@@ -36,6 +36,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     private Spinner spinner;
     private String hazardLevel;
     private String vioNumString;
+    private String searchName;
 
     private RecyclerViewAdapter recyclerViewAdapter;
 
@@ -56,13 +57,15 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
 
         createSpinner();
         getCritVioOption();
+        getSearchName();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setTitle("Filter");
         builder.setPositiveButton(R.string.apply_search, (dialogInterface, i) -> {
-            String constraints = myFilter.getConstraint() + "-" + hazardLevel + "-" + vioNumString;
+            String constraints = searchName + "-" + hazardLevel + "-" + vioNumString;
             recyclerViewAdapter.getFilter().filter(constraints);
+
             dismiss();
         });
         builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
@@ -81,7 +84,21 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
                 R.array.hazard_levels_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(getSpinnerPosition());
         spinner.setOnItemSelectedListener(this);
+    }
+
+    private int getSpinnerPosition() {
+        String savedLevel = myFilter.getHazardLevel();
+        if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_low))) {
+            return 0;
+        } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_medium))) {
+            return 1;
+        } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_high))) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 
     @Override
@@ -125,10 +142,23 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         });
     }
 
-    private void setCritVioOption() {
-        if (!(vioNumString == null || vioNumString.length() == 0)) {
-            int critVioNum = Integer.parseInt(vioNumString);
-            myFilter.setCritVioNum(critVioNum);
-        }
+    private void getSearchName() {
+        searchName = "";
+        EditText editText = view.findViewById(R.id.editText);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                searchName = editText.getText().toString();
+            }
+        });
     }
+
 }

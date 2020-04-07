@@ -89,12 +89,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Filter restaurantFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraints) {
+            // parser for constraints
             String[] filterValues = constraints.toString().split("-", 3);
             myFilter.setConstraint(filterValues[0]);
             myFilter.setHazardLevel(filterValues[1]);
             int myNumber = Integer.parseInt(filterValues[2]);
             myFilter.setCritVioNum(myNumber);
-            Toast.makeText(context, filterValues[0] + " " + filterValues[1] + " " + myNumber, Toast.LENGTH_SHORT).show();
 
             myFilter.performSorting();
 
@@ -105,7 +105,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
+        protected void publishResults(CharSequence constraints, FilterResults results) {
+            String[] filterValues = constraints.toString().split("-", 3);
+            myFilter.setConstraint(filterValues[0]);
+            myFilter.setHazardLevel(filterValues[1]);
+            int myNumber = Integer.parseInt(filterValues[2]);
+            myFilter.setCritVioNum(myNumber);
+
             restaurantManager.setRestaurants(myFilter.getFilteredList());
             notifyDataSetChanged();
         }
