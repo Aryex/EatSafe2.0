@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/menu_item_return_map"
         android:icon="@drawable/ic_list_white_24dp"
@@ -10,12 +11,13 @@
         android:icon="@drawable/ic_filter_white"
         android:orderInCategory="2"
         android:title="@string/menu_filter"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always|collapseActionView"
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/menu_action_search"
         android:icon="@drawable/ic_search_white_24dp"
         android:orderInCategory="1"
         android:title="@string/menu_search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
 </menu>
