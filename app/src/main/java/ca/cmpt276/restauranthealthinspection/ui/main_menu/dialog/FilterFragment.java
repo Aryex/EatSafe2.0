@@ -2,7 +2,9 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,12 +14,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
 
 /**
  * Fragment for a filter dialog
@@ -28,20 +34,24 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     public static final String TAG = "filter";
     private View view;
     private Spinner spinner;
-    private RestaurantManager restaurantManager;
     private String hazardLevel;
     private String vioNumString;
+
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     /*
      * Filter support
      */
     private MyFilter myFilter;
 
+    public FilterFragment(RecyclerViewAdapter recyclerViewAdapter) {
+        this.recyclerViewAdapter = recyclerViewAdapter;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         view = LayoutInflater.from(getActivity()).inflate(R.layout.filter_fragment, null);
 
-        //List<Restaurant> restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
         myFilter = MyFilter.getInstance(view.getContext());
 
         createSpinner();
@@ -51,8 +61,8 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         builder.setView(view);
         builder.setTitle("Filter");
         builder.setPositiveButton(R.string.apply_search, (dialogInterface, i) -> {
-            myFilter.setHazardLevel(hazardLevel);
-            setCritVioOption();
+            String constraints = myFilter.getConstraint() + "-" + hazardLevel + "-" + vioNumString;
+            recyclerViewAdapter.getFilter().filter(constraints);
             dismiss();
         });
         builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
@@ -94,21 +104,23 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     }
 
     private void getCritVioOption() {
+        vioNumString = Integer.toString(myFilter.getCritVioNum());
         EditText editText = view.findViewById(R.id.crit_vio_editText);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 vioNumString = editText.getText().toString();
+                if (vioNumString.length() == 0) {
+                    vioNumString = Integer.toString(myFilter.getCritVioNum());
+                }
             }
         });
     }

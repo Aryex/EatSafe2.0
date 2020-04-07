@@ -9,9 +9,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.Constraints;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Context context;
     private RestaurantManager restaurantManager;
-    private List<Restaurant> restaurantListFull;
 
     private MyFilter myFilter;
 
@@ -39,7 +40,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.restaurantManager = restaurantManager;
 
         // Filter support
-        restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
         myFilter = MyFilter.getInstance(context);
 
         this.context = context;
@@ -88,8 +88,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Filter restaurantFilter = new Filter() {
         @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            myFilter.setConstraint(constraint);
+        protected FilterResults performFiltering(CharSequence constraints) {
+            String[] filterValues = constraints.toString().split("-", 3);
+            myFilter.setConstraint(filterValues[0]);
+            myFilter.setHazardLevel(filterValues[1]);
+            int myNumber = Integer.parseInt(filterValues[2]);
+            myFilter.setCritVioNum(myNumber);
+            Toast.makeText(context, filterValues[0] + " " + filterValues[1] + " " + myNumber, Toast.LENGTH_SHORT).show();
 
             myFilter.performSorting();
 
@@ -101,8 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            List<Restaurant> restaurantList = (List<Restaurant>) results.values;
-            restaurantManager.setRestaurants(restaurantList);
+            restaurantManager.setRestaurants(myFilter.getFilteredList());
             notifyDataSetChanged();
         }
     };

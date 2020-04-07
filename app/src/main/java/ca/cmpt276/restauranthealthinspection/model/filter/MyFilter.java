@@ -44,8 +44,9 @@ public class MyFilter {
     private MyFilter(Context context) {
         RestaurantManager restaurantManager = RestaurantManager.getInstance(context);
         this.restaurantList = new ArrayList<>(restaurantManager.getRestaurants());
-        this.constraint = null;
-        this.hazardLevel = null;
+        this.filteredList = new ArrayList<>(restaurantManager.getRestaurants());
+        this.constraint = "";
+        this.hazardLevel = "";
         this.critVioNum = 0;
         this.context = context;
     }
@@ -107,9 +108,6 @@ public class MyFilter {
     }
 
     private void sortByHazardLevel() {
-        // hardcoded for testing
-        //hazardLevel = "High";
-
         if (hazardLevel != null && hazardLevel.length() != 0) {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
@@ -123,9 +121,6 @@ public class MyFilter {
     }
 
     private void sortByCritVio() {
-        // hardcoded for testing
-        //critVioNum = 10;
-
         if (critVioNum != 0) {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();

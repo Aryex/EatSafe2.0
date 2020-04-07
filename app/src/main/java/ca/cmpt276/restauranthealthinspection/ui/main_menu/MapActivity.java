@@ -614,11 +614,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             startActivity(intent);
             return true;
         }
-        if (item.getItemId() == R.id.menu_filter) {
+        /*if (item.getItemId() == R.id.menu_filter) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FilterFragment filterFragment = new FilterFragment();
             filterFragment.show(fragmentManager, FilterFragment.TAG);
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 }

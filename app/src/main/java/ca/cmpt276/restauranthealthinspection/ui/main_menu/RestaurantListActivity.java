@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterFragment;
 
 /**
@@ -28,6 +30,10 @@ public class RestaurantListActivity extends AppCompatActivity {
     private RestaurantManager restaurants;
 
     private RecyclerViewAdapter recyclerViewAdapter;
+
+    private RecyclerView recyclerView;
+
+    private MyFilter myFilter;
 
     public static Intent makeLaunchIntent(Context context) {
         return new Intent(context, RestaurantListActivity.class);
@@ -41,11 +47,12 @@ public class RestaurantListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         restaurants = RestaurantManager.getInstance(this);
+        recyclerView = findViewById(R.id.recyclerViewMain);
+        myFilter = MyFilter.getInstance(this);
         setupRecyclerView();
     }
 
     private void setupRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewMain);
         recyclerViewAdapter = new RecyclerViewAdapter(this, restaurants);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -74,12 +81,17 @@ public class RestaurantListActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                String constraints = query + "-"
+                        + myFilter.getHazardLevel() + "-" + myFilter.getCritVioNum();
+                recyclerViewAdapter.getFilter().filter(constraints);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                recyclerViewAdapter.getFilter().filter(newText);
+                String constraints = newText + "-"
+                        + myFilter.getHazardLevel() + "-" + myFilter.getCritVioNum();
+                recyclerViewAdapter.getFilter().filter(constraints);
                 return false;
             }
         });
@@ -94,7 +106,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.menu_filter) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FilterFragment filterFragment = new FilterFragment();
+            FilterFragment filterFragment = new FilterFragment(recyclerViewAdapter);
             filterFragment.show(fragmentManager, FilterFragment.TAG);
             return true;
         }
