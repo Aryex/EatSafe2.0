@@ -71,4 +71,5 @@
         <item>@string/less_than</item>
         <item>@string/greater_than</item>
     </string-array>
+    <string name="new_inspections_for_your_favourite_restaurants">Les nouvelles inspections pour vos restaurants préférés.</string>
 </resources>
