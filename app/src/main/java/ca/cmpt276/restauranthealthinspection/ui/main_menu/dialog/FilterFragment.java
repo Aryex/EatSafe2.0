@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,6 +26,8 @@ import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Fragment for a filter dialog
  */
@@ -32,6 +35,9 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity
 public class FilterFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "filter";
+    public static final String NAME_SEARCH = "Name Search";
+    public static final String HAZARD_LEVEL = "Hazard level";
+    public static final String CRIT_VIO_NUM = "Number of critical violations";
     private View view;
     private Spinner spinner;
     private String hazardLevel;
@@ -64,6 +70,11 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         builder.setTitle("Filter");
         builder.setPositiveButton(R.string.apply_search, (dialogInterface, i) -> {
             String constraints = searchName + "-" + hazardLevel + "-" + vioNumString;
+
+            setHazardLevelPref(hazardLevel);
+            setVioNumPref(Integer.parseInt(vioNumString));
+            setNamePref(searchName);
+
             recyclerViewAdapter.getFilter().filter(constraints);
 
             dismiss();
@@ -135,9 +146,9 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
             @Override
             public void afterTextChanged(Editable s) {
                 vioNumString = editText.getText().toString();
-                if (vioNumString.length() == 0) {
+                /*if (vioNumString.length() == 0) {
                     vioNumString = Integer.toString(myFilter.getCritVioNum());
-                }
+                }*/
             }
         });
     }
@@ -161,4 +172,39 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         });
     }
 
+    public void setNamePref(String searchName) {
+        SharedPreferences pref = getContext().getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(NAME_SEARCH, searchName);
+        editor.apply();
+    }
+    public static String getNamePref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
+        String defaultVal = "";
+        return pref.getString(NAME_SEARCH, defaultVal);
+    }
+
+    public void setHazardLevelPref(String hazardLevel) {
+        SharedPreferences pref = getContext().getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(HAZARD_LEVEL, hazardLevel);
+        editor.apply();
+    }
+    public static String getHazardLevelPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
+        String defaultVal = "";
+        return pref.getString(HAZARD_LEVEL, defaultVal);
+    }
+
+    public void setVioNumPref(int vioNum) {
+        SharedPreferences pref = getContext().getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(CRIT_VIO_NUM, vioNum);
+        editor.apply();
+    }
+    public static int getVioNumPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
+        int defaultVal = 0;
+        return pref.getInt(CRIT_VIO_NUM, defaultVal);
+    }
 }
