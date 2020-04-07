@@ -30,17 +30,17 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> implements Filterable {
 
     private Context context;
-    private RestaurantManager restaurantManager;
 
     // Filter support
     private List<Restaurant> restaurantListFull;
+    private List<Restaurant> restaurants;
     private MyFilter myFilter;
 
-    RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
-        this.restaurantManager = restaurantManager;
+    public RecyclerViewAdapter(Context context, List<Restaurant> restaurants) {
+        this.restaurants = restaurants;
 
         // Filter support
-        this.restaurantListFull = new ArrayList<>(restaurantManager.getRestaurants());
+        this.restaurantListFull = restaurants;
         myFilter = MyFilter.getInstance();
 
         this.context = context;
@@ -57,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantCardViewHolder holder, int position) {
-        Restaurant restaurant = restaurantManager.get(position);
+        Restaurant restaurant = restaurants.get(position);
         holder.setupCardView(restaurant);
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return restaurantManager.restaurantCount();
+        return restaurants.size();
     }
 
     /**
@@ -113,7 +113,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected void publishResults(CharSequence constraint, FilterResults results) {
             List<Restaurant> restaurantList = (List<Restaurant>)results.values;
 
-            restaurantManager.setRestaurants(restaurantList);
+            RecyclerViewAdapter.this.restaurants = restaurantList;
             myFilter.setConstraint(constraint);
             myFilter.setRestaurantList(restaurantList);
 
