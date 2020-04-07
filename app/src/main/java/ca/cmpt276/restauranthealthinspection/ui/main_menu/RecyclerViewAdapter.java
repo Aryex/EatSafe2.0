@@ -150,6 +150,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if (restaurant.isFavourite()) {
                 parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
             }
+            else {
+                parentLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            }
 
             if (restaurant.hasBeenInspected()) {
                 String latestInspectionDate = restaurant.getLatestInspectionDate(context);
