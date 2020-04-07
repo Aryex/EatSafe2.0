@@ -71,9 +71,9 @@
     <string name="hazard_rating_high">High</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Follow-Up</string>
-    <string name="menu_search">search</string>
-    <string name="apply_search">apply</string>
-    <string name="menu_filter">filter</string>
+    <string name="menu_search">Search</string>
+    <string name="apply_search">Apply</string>
+    <string name="menu_filter">Filter</string>
     <string name="favourite">Favourite restaurant:</string>
     <string name="splash_screen_image" translatable="false">Splash screen image</string>
     <string name="empty_hint" translatable="false">0</string>

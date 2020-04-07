@@ -300,6 +300,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toast.makeText(this, "On Resume!", Toast.LENGTH_SHORT).show();
         makeLocationCallback();
         startLocationUpdates();
+
     }
 
     @Override

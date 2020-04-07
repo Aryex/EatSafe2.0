@@ -50,9 +50,9 @@
     <string name="no">pas des</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Suivi</string>
-    <string name="menu_search">rechercher</string>
-    <string name="apply_search">appliquer</string>
-    <string name="menu_filter">filtrer</string>
+    <string name="menu_search">Rechercher</string>
+    <string name="apply_search">Appliquer</string>
+    <string name="menu_filter">Filtrer</string>
     <string name="favourite">Restaurant préféré:</string>
     <string name="hazard_desc">Risque</string>
     <string name="show_only_favorites">Afficher seulement les favoris</string>
