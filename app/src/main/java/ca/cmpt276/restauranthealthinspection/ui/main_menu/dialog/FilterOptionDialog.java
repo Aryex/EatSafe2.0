@@ -32,6 +32,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FilterOptionDialog extends DialogFragment {
 
+    public static final String FAVORITE_FLAG = "Favorite Flag";
+
     public interface OptionDialogListener {
         public void onOptionDialogApply();
         public void onOptionDialogCancel();
@@ -95,6 +97,7 @@ public class FilterOptionDialog extends DialogFragment {
                         setHazardLevelPref(hazardLevel);
                         setVioNumPref(Integer.parseInt(vioNumString));
                         setNamePref(searchName);
+                        setFavoritePref(keepFavorite);
 
                         recyclerViewAdapter.getFilter().filter(constraints);
 
@@ -121,6 +124,7 @@ public class FilterOptionDialog extends DialogFragment {
                         setHazardLevelPref(hazardLevel);
                         setVioNumPref(Integer.parseInt(vioNumString));
                         setNamePref(searchName);
+                        setFavoritePref(false);
 
                         recyclerViewAdapter.getFilter().filter(constraints);
                         recyclerViewAdapter.notifyDataSetChanged();
@@ -272,5 +276,17 @@ public class FilterOptionDialog extends DialogFragment {
         SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
         int defaultVal = 0;
         return pref.getInt(CRIT_VIO_NUM, defaultVal);
+    }
+
+    public void setFavoritePref(boolean flag) {
+        SharedPreferences pref = getContext().getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(FAVORITE_FLAG, flag);
+        editor.apply();
+    }
+    public static boolean getFavoritePref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
+        boolean defaultVal = false;
+        return pref.getBoolean(FAVORITE_FLAG, defaultVal);
     }
 }

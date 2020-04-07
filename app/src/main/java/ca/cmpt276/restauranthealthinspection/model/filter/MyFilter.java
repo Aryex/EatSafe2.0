@@ -10,6 +10,7 @@ import java.util.List;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 
 /**
  * Singleton class for storing filtered results after searching
@@ -90,6 +91,7 @@ public class MyFilter {
         sortByRestaurantName();
         sortByHazardLevel();
         sortByCritVio();
+        sortByFavorite();
     }
 
     private void sortByRestaurantName() {
@@ -127,6 +129,19 @@ public class MyFilter {
 
             for (Restaurant restaurant: oldList) {
                 if (restaurant.getCritVioLastYear() >= critVioNum) {
+                    filteredList.add(restaurant);
+                }
+            }
+        }
+    }
+
+    private void sortByFavorite() {
+        if (FilterOptionDialog.getFavoritePref(context)) {
+            List<Restaurant> oldList = filteredList;
+            filteredList = new ArrayList<>();
+
+            for (Restaurant restaurant: oldList) {
+                if (restaurant.isFavourite()) {
                     filteredList.add(restaurant);
                 }
             }
