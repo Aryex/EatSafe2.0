@@ -60,4 +60,15 @@
     <string name="search_options">Options de recherche</string>
     <string name="server_timed_out">Le serveur est en panne de temps</string>
     <string name="pizza">pizza</string>
+    <string name="less_than">Moins de</string>
+    <string name="greater_than">Plus de</string>
+    <string-array name="hazard_levels_array">
+        <item>@string/hazard_rating_low</item>
+        <item>@string/hazard_rating_medium</item>
+        <item>@string/hazard_rating_high</item>
+    </string-array>
+    <string-array name="inequality_array">
+        <item>@string/less_than</item>
+        <item>@string/greater_than</item>
+    </string-array>
 </resources>
