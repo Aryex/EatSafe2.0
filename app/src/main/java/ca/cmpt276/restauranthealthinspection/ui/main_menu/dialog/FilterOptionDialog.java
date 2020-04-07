@@ -115,6 +115,16 @@ public class FilterOptionDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d(TAG, "onClick: Clear All");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
+
+                        String constraints = "" + "-" + "" + "-" + "0";
+
+                        setHazardLevelPref(hazardLevel);
+                        setVioNumPref(Integer.parseInt(vioNumString));
+                        setNamePref(searchName);
+
+                        recyclerViewAdapter.getFilter().filter(constraints);
+                        recyclerViewAdapter.notifyDataSetChanged();
+
                         optionDialogListener.onOptionDialogClearAll();
                         dismiss();
                     }
@@ -124,6 +134,7 @@ public class FilterOptionDialog extends DialogFragment {
 
     private void createInputs() {
 
+        // Inequality spinner for number of critical violations
         Spinner spinnerInequality = view.findViewById(R.id.inequality_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.inequality_array, R.layout.spinner_item);
@@ -145,11 +156,13 @@ public class FilterOptionDialog extends DialogFragment {
         getCritVioOption();
         getSearchName();
 
+        // Hazard spinner
         Spinner spinnerHazard = view.findViewById(R.id.hazard_spinner);
         adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.hazard_levels_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerHazard.setAdapter(adapter);
+        spinnerHazard.setSelection(getSpinnerPosition());
         spinnerHazard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -162,6 +175,7 @@ public class FilterOptionDialog extends DialogFragment {
             }
         });
 
+        // Favorite checkbox
         CheckBox favoriteCheckBox = view.findViewById(R.id.show_favorite_check_box);
         favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -169,6 +183,19 @@ public class FilterOptionDialog extends DialogFragment {
                 keepFavorite = isChecked;
             }
         });
+    }
+
+    private int getSpinnerPosition() {
+        String savedLevel = getHazardLevelPref(view.getContext());
+        if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_low))) {
+            return 0;
+        } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_medium))) {
+            return 1;
+        } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_high))) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 
     private void getCritVioOption() {
@@ -185,7 +212,7 @@ public class FilterOptionDialog extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 vioNumString = editText.getText().toString();
-                if (vioNumString == "") {
+                if (vioNumString.equals("")) {
                     vioNumString = "0";
                 }
             }

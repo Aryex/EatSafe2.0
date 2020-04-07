@@ -97,8 +97,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="@string/name"
+            android:inputType="textPersonName" />
 
     </LinearLayout>
 

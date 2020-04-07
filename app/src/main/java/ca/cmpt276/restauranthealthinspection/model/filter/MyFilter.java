@@ -108,7 +108,7 @@ public class MyFilter {
     }
 
     private void sortByHazardLevel() {
-        if (hazardLevel != null && hazardLevel.length() != 0) {
+        if (hazardLevel != null && hazardLevel.length() != 0 && !hazardLevel.equals("All")) {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
 
