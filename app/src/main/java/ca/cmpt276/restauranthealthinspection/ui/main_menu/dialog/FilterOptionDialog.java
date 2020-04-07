@@ -105,11 +105,7 @@ public class FilterOptionDialog extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String value = spinnerInequality.getSelectedItem().toString();
-                if(value.toLowerCase().equals("less than")){
-                    isLessThen = true;
-                }else{
-                    isLessThen = false;
-                }
+                isLessThen = value.equals(getString(R.string.less_than));
             }
 
             @Override
@@ -118,7 +114,7 @@ public class FilterOptionDialog extends DialogFragment {
             }
         });
 
-        Spinner spinnerHazard = (Spinner) view.findViewById(R.id.hazard_spinner);
+        Spinner spinnerHazard = view.findViewById(R.id.hazard_spinner);
         adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.hazard_levels_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
