@@ -69,6 +69,7 @@
     <string name="hazard_rating_low">Low</string>
     <string name="hazard_rating_medium">Medium</string>
     <string name="hazard_rating_high">High</string>
+    <string name="hazard_rating_all">All</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Follow-Up</string>
     <string name="menu_search">Search</string>
@@ -100,5 +101,4 @@
         <item>@string/greater_than</item>
     </string-array>
     <string name="crit_vio_desc"><![CDATA[Total # of critical violations within the last year >=]]></string>
-    <string name="hazard_rating_all">All</string>
 </resources>

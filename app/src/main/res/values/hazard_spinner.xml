@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="hazard_levels_array">
-        <item>Low</item>
-        <item>Medium</item>
-        <item>High</item>
-        <item>All</item>
-    </string-array>
-</resources>

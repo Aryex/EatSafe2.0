@@ -155,7 +155,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
 
     private void getSearchName() {
         searchName = "";
-        EditText editText = view.findViewById(R.id.editText);
+        EditText editText = view.findViewById(R.id.nameEditText);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

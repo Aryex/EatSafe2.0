@@ -47,6 +47,7 @@
     <string name="hazard_rating_low">Faible</string>
     <string name="hazard_rating_medium">Moyen</string>
     <string name="hazard_rating_high">Élevé</string>
+    <string name="hazard_rating_all">Tout</string>
     <string name="no">pas des</string>
     <string name="routine_inspection">Routine</string>
     <string name="follow_up_inspection">Suivi</string>
@@ -66,6 +67,7 @@
         <item>@string/hazard_rating_low</item>
         <item>@string/hazard_rating_medium</item>
         <item>@string/hazard_rating_high</item>
+        <item>@string/hazard_rating_all</item>
     </string-array>
     <string-array name="inequality_array">
         <item>@string/less_than</item>

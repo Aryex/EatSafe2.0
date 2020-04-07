@@ -126,7 +126,7 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
         }
         if (item.getItemId() == R.id.menu_filter) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FilterOptionDialog filterOptionDialog = new FilterOptionDialog();
+            FilterOptionDialog filterOptionDialog = new FilterOptionDialog(recyclerViewAdapter);
             filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);
             return true;
         }

@@ -107,12 +107,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         protected void publishResults(CharSequence constraints, FilterResults results) {
-            String[] filterValues = constraints.toString().split("-", 3);
-            myFilter.setConstraint(filterValues[0]);
-            myFilter.setHazardLevel(filterValues[1]);
-            int myNumber = Integer.parseInt(filterValues[2]);
-            myFilter.setCritVioNum(myNumber);
-
             restaurantManager.setRestaurants(myFilter.getFilteredList());
             notifyDataSetChanged();
         }
