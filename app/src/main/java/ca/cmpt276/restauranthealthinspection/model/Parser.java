@@ -143,8 +143,7 @@ class Parser {
     // Parses the violations from data and create a violation object
     private static Violation parseVioChunk(String vioChunk) {
         String[] dataCols = vioChunk.split(",");
-        Violation vio = new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
-        return vio;
+        return new Violation(Integer.parseInt(dataCols[0]), dataCols[1], dataCols[2], dataCols[3]);
     }
 
     // Converts the date string into a calendar object
