@@ -35,7 +35,7 @@ public class RestaurantDetails extends AppCompatActivity {
     public static final String INTENT_TAG_TRACKING_ID = "tracking ID";
     private String trackingID;
     private int index;
-    private RestaurantManager manager = RestaurantManager.getInstance(this);
+    private RestaurantManager manager;
     private List<Inspection> inspectionList;
 
     public static Intent makeLaunchIntent(Context c, String trackingID) {
@@ -50,6 +50,8 @@ public class RestaurantDetails extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_details);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        manager = RestaurantManager.getInstance(this);
 
         ActionBar ab = getSupportActionBar();
         // Enable the Up button

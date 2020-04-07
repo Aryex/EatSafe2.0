@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,10 +26,10 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> {
 
     private Context context;
-    private RestaurantManager restaurantManager;
+    private List<Restaurant> restaurants;
 
-    RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
-        this.restaurantManager = restaurantManager;
+    public RecyclerViewAdapter(Context context, List<Restaurant> restaurants) {
+        this.restaurants = restaurants;
         this.context = context;
     }
 
@@ -42,7 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantCardViewHolder holder, int position) {
-        Restaurant restaurant = restaurantManager.get(position);
+        Restaurant restaurant = restaurants.get(position);
         holder.setupCardView(restaurant);
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return restaurantManager.restaurantCount();
+        return restaurants.size();
     }
 
     /**

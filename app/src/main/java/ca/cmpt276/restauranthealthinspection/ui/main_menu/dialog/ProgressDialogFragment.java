@@ -7,14 +7,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.fragment.app.DialogFragment;
 
+import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
+import ca.cmpt276.restauranthealthinspection.model.Restaurant;
+import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.model.updater.FileUpdater;
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
@@ -82,14 +88,54 @@ public class ProgressDialogFragment extends DialogFragment {
 
                     //signal the FileUpdater that the download is complete, and change to Map activity
                     if (progressBar.getProgress() == 100) {
-                        FileUpdater.completeDownload(getContext());
-                        getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
-                        Intent i = MapActivity.makeLaunchIntent(getContext());
-                        startActivity(i);
+
+//                        FileUpdater.completeDownload(getContext());
+//                        getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
+//                        Intent i = MapActivity.makeLaunchIntent(getContext());
+//                        startActivity(i);
+
+                        List<Restaurant> updatedRestaurants = getFavourites();
+
+                        if (!updatedRestaurants.isEmpty()) {
+                            getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FavouriteNotificationFragment favouriteNotificationFragment = new FavouriteNotificationFragment(updatedRestaurants);
+                            favouriteNotificationFragment.show(fragmentManager, FavouriteNotificationFragment.TAG);
+                        }
+                        else {
+                            getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
+                            Intent i = MapActivity.makeLaunchIntent(getContext());
+                            startActivity(i);
+                        }
                     }
                 }
             }
         });
+    }
+
+    private List<Restaurant> getFavourites() {
+
+        RestaurantManager oldManager = RestaurantManager.getInstance(getActivity());
+        List<Restaurant> favourites = new ArrayList<>(oldManager.getFavourites());
+        FileUpdater.completeDownload(getActivity());
+
+        RestaurantManager.invalidate(getActivity());
+        RestaurantManager updatedManager = RestaurantManager.getInstance(getActivity());
+        List<Restaurant> newRestaurants = updatedManager.getRestaurants();
+        List<Restaurant> updatedFavourites = new ArrayList<>();
+
+        for (Restaurant currentFavourite : favourites) {
+            for (Restaurant restaurant : newRestaurants) {
+
+                if (restaurant.getResTrackingNumber().equals(currentFavourite.getResTrackingNumber())
+                && currentFavourite.getInspections().size() != restaurant.getInspections().size()) {
+                        updatedFavourites.add(restaurant);
+
+                }
+            }
+        }
+
+        return updatedFavourites;
     }
 
     public int getProgress() {
