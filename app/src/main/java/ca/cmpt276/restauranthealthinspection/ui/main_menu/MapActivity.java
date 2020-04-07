@@ -326,7 +326,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         clusterManager.getMarkerCollection().setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) marker -> {
-            String trackingID = (String) clickedClusterItem.getSnippet();
+            String trackingID = clickedClusterItem.getSnippet();
             Intent startIntent = RestaurantDetails.makeLaunchIntent(MapActivity.this, trackingID);
             startActivity(startIntent);
         });
@@ -660,7 +660,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         RestaurantManager searchEngine = RestaurantManager.getInstance(this);
         if (searchEngine.hasQuery) {
-            ;//populate map based on serach engine
+            //populate map based on search engine
         }
 
         return true;
