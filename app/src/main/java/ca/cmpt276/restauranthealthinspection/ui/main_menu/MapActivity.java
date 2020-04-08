@@ -505,7 +505,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onOptionDialogApply() {
+    public void onOptionDialogApply(String constraint) {
         Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
         if(myClusterItemList.isEmpty()){
             List<Restaurant> restaurantsList = restaurantManager.getRestaurants();
@@ -525,7 +525,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onOptionDialogClearAll() {
+    public void onOptionDialogClearAll(String constraint) {
         Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
         //TODO: update list pls
 
