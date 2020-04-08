@@ -308,6 +308,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toast.makeText(this, "On Resume!", Toast.LENGTH_SHORT).show();
         makeLocationCallback();
         startLocationUpdates();
+
+        if(clusterManager != null){
+            updateMapClusters();
+        }
+
+    }
+
+    private void updateMapClusters() {
+        clusterManager.clearItems();
+        myClusterItemList.clear();
+        //refresh
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+
+        myFilter.performSorting();
+        List<Restaurant> restaurantsList = myFilter.getFilteredList();
+        setupClusterMarkers(restaurantsList);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
     @Override
@@ -515,16 +533,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onOptionDialogApply() {
         Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
-        clusterManager.clearItems();
-        myClusterItemList.clear();
-        //refresh
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
-
-        myFilter.performSorting();
-        List<Restaurant> restaurantsList = myFilter.getFilteredList();
-        setupClusterMarkers(restaurantsList);
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+        updateMapClusters();
     }
 
     @Override
@@ -537,16 +546,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onOptionDialogClearAll() {
         Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
-        clusterManager.clearItems();
-        myClusterItemList.clear();
-        //refresh
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
-
-        myFilter.performSorting();
-        List<Restaurant> restaurantsList = myFilter.getFilteredList();
-        setupClusterMarkers(restaurantsList);
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+        updateMapClusters();
     }
 
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
