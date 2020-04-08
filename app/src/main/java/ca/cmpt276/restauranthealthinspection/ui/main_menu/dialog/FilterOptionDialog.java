@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -44,10 +45,11 @@ public class FilterOptionDialog extends DialogFragment {
     public static final String TAG = "Option Dialog";
 
     private View view;
-    private int critValue = 0;
+    private int vioCritNum = 0;
     private boolean isLessThan = false;
-    private String hazardLevel = "";
+    private String hazardLevel = "All";
     private boolean keepFavorite = false;
+    private boolean clearAll = false;
     private OptionDialogListener optionDialogListener;
     private String vioNumString = "0";
     private String searchName = "";
@@ -92,7 +94,7 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Apply");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        setFilterVariables(searchName, hazardLevel, Integer.parseInt(vioNumString), keepFavorite, isLessThan);
+                        setFilterVariables(searchName, hazardLevel, vioCritNum, keepFavorite, isLessThan, false);
 
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
@@ -118,8 +120,7 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Clear All");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        setFilterVariables("", "All", 0, false, false);
-
+                        setFilterVariables("", "All", 0, false, false, true);
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
                             recyclerViewAdapter.getFilter().filter("");
@@ -132,12 +133,13 @@ public class FilterOptionDialog extends DialogFragment {
                 .create();
     }
 
-    private void setFilterVariables(String searchName, String hazardLevel, int vioNum, boolean keepFavorite, boolean isLessThan) {
+    private void setFilterVariables(String searchName, String hazardLevel, int vioNum, boolean keepFavorite, boolean isLessThan, boolean clearAll) {
         myFilter.setNamePref(searchName);
         myFilter.setHazardLevelPref(hazardLevel);
         myFilter.setVioNumPref(vioNum);
         myFilter.setFavoritePref(keepFavorite);
         myFilter.setLessThanPref(isLessThan);
+        myFilter.setClearAllPref(clearAll);
     }
 
     private void createInputs() {
@@ -148,7 +150,7 @@ public class FilterOptionDialog extends DialogFragment {
                 R.array.inequality_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerInequality.setAdapter(adapter);
-        spinnerInequality.setSelection(getInequalitySpinnerPosition());
+        spinnerInequality.setSelection(1);
         spinnerInequality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -171,8 +173,7 @@ public class FilterOptionDialog extends DialogFragment {
                 R.array.hazard_levels_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerHazard.setAdapter(adapter);
-        spinnerHazard.setSelection(getHazardSpinnerPosition());
-        hazardLevel = MyFilter.getHazardLevelPref(view.getContext());
+        spinnerHazard.setSelection(3);
         spinnerHazard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -187,7 +188,6 @@ public class FilterOptionDialog extends DialogFragment {
 
         // Favorite checkbox
         CheckBox favoriteCheckBox = view.findViewById(R.id.show_favorite_check_box);
-        favoriteCheckBox.setChecked(MyFilter.getFavoritePref(view.getContext()));
         favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -196,32 +196,9 @@ public class FilterOptionDialog extends DialogFragment {
         });
     }
 
-    private int getInequalitySpinnerPosition() {
-        boolean flag = MyFilter.getLessThanPref(view.getContext());
-        if (flag) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    private int getHazardSpinnerPosition() {
-        String savedLevel = MyFilter.getHazardLevelPref(view.getContext());
-        if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_low))) {
-            return 0;
-        } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_medium))) {
-            return 1;
-        } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_high))) {
-            return 2;
-        } else {
-            return 3;
-        }
-    }
-
     private void getCritVioOption() {
         EditText editText = view.findViewById(R.id.crit_vio_editText);
-        String value = Integer.toString(MyFilter.getVioNumPref(view.getContext()));
-        editText.setText(value);
+        editText.setText("0");
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -235,7 +212,9 @@ public class FilterOptionDialog extends DialogFragment {
             public void afterTextChanged(Editable s) {
                 vioNumString = editText.getText().toString();
                 if (vioNumString.equals("")) {
-                    vioNumString = "0";
+                    vioCritNum = 0;
+                } else {
+                    vioCritNum = Integer.parseInt(vioNumString);
                 }
             }
         });
@@ -243,7 +222,6 @@ public class FilterOptionDialog extends DialogFragment {
 
     private void getSearchName() {
         EditText editText = view.findViewById(R.id.nameEditText);
-        editText.setText(MyFilter.getNamePref(view.getContext()));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -23,7 +23,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class MyFilter {
 
-    public static final String LESS_THAN_FLAG = "Less-than Flag";
+
     private List<Restaurant> restaurantList;
     private List<Restaurant> filteredList;
     private Context context;
@@ -32,6 +32,8 @@ public class MyFilter {
     private static final String HAZARD_LEVEL = "Hazard level";
     private static final String CRIT_VIO_NUM = "Number of critical violations";
     private static final String FAVOURITE_FLAG = "Favourite Flag";
+    public static final String LESS_THAN_FLAG = "Less-than Flag";
+    public static final String CLEAR_ALL = "Clear all";
 
     /*
      * Singleton support
@@ -106,20 +108,22 @@ public class MyFilter {
     }
 
     private void sortByCritVio() {
-        int critVioNum = getVioNumPref(context);
+        if (!getClearAllPref(context)) {
+            int critVioNum = getVioNumPref(context);
 
-        List<Restaurant> oldList = filteredList;
-        filteredList = new ArrayList<>();
-        if (getLessThanPref(context)) {
-            for (Restaurant restaurant : oldList) {
-                if (restaurant.getCritVioLastYear() <= critVioNum) {
-                    filteredList.add(restaurant);
+            List<Restaurant> oldList = filteredList;
+            filteredList = new ArrayList<>();
+            if (getLessThanPref(context)) {
+                for (Restaurant restaurant : oldList) {
+                    if (restaurant.getCritVioLastYear() <= critVioNum) {
+                        filteredList.add(restaurant);
+                    }
                 }
-            }
-        } else {
-            for (Restaurant restaurant : oldList) {
-                if (restaurant.getCritVioLastYear() >= critVioNum) {
-                    filteredList.add(restaurant);
+            } else {
+                for (Restaurant restaurant : oldList) {
+                    if (restaurant.getCritVioLastYear() >= critVioNum) {
+                        filteredList.add(restaurant);
+                    }
                 }
             }
         }
@@ -194,5 +198,16 @@ public class MyFilter {
     public static boolean getLessThanPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(LESS_THAN_FLAG, MODE_PRIVATE);
         return pref.getBoolean(LESS_THAN_FLAG, false);
+    }
+
+    public void setClearAllPref(boolean flag) {
+        SharedPreferences pref = context.getSharedPreferences(CLEAR_ALL, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(CLEAR_ALL, flag);
+        editor.apply();
+    }
+    public static boolean getClearAllPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(CLEAR_ALL, MODE_PRIVATE);
+        return pref.getBoolean(CLEAR_ALL, false);
     }
 }
