@@ -246,7 +246,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //myFilter.resetAllFilterOptions("", "All", 0, false, false, true);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        setupDebug(debugOn);
+        setupDebug(false);
         setupLocationRequest();
 
         getLocationPermission();
@@ -283,6 +283,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             button.setVisibility(View.GONE);
             floatingActionButton.setVisibility(View.GONE);
             debugTextView.setVisibility(View.GONE);
+            textViewDebugHazardLevel.setVisibility(View.GONE);
+            textViewDebugCritOption.setVisibility(View.GONE);
+            textViewDebugFavorite.setVisibility(View.GONE);
             return;
         }
 
@@ -309,7 +312,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         makeLocationCallback();
         startLocationUpdates();
 
-        if(clusterManager != null){
+        if (clusterManager != null) {
             updateMapClusters();
         }
 
