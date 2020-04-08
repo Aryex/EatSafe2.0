@@ -3,24 +3,45 @@
     <string name="address">Adresse : %1$s</string>
     <string name="api_error">Impossible de se connecter à l\'API</string>
     <string name="app_name">EatSafe</string>
+    <string name="apply_search">Appliquer</string>
     <string name="checking_for_updates">Vérifier les mises à jour…</string>
+    <string name="clear_all">Effacer tout</string>
     <string name="code_100">Problèmes de fonctionnement et de permis des restaurants</string>
     <string name="code_200">Problèmes de sécurité alimentaire</string>
     <string name="code_300">Problèmes de propreté des équipements</string>
     <string name="code_400">Problèmes de propreté des employés</string>
     <string name="code_500">Formation inadéquate des employés</string>
     <string name="crit_issues">Problèmes critiques détectés: %1$d</string>
+    <string name="crit_vio_desc"><![CDATA[Nombre total de violations critiques au cours de la dernière année >=]]></string>
     <string name="critical_issues_found">Problèmes critiques détectés: %1$d</string>
     <string name="date">Date de l\'inspection : %1$s</string>
     <string name="dialog_button_cancel">Annuler</string>
     <string name="dialog_button_update">Mettre à jour</string>
+    <string name="favourite">Restaurant préféré:</string>
+    <string name="follow_up_inspection">Suivi</string>
     <string name="found">Trouvé\u0020</string>
     <string name="found_num_issues">"Trouvé %s problèmes "</string>
+    <string name="greater_than">Plus de</string>
     <string name="hazardLevelDisplay">Niveau de risque : %1$s</string>
+    <string name="hazard_desc">Risque</string>
     <string name="hazard_level">Niveau de risque : %1$s</string>
     <string name="hazard_level_high">Risque élevé</string>
     <string name="hazard_level_low">Faible risque</string>
     <string name="hazard_level_medium">Risque moyen</string>
+    <string-array name="hazard_levels_array">
+        <item>@string/hazard_rating_low</item>
+        <item>@string/hazard_rating_medium</item>
+        <item>@string/hazard_rating_high</item>
+        <item>@string/hazard_rating_all</item>
+    </string-array>
+    <string name="hazard_rating_all">Tout</string>
+    <string name="hazard_rating_high">Élevé</string>
+    <string name="hazard_rating_low">Faible</string>
+    <string name="hazard_rating_medium">Moyen</string>
+    <string-array name="inequality_array">
+        <item>@string/less_than</item>
+        <item>@string/greater_than</item>
+    </string-array>
     <string name="inspected_on">"Inspecté: "</string>
     <string name="inspectionDateDisplay">Date d\'inspection: %1$s</string>
     <string name="inspectionTypeDisplay">Type d\'inspection: %1$s</string>
@@ -28,51 +49,30 @@
     <string name="issues">\u0020problèmes</string>
     <string name="last_inspected_on">Dernière inspection en %s</string>
     <string name="latitude">Latitude:\n%1$s</string>
+    <string name="less_than">Moins de</string>
     <string name="longitude">Longitude:\n%1$s</string>
+    <string name="menu_filter">Filtrer</string>
+    <string name="menu_search">Rechercher</string>
     <string name="name">Nom</string>
+    <string name="new_inspections_for_your_favourite_restaurants">Les nouvelles inspections pour vos restaurants préférés:</string>
+    <string name="no">pas des</string>
     <string name="no_inspection">Aucune inspection trouvée</string>
     <string name="no_inspections_found">Aucune inspection trouvée</string>
     <string name="non_crit_issues">Problèmes non critiques détectés: %1$d</string>
     <string name="non_critical_issues_found">Problèmes non critiques détectés: %1$d</string>
+    <string name="pizza">pizza</string>
     <string name="restaurant_days">\u0020jours</string>
     <string name="restaurant_details_title">Informations sur le restaurant</string>
     <string name="return_to_map">Retour à la carte</string>
+    <string name="routine_inspection">Routine</string>
+    <string name="search_options">Options de recherche</string>
+    <string name="server_timed_out">Le serveur est en panne de temps</string>
     <string name="show_list">Afficher tous les restaurants</string>
+    <string name="show_only_favorites">Afficher seulement les favoris</string>
     <string name="string_inspectionHazardLevel">Niveau de risque global: %1$s</string>
     <string name="update_available">Mise à jour disponible</string>
     <string name="update_message">Une version mise à jour des données d\'inspection est disponible. Voulez-vous mettre à jour maintenant?</string>
     <string name="updating">En cours de mise à jour:</string>
     <string name="violation_detail">%1$d - %2$s</string>
     <string name="welcome">Bienvenue chez EatSafe</string>
-    <string name="hazard_rating_low">Faible</string>
-    <string name="hazard_rating_medium">Moyen</string>
-    <string name="hazard_rating_high">Élevé</string>
-    <string name="hazard_rating_all">Tout</string>
-    <string name="no">pas des</string>
-    <string name="routine_inspection">Routine</string>
-    <string name="follow_up_inspection">Suivi</string>
-    <string name="menu_search">Rechercher</string>
-    <string name="apply_search">Appliquer</string>
-    <string name="menu_filter">Filtrer</string>
-    <string name="favourite">Restaurant préféré:</string>
-    <string name="hazard_desc">Risque</string>
-    <string name="show_only_favorites">Afficher seulement les favoris</string>
-    <string name="clear_all">Effacer tout</string>
-    <string name="search_options">Options de recherche</string>
-    <string name="server_timed_out">Le serveur est en panne de temps</string>
-    <string name="pizza">pizza</string>
-    <string name="less_than">Moins de</string>
-    <string name="greater_than">Plus de</string>
-    <string-array name="hazard_levels_array">
-        <item>@string/hazard_rating_low</item>
-        <item>@string/hazard_rating_medium</item>
-        <item>@string/hazard_rating_high</item>
-        <item>@string/hazard_rating_all</item>
-    </string-array>
-    <string-array name="inequality_array">
-        <item>@string/less_than</item>
-        <item>@string/greater_than</item>
-    </string-array>
-    <string name="crit_vio_desc"><![CDATA[Nombre total de violations critiques au cours de la dernière année >=]]></string>
-    <string name="new_inspections_for_your_favourite_restaurants">Les nouvelles inspections pour vos restaurants préférés:</string>
 </resources>
