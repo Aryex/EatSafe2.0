@@ -8,8 +8,10 @@ import android.widget.Filterable;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 
@@ -70,10 +72,16 @@ public class MyFilter {
     }
 
     public void performSorting() {
-        sortByRestaurantName();
-        sortByHazardLevel();
-        sortByCritVio();
-        sortByFavorite();
+        if (getClearAllPref(context)) {
+            filteredList = new ArrayList<>();
+            filteredList.addAll(restaurantList);
+            setClearAllPref(false);
+        } else {
+            sortByRestaurantName();
+            sortByHazardLevel();
+            sortByCritVio();
+            sortByFavorite();
+        }
     }
 
     private void sortByRestaurantName() {
@@ -108,7 +116,7 @@ public class MyFilter {
     }
 
     private void sortByCritVio() {
-        if (!getClearAllPref(context)) {
+        //if (!getClearAllPref(context)) {
             int critVioNum = getVioNumPref(context);
 
             List<Restaurant> oldList = filteredList;
@@ -126,7 +134,7 @@ public class MyFilter {
                     }
                 }
             }
-        }
+        //}
     }
 
     private void sortByFavorite() {
@@ -150,7 +158,7 @@ public class MyFilter {
     }
     public static String getNamePref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
-        String defaultVal = "";
+        String defaultVal = context.getResources().getString(R.string.empty_string);
         return pref.getString(NAME_SEARCH, defaultVal);
     }
 
@@ -209,5 +217,14 @@ public class MyFilter {
     public static boolean getClearAllPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(CLEAR_ALL, MODE_PRIVATE);
         return pref.getBoolean(CLEAR_ALL, false);
+    }
+
+    public void resetAllFilterOptions(String searchName, String hazardLevel, int vioNum, boolean keepFavorite, boolean isLessThan, boolean clearAll) {
+        setNamePref(searchName);
+        setHazardLevelPref(hazardLevel);
+        setVioNumPref(vioNum);
+        setFavoritePref(keepFavorite);
+        setLessThanPref(isLessThan);
+        setClearAllPref(clearAll);
     }
 }

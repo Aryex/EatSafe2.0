@@ -88,8 +88,8 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
 
     @Override
     public void onResume() {
-        setupRecyclerView();
         super.onResume();
+        setupRecyclerView();
     }
 
     //Menu setup
@@ -97,29 +97,6 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_restuarant, menu);
-
-        /*MenuItem searchItem = menu.findItem(R.id.menu_action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                recyclerViewAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-        RestaurantManager searchEngine = RestaurantManager.getInstance(this);
-        if(searchEngine.hasQuery){
-            searchItem.expandActionView();
-            searchView.setQuery(getString(R.string.pizza),true);
-        }*/
         return true;
     }
 
@@ -133,9 +110,6 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
             FragmentManager fragmentManager = getSupportFragmentManager();
             FilterOptionDialog filterOptionDialog = new FilterOptionDialog(recyclerViewAdapter);
             filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);
-            return true;
-        }
-        if (item.getItemId() == R.id.menu_action_search) {
             return true;
         }
         return super.onOptionsItemSelected(item);

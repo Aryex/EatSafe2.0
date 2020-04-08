@@ -153,6 +153,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM_HIGH));
             createRequestedMarker(data);
         } else {
+            myFilter.setClearAllPref(true);
             populateMap();
             setupLocationTracking();
             moveCamera(deviceLocation, DEFAULT_ZOOM_HIGH);
@@ -242,6 +243,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         restaurantManager = RestaurantManager.getInstance(this);
         myFilter = MyFilter.getInstance(this);
+        //myFilter.resetAllFilterOptions("", "All", 0, false, false, true);
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         setupDebug(debugOn);
         setupLocationRequest();
@@ -474,10 +477,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(TAG, "createMap: creating map");
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(MapActivity.this);
-        /*myFilter.setNamePref("");
-        myFilter.setCritVioNum(0);
-        myFilter.setHazardLevel("All");
-        myFilter.setFavoritePref(false);*/
     }
 
     private void setupClusterMarkers(Iterable<Restaurant> restaurants) {
@@ -526,8 +525,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onOptionDialogCancel() {
         Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
-        clusterManager.clearItems();
-        myClusterItemList.clear();
         //refresh
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
@@ -650,33 +647,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-
-        /*MenuItem searchItem = menu.findItem(R.id.menu_action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                debugDisplay(newText);
-                restaurantManager.query = newText;
-                myFilter.setNamePref(newText);
-                populateMap();
-                return false;
-            }
-        });*/
-
-        RestaurantManager searchEngine = RestaurantManager.getInstance(this);
-        if (searchEngine.hasQuery) {
-            //populate map based on search engine
-            //populateMap();
-        }
-
         return true;
     }
 

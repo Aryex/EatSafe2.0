@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,18 +16,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.gms.maps.GoogleMap;
-
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Fragment for a filter dialog
@@ -49,7 +42,6 @@ public class FilterOptionDialog extends DialogFragment {
     private boolean isLessThan = false;
     private String hazardLevel = "All";
     private boolean keepFavorite = false;
-    private boolean clearAll = false;
     private OptionDialogListener optionDialogListener;
     private String vioNumString = "0";
     private String searchName = "";
@@ -94,7 +86,7 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Apply");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        setFilterVariables(searchName, hazardLevel, vioCritNum, keepFavorite, isLessThan, false);
+                        myFilter.resetAllFilterOptions(searchName, hazardLevel, vioCritNum, keepFavorite, isLessThan, false);
 
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
@@ -120,7 +112,7 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Clear All");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        setFilterVariables("", "All", 0, false, false, true);
+                        myFilter.resetAllFilterOptions("", "All", 0, false, false, true);
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
                             recyclerViewAdapter.getFilter().filter("");
@@ -131,15 +123,6 @@ public class FilterOptionDialog extends DialogFragment {
                     }
                 })
                 .create();
-    }
-
-    private void setFilterVariables(String searchName, String hazardLevel, int vioNum, boolean keepFavorite, boolean isLessThan, boolean clearAll) {
-        myFilter.setNamePref(searchName);
-        myFilter.setHazardLevelPref(hazardLevel);
-        myFilter.setVioNumPref(vioNum);
-        myFilter.setFavoritePref(keepFavorite);
-        myFilter.setLessThanPref(isLessThan);
-        myFilter.setClearAllPref(clearAll);
     }
 
     private void createInputs() {
