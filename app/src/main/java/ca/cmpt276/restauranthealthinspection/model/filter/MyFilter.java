@@ -103,7 +103,8 @@ public class MyFilter {
     private void sortByHazardLevel() {
         String hazardLevel = getHazardLevelPref(context);
 
-        if (hazardLevel != null && hazardLevel.length() != 0 && !hazardLevel.equals("All")) {
+        if (hazardLevel != null && hazardLevel.length() != 0
+                && !hazardLevel.equals(context.getResources().getString(R.string.hazard_rating_all))) {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
 
@@ -170,7 +171,7 @@ public class MyFilter {
     }
     public static String getHazardLevelPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
-        String defaultVal = "All";
+        String defaultVal = context.getResources().getString(R.string.hazard_rating_all);
         return pref.getString(HAZARD_LEVEL, defaultVal);
     }
 

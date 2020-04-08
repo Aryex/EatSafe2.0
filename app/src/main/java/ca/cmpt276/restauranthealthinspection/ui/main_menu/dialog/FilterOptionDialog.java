@@ -90,7 +90,7 @@ public class FilterOptionDialog extends DialogFragment {
 
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
-                            recyclerViewAdapter.getFilter().filter("");
+                            recyclerViewAdapter.getFilter().filter((view.getContext().getResources().getString(R.string.empty_string)));
                         }
 
                         optionDialogListener.onOptionDialogApply();
@@ -112,10 +112,12 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Clear All");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        myFilter.resetAllFilterOptions("", "All", 0, false, false, true);
+                        myFilter.resetAllFilterOptions((view.getContext().getResources().getString(R.string.empty_string)),
+                                (view.getContext().getResources().getString(R.string.hazard_rating_all)),
+                                0, false, false, true);
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
-                            recyclerViewAdapter.getFilter().filter("");
+                            recyclerViewAdapter.getFilter().filter((view.getContext().getResources().getString(R.string.empty_string)));
                         }
 
                         optionDialogListener.onOptionDialogClearAll();
@@ -194,7 +196,7 @@ public class FilterOptionDialog extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 vioNumString = editText.getText().toString();
-                if (vioNumString.equals("")) {
+                if (vioNumString.equals(view.getContext().getResources().getString(R.string.empty_string))) {
                     vioCritNum = 0;
                 } else {
                     vioCritNum = Integer.parseInt(vioNumString);

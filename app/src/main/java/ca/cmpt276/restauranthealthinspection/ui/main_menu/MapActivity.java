@@ -519,7 +519,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         myClusterItemList.clear();
         //refresh
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
-        populateMap();
+
+        myFilter.performSorting();
+        List<Restaurant> restaurantsList = myFilter.getFilteredList();
+        setupClusterMarkers(restaurantsList);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
     @Override
@@ -536,7 +541,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         myClusterItemList.clear();
         //refresh
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
-        populateMap();
+
+        myFilter.performSorting();
+        List<Restaurant> restaurantsList = myFilter.getFilteredList();
+        setupClusterMarkers(restaurantsList);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
