@@ -51,7 +51,7 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
 
     private void setupRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewMain);
-        recyclerViewAdapter = new RecyclerViewAdapter(this, restaurantManager);
+        recyclerViewAdapter = new RecyclerViewAdapter(this, restaurantManager.getRestaurants());
 
         // restore previous filtered results
         recyclerViewAdapter.getFilter().filter("");
