@@ -33,12 +33,11 @@ import static android.content.Context.MODE_PRIVATE;
 public class FilterOptionDialog extends DialogFragment {
 
     public static final String FAVORITE_FLAG = "Favorite Flag";
-    private MyFilter myFilter;
 
     public interface OptionDialogListener {
-        public void onOptionDialogApply(String constraint);
+        public void onOptionDialogApply();
         public void onOptionDialogCancel();
-        public void onOptionDialogClearAll(String constraint);
+        public void onOptionDialogClearAll();
     }
 
     public static final String TAG = "Option Dialog";
@@ -82,7 +81,6 @@ public class FilterOptionDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         view = LayoutInflater.from(getActivity()).inflate(R.layout.filter_fragment, null);
-        myFilter = MyFilter.getInstance(view.getContext());
         createInputs();
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
@@ -92,6 +90,7 @@ public class FilterOptionDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Log.d(TAG, "onClick: Apply");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
+                        optionDialogListener.onOptionDialogApply();
 
                         String constraints = searchName + "-" + hazardLevel + "-" + vioNumString;
 
@@ -100,15 +99,7 @@ public class FilterOptionDialog extends DialogFragment {
                         setNamePref(searchName);
                         setFavoritePref(keepFavorite);
 
-                        String[] filterValues = constraints.toString().split("-", 3);
-                        myFilter.setConstraint(filterValues[0]);
-                        myFilter.setHazardLevel(filterValues[1]);
-                        int myNumber = Integer.parseInt(filterValues[2]);
-                        myFilter.setCritVioNum(myNumber);
-
-                        myFilter.performSorting();
-
-                        optionDialogListener.onOptionDialogApply(constraints);
+                        recyclerViewAdapter.getFilter().filter(constraints);
 
                         dismiss();
                     }
@@ -135,15 +126,10 @@ public class FilterOptionDialog extends DialogFragment {
                         setNamePref(searchName);
                         setFavoritePref(false);
 
-                        String[] filterValues = constraints.toString().split("-", 3);
-                        myFilter.setConstraint(filterValues[0]);
-                        myFilter.setHazardLevel(filterValues[1]);
-                        int myNumber = Integer.parseInt(filterValues[2]);
-                        myFilter.setCritVioNum(myNumber);
+                        recyclerViewAdapter.getFilter().filter(constraints);
+                        recyclerViewAdapter.notifyDataSetChanged();
 
-                        myFilter.performSorting();
-
-                        optionDialogListener.onOptionDialogClearAll(constraints);
+                        optionDialogListener.onOptionDialogClearAll();
                         dismiss();
                     }
                 })

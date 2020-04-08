@@ -56,10 +56,8 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
     }
 
     @Override
-    public void onOptionDialogApply(String constraints) {
+    public void onOptionDialogApply() {
         Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
-        recyclerViewAdapter.getFilter().filter(constraints);
-        recyclerViewAdapter.notifyDataSetChanged();
         //TODO: update list pls
     }
 
@@ -71,11 +69,9 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
     }
 
     @Override
-    public void onOptionDialogClearAll(String constraints) {
+    public void onOptionDialogClearAll() {
         Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
         //TODO: update list pls
-        recyclerViewAdapter.getFilter().filter(constraints);
-        recyclerViewAdapter.notifyDataSetChanged();
 
     }
 

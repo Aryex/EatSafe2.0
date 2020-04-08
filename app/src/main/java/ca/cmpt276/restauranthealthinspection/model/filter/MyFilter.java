@@ -34,7 +34,7 @@ public class MyFilter {
 
     public static MyFilter getInstance(Context context) {
         if (instance == null) {
-            instance = new MyFilter(context);
+            return new MyFilter(context);
         }
         return instance;
     }
@@ -42,7 +42,6 @@ public class MyFilter {
     /*
      * Normal code
      */
-
     private MyFilter(Context context) {
         RestaurantManager restaurantManager = RestaurantManager.getInstance(context);
         this.restaurantList = new ArrayList<>(restaurantManager.getRestaurants());
