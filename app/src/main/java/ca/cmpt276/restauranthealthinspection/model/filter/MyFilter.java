@@ -23,6 +23,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class MyFilter {
 
+    public static final String LESS_THAN_FLAG = "Less-than Flag";
     private List<Restaurant> restaurantList;
     private List<Restaurant> filteredList;
     private Context context;
@@ -30,7 +31,7 @@ public class MyFilter {
     private static final String NAME_SEARCH = "Name Search";
     private static final String HAZARD_LEVEL = "Hazard level";
     private static final String CRIT_VIO_NUM = "Number of critical violations";
-    private static final String FAVORITE_FLAG = "Favorite Flag";
+    private static final String FAVOURITE_FLAG = "Favourite Flag";
 
     /*
      * Singleton support
@@ -111,9 +112,17 @@ public class MyFilter {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
 
-            for (Restaurant restaurant: oldList) {
-                if (restaurant.getCritVioLastYear() >= critVioNum) {
-                    filteredList.add(restaurant);
+            if (getLessThanPref(context)) {
+                for (Restaurant restaurant : oldList) {
+                    if (restaurant.getCritVioLastYear() <= critVioNum) {
+                        filteredList.add(restaurant);
+                    }
+                }
+            } else {
+                for (Restaurant restaurant : oldList) {
+                    if (restaurant.getCritVioLastYear() >= critVioNum) {
+                        filteredList.add(restaurant);
+                    }
                 }
             }
         }
@@ -169,14 +178,26 @@ public class MyFilter {
     }
 
     public void setFavoritePref(boolean flag) {
-        SharedPreferences pref = context.getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(FAVOURITE_FLAG, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(FAVORITE_FLAG, flag);
+        editor.putBoolean(FAVOURITE_FLAG, flag);
         editor.apply();
     }
     public static boolean getFavoritePref(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(FAVOURITE_FLAG, MODE_PRIVATE);
         boolean defaultVal = false;
-        return pref.getBoolean(FAVORITE_FLAG, defaultVal);
+        return pref.getBoolean(FAVOURITE_FLAG, defaultVal);
+    }
+
+    public void setLessThanPref(boolean flag) {
+        SharedPreferences pref = context.getSharedPreferences(LESS_THAN_FLAG, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(LESS_THAN_FLAG, flag);
+        editor.apply();
+    }
+    public static boolean getLessThanPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(LESS_THAN_FLAG, MODE_PRIVATE);
+        boolean defaultVal = false;
+        return pref.getBoolean(LESS_THAN_FLAG, defaultVal);
     }
 }
