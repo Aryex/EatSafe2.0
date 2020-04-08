@@ -25,9 +25,6 @@ public class MyFilter {
 
     private List<Restaurant> restaurantList;
     private List<Restaurant> filteredList;
-    private String constraint;
-    private String hazardLevel;
-    private int critVioNum;
     private Context context;
 
     private static final String NAME_SEARCH = "Name Search";
@@ -54,45 +51,19 @@ public class MyFilter {
         RestaurantManager restaurantManager = RestaurantManager.getInstance(context);
         this.restaurantList = new ArrayList<>(restaurantManager.getRestaurants());
         this.filteredList = new ArrayList<>(restaurantManager.getRestaurants());
-        this.constraint = "";
-        this.hazardLevel = "";
-        this.critVioNum = 0;
         this.context = context;
-    }
-
-    public List<Restaurant> getRestaurantList() {
-        return restaurantList;
     }
 
     public List<Restaurant> getFilteredList() {
         return filteredList;
     }
 
-    public String getConstraint() {
-        return constraint;
+    public void setFilteredList(List<Restaurant> restaurantList) {
+        filteredList = restaurantList;
     }
 
-    public String getHazardLevel() {
-        return hazardLevel;
-    }
-
-    public int getCritVioNum() { return critVioNum; }
-
-
-    public void setRestaurantList(List<Restaurant> restaurantList) {
-        this.restaurantList = restaurantList;
-    }
-
-    public void setConstraint(CharSequence constraint) {
-        this.constraint = constraint.toString();
-    }
-
-    public void setHazardLevel(String hazardLevel) {
-        this.hazardLevel = hazardLevel;
-    }
-
-    public void setCritVioNum(int critVioNum) {
-        this.critVioNum = critVioNum;
+    public List<Restaurant> getRestaurantList() {
+        return restaurantList;
     }
 
     public void performSorting() {
@@ -105,10 +76,11 @@ public class MyFilter {
     private void sortByRestaurantName() {
         filteredList = new ArrayList<>();
 
+        String constraint = getNamePref(context);
         if (constraint == null || constraint.length() == 0) {
             filteredList.addAll(restaurantList);
         } else {
-            String filterPattern = constraint.toString().toLowerCase().trim();
+            String filterPattern = constraint.toLowerCase().trim();
             for (Restaurant restaurant: restaurantList) {
                 if (restaurant.getName().toLowerCase().contains(filterPattern)) {
                     filteredList.add(restaurant);
@@ -118,6 +90,8 @@ public class MyFilter {
     }
 
     private void sortByHazardLevel() {
+        String hazardLevel = getHazardLevelPref(context);
+
         if (hazardLevel != null && hazardLevel.length() != 0 && !hazardLevel.equals("All")) {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
@@ -131,6 +105,8 @@ public class MyFilter {
     }
 
     private void sortByCritVio() {
+        int critVioNum = getVioNumPref(context);
+
         if (critVioNum != 0) {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();

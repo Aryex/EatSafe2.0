@@ -93,7 +93,7 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_restuarant, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.menu_action_search);
+        /*MenuItem searchItem = menu.findItem(R.id.menu_action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -114,7 +114,7 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
         if(searchEngine.hasQuery){
             searchItem.expandActionView();
             searchView.setQuery(getString(R.string.pizza),true);
-        }
+        }*/
         return true;
     }
 

@@ -100,7 +100,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     }
 
     private int getSpinnerPosition() {
-        String savedLevel = myFilter.getHazardLevel();
+        String savedLevel = MyFilter.getHazardLevelPref(view.getContext());
         if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_low))) {
             return 0;
         } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_medium))) {
@@ -132,7 +132,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
     }
 
     private void getCritVioOption() {
-        vioNumString = Integer.toString(myFilter.getCritVioNum());
+        vioNumString = Integer.toString(MyFilter.getVioNumPref(view.getContext()));
         EditText editText = view.findViewById(R.id.crit_vio_editText);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
