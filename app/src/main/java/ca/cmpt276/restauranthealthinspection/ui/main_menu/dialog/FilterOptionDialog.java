@@ -130,12 +130,71 @@ public class FilterOptionDialog extends DialogFragment {
     private void createInputs() {
 
         // Inequality spinner for number of critical violations
+        setupViolationSpinner();
+        setupCritVioInput();
+
+        setupSearchName();
+        // Hazard spinner
+        setupHazardSpinner();
+
+        // Favorite checkbox
+        setupFavoriteCheckBox();
+    }
+
+    private void setupFavoriteCheckBox() {
+        CheckBox favoriteCheckBox = view.findViewById(R.id.show_favorite_check_box);
+        favoriteCheckBox.setChecked(MyFilter.getFavoritePref(view.getContext()));
+        favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                keepFavorite = isChecked;
+            }
+        });
+    }
+
+    private void setupHazardSpinner() {
+        ArrayAdapter<CharSequence> adapter;
+        Spinner spinnerHazard = view.findViewById(R.id.hazard_spinner);
+        adapter = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.hazard_levels_array, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerHazard.setAdapter(adapter);
+        spinnerHazard.setSelection(getSavedHazard());
+        spinnerHazard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                hazardLevel = spinnerHazard.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private int getSavedHazard() {
+        String value = MyFilter.getHazardLevelPref(view.getContext());
+        switch (value.toLowerCase()){
+            case "low":
+                return 0;
+            case "medium":
+                return 1;
+            case "high":
+                return 2;
+            default:
+                return 3;
+        }
+    }
+
+    private void setupViolationSpinner() {
         Spinner spinnerInequality = view.findViewById(R.id.inequality_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.inequality_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerInequality.setAdapter(adapter);
-        spinnerInequality.setSelection(1);
+        spinnerInequality.setSelection(getSavedInequality());
+
         spinnerInequality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -148,42 +207,21 @@ public class FilterOptionDialog extends DialogFragment {
 
             }
         });
-
-        getCritVioOption();
-        getSearchName();
-
-        // Hazard spinner
-        Spinner spinnerHazard = view.findViewById(R.id.hazard_spinner);
-        adapter = ArrayAdapter.createFromResource(view.getContext(),
-                R.array.hazard_levels_array, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerHazard.setAdapter(adapter);
-        spinnerHazard.setSelection(3);
-        spinnerHazard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                hazardLevel = spinnerHazard.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        // Favorite checkbox
-        CheckBox favoriteCheckBox = view.findViewById(R.id.show_favorite_check_box);
-        favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                keepFavorite = isChecked;
-            }
-        });
     }
 
-    private void getCritVioOption() {
+    private int getSavedInequality() {
+        boolean lessThanPref = MyFilter.getLessThanPref(view.getContext());
+        if(lessThanPref){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+
+    private void setupCritVioInput() {
         EditText editText = view.findViewById(R.id.crit_vio_editText);
-        editText.setText("0");
+        int value = MyFilter.getVioNumPref(view.getContext());
+        editText.setText(String.valueOf(value));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -205,8 +243,9 @@ public class FilterOptionDialog extends DialogFragment {
         });
     }
 
-    private void getSearchName() {
+    private void setupSearchName() {
         EditText editText = view.findViewById(R.id.nameEditText);
+        editText.setText(MyFilter.getNamePref(view.getContext()));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
