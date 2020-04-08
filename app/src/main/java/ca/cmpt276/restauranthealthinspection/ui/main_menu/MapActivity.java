@@ -519,8 +519,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         clusterManager.clearItems();
         myClusterItemList.clear();
         //refresh
-        populateMap();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+        populateMap();
     }
 
     @Override
@@ -535,7 +535,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onOptionDialogClearAll() {
         Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
-        //TODO: update list pls
+        clusterManager.clearItems();
+        myClusterItemList.clear();
+        //refresh
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
         populateMap();
     }
 
@@ -648,7 +651,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.menu_action_search);
+        /*MenuItem searchItem = menu.findItem(R.id.menu_action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
@@ -666,7 +669,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 populateMap();
                 return false;
             }
-        });
+        });*/
 
         RestaurantManager searchEngine = RestaurantManager.getInstance(this);
         if (searchEngine.hasQuery) {
