@@ -20,8 +20,11 @@ import android.widget.Spinner;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
+import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -32,8 +35,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FilterOptionDialog extends DialogFragment {
 
-    public static final String FAVORITE_FLAG = "Favorite Flag";
-
     public interface OptionDialogListener {
         public void onOptionDialogApply();
         public void onOptionDialogCancel();
@@ -41,9 +42,6 @@ public class FilterOptionDialog extends DialogFragment {
     }
 
     public static final String TAG = "Option Dialog";
-    public static final String NAME_SEARCH = "Name Search";
-    public static final String HAZARD_LEVEL = "Hazard level";
-    public static final String CRIT_VIO_NUM = "Number of critical violations";
 
     private View view;
     private int critValue = 0;
@@ -53,7 +51,7 @@ public class FilterOptionDialog extends DialogFragment {
     private OptionDialogListener optionDialogListener;
     private String vioNumString = "0";
     private String searchName;
-
+    private MyFilter myFilter;
     private RecyclerViewAdapter recyclerViewAdapter;
 
     public FilterOptionDialog(RecyclerViewAdapter recyclerViewAdapter) {
@@ -81,7 +79,10 @@ public class FilterOptionDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         view = LayoutInflater.from(getActivity()).inflate(R.layout.filter_fragment, null);
+        myFilter = MyFilter.getInstance(view.getContext());
+
         createInputs();
+
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .setTitle(R.string.search_options)
@@ -94,12 +95,15 @@ public class FilterOptionDialog extends DialogFragment {
 
                         String constraints = searchName + "-" + hazardLevel + "-" + vioNumString;
 
-                        setHazardLevelPref(hazardLevel);
-                        setVioNumPref(Integer.parseInt(vioNumString));
-                        setNamePref(searchName);
-                        setFavoritePref(keepFavorite);
+                        myFilter.setHazardLevelPref(hazardLevel);
+                        myFilter.setVioNumPref(Integer.parseInt(vioNumString));
+                        myFilter.setNamePref(searchName);
+                        myFilter.setFavoritePref(keepFavorite);
 
-                        recyclerViewAdapter.getFilter().filter(constraints);
+                        if (recyclerViewAdapter != null) {
+                            // Filter options applied on RecycleView
+                            recyclerViewAdapter.getFilter().filter(constraints);
+                        }
 
                         dismiss();
                     }
@@ -121,10 +125,10 @@ public class FilterOptionDialog extends DialogFragment {
 
                         String constraints = "" + "-" + "" + "-" + "0";
 
-                        setHazardLevelPref(hazardLevel);
-                        setVioNumPref(Integer.parseInt(vioNumString));
-                        setNamePref(searchName);
-                        setFavoritePref(false);
+                        myFilter.setHazardLevelPref(hazardLevel);
+                        myFilter.setVioNumPref(Integer.parseInt(vioNumString));
+                        myFilter.setNamePref(searchName);
+                        myFilter.setFavoritePref(false);
 
                         recyclerViewAdapter.getFilter().filter(constraints);
                         recyclerViewAdapter.notifyDataSetChanged();
@@ -190,7 +194,7 @@ public class FilterOptionDialog extends DialogFragment {
     }
 
     private int getSpinnerPosition() {
-        String savedLevel = getHazardLevelPref(view.getContext());
+        String savedLevel = MyFilter.getHazardLevelPref(view.getContext());
         if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_low))) {
             return 0;
         } else if (savedLevel.equals(view.getContext().getString(R.string.hazard_rating_medium))) {
@@ -240,53 +244,5 @@ public class FilterOptionDialog extends DialogFragment {
                 searchName = editText.getText().toString();
             }
         });
-    }
-
-    public void setNamePref(String searchName) {
-        SharedPreferences pref = getContext().getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(NAME_SEARCH, searchName);
-        editor.apply();
-    }
-    public static String getNamePref(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
-        String defaultVal = "";
-        return pref.getString(NAME_SEARCH, defaultVal);
-    }
-
-    public void setHazardLevelPref(String hazardLevel) {
-        SharedPreferences pref = getContext().getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(HAZARD_LEVEL, hazardLevel);
-        editor.apply();
-    }
-    public static String getHazardLevelPref(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
-        String defaultVal = "";
-        return pref.getString(HAZARD_LEVEL, defaultVal);
-    }
-
-    public void setVioNumPref(int vioNum) {
-        SharedPreferences pref = getContext().getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putInt(CRIT_VIO_NUM, vioNum);
-        editor.apply();
-    }
-    public static int getVioNumPref(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
-        int defaultVal = 0;
-        return pref.getInt(CRIT_VIO_NUM, defaultVal);
-    }
-
-    public void setFavoritePref(boolean flag) {
-        SharedPreferences pref = getContext().getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(FAVORITE_FLAG, flag);
-        editor.apply();
-    }
-    public static boolean getFavoritePref(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
-        boolean defaultVal = false;
-        return pref.getBoolean(FAVORITE_FLAG, defaultVal);
     }
 }

@@ -53,6 +53,7 @@ import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
@@ -110,6 +111,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static String INTENT_KEY_LAT = "lat";
     private static String INTENT_KEY_LNG = "lng";
     private static String INTENT_KEY_RESTAURANT_ID = "id";
+
+    // Filter support
+    private MyFilter myFilter;
 
     public static Intent makeLaunchIntent(Context context, double lat, double lng, String trackingId) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -237,6 +241,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setSupportActionBar(toolbar);
 
         restaurantManager = RestaurantManager.getInstance(this);
+        myFilter = MyFilter.getInstance(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         setupDebug(debugOn);
         setupLocationRequest();
@@ -310,7 +315,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
-    private void populateMap() {
+    /*private void populateMap() {
         clusterItemsRendered = true;
         clusterManager = new ClusterManager<MyClusterItem>(this, map);
         clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
@@ -338,7 +343,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.setOnCameraIdleListener(clusterManager);
         map.setOnMarkerClickListener(clusterManager);
         map.setOnInfoWindowClickListener(clusterManager);
-    }
+    }*/
 
     private boolean approximateEqual(double value1, double value2, double precision) {
         double valueDiff = value1 - value2;
@@ -654,6 +659,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public boolean onQueryTextChange(String newText) {
                 debugDisplay(newText);
                 restaurantManager.query = newText;
+                myFilter.setNamePref(newText);
+                populateMap();
                 return false;
             }
         });
@@ -661,6 +668,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         RestaurantManager searchEngine = RestaurantManager.getInstance(this);
         if (searchEngine.hasQuery) {
             //populate map based on search engine
+            //populateMap();
         }
 
         return true;
@@ -674,11 +682,44 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return true;
         }
         if (item.getItemId() == R.id.menu_filter) {
-            /*FragmentManager fragmentManager = getSupportFragmentManager();
-            FilterOptionDialog filterOptionDialog = new FilterOptionDialog();
-            filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);*/
+            // For Map View, set preferences only
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FilterOptionDialog filterOptionDialog = new FilterOptionDialog(null);
+            filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);
+            populateMap();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void populateMap() {
+        clusterItemsRendered = true;
+        clusterManager = new ClusterManager<MyClusterItem>(this, map);
+        clusterManager.setRenderer(new MyDefaultRenderer(this, map, clusterManager));
+        myClusterItemList = new ArrayList<>();
+
+        //setup cluster if search engine has query.
+        myFilter.performSorting();
+        List<Restaurant> restaurantsList = myFilter.getFilteredList();
+        setupClusterMarkers(restaurantsList);
+
+        clusterManager.setOnClusterItemClickListener(item -> {
+            clickedClusterItem = new MyClusterItem(item.getPosition(), item.getTitle(), item.getSnippet(), item.getHazardLevel());
+            return false;
+        });
+
+        clusterManager.getMarkerCollection().setOnInfoWindowClickListener((GoogleMap.OnInfoWindowClickListener) marker -> {
+            String trackingID = clickedClusterItem.getSnippet();
+            Intent startIntent = RestaurantDetails.makeLaunchIntent(MapActivity.this, trackingID);
+            startActivity(startIntent);
+        });
+
+        //set clusterManager's infoWindowAdapter
+        clusterManager.getMarkerCollection().setInfoWindowAdapter(new InfoWindowAdapter(this));
+
+        // Map will use markerCluster's implementations.
+        map.setOnCameraIdleListener(clusterManager);
+        map.setOnMarkerClickListener(clusterManager);
+        map.setOnInfoWindowClickListener(clusterManager);
     }
 }

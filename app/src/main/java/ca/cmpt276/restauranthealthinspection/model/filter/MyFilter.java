@@ -1,6 +1,7 @@
 package ca.cmpt276.restauranthealthinspection.model.filter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Filter;
 import android.widget.Filterable;
 
@@ -11,6 +12,8 @@ import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Singleton class for storing filtered results after searching
@@ -26,6 +29,11 @@ public class MyFilter {
     private String hazardLevel;
     private int critVioNum;
     private Context context;
+
+    private static final String NAME_SEARCH = "Name Search";
+    private static final String HAZARD_LEVEL = "Hazard level";
+    private static final String CRIT_VIO_NUM = "Number of critical violations";
+    private static final String FAVORITE_FLAG = "Favorite Flag";
 
     /*
      * Singleton support
@@ -136,7 +144,7 @@ public class MyFilter {
     }
 
     private void sortByFavorite() {
-        if (FilterOptionDialog.getFavoritePref(context)) {
+        if (getFavoritePref(context)) {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
 
@@ -146,5 +154,53 @@ public class MyFilter {
                 }
             }
         }
+    }
+
+    public void setNamePref(String searchName) {
+        SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(NAME_SEARCH, searchName);
+        editor.apply();
+    }
+    public static String getNamePref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
+        String defaultVal = "";
+        return pref.getString(NAME_SEARCH, defaultVal);
+    }
+
+    public void setHazardLevelPref(String hazardLevel) {
+        SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(HAZARD_LEVEL, hazardLevel);
+        editor.apply();
+    }
+    public static String getHazardLevelPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
+        String defaultVal = "";
+        return pref.getString(HAZARD_LEVEL, defaultVal);
+    }
+
+    public void setVioNumPref(int vioNum) {
+        SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(CRIT_VIO_NUM, vioNum);
+        editor.apply();
+    }
+    public static int getVioNumPref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
+        int defaultVal = 0;
+        return pref.getInt(CRIT_VIO_NUM, defaultVal);
+    }
+
+    public void setFavoritePref(boolean flag) {
+        SharedPreferences pref = context.getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(FAVORITE_FLAG, flag);
+        editor.apply();
+    }
+    public static boolean getFavoritePref(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(FAVORITE_FLAG, MODE_PRIVATE);
+        boolean defaultVal = false;
+        return pref.getBoolean(FAVORITE_FLAG, defaultVal);
     }
 }

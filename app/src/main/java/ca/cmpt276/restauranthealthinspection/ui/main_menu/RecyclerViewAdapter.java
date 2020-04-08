@@ -10,16 +10,13 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.Constraints;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
@@ -60,13 +57,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Restaurant restaurant = restaurantManager.get(position);
         holder.setupCardView(restaurant);
 
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String trackingID = restaurant.getResTrackingNumber();
-                Intent i = RestaurantDetails.makeLaunchIntent(context, trackingID);
-                context.startActivity(i);
-            }
+        holder.parentLayout.setOnClickListener(v -> {
+            String trackingID = restaurant.getResTrackingNumber();
+            Intent i = RestaurantDetails.makeLaunchIntent(context, trackingID);
+            context.startActivity(i);
         });
     }
 
