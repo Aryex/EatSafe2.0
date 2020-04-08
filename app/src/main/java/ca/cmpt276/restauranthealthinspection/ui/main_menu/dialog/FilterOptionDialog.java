@@ -50,7 +50,7 @@ public class FilterOptionDialog extends DialogFragment {
     private boolean keepFavorite = false;
     private OptionDialogListener optionDialogListener;
     private String vioNumString = "0";
-    private String searchName;
+    private String searchName = "";
     private MyFilter myFilter;
     private RecyclerViewAdapter recyclerViewAdapter;
 
@@ -92,8 +92,6 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Apply");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        String constraints = searchName + "-" + hazardLevel + "-" + vioNumString;
-
                         myFilter.setHazardLevelPref(hazardLevel);
                         myFilter.setVioNumPref(Integer.parseInt(vioNumString));
                         myFilter.setNamePref(searchName);
@@ -102,7 +100,7 @@ public class FilterOptionDialog extends DialogFragment {
 
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
-                            recyclerViewAdapter.getFilter().filter(constraints);
+                            recyclerViewAdapter.getFilter().filter("");
                         }
 
                         optionDialogListener.onOptionDialogApply();
@@ -124,17 +122,15 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Clear All");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        String constraints = "" + "-" + "" + "-" + "0";
-
-                        myFilter.setHazardLevelPref(hazardLevel);
-                        myFilter.setVioNumPref(Integer.parseInt(vioNumString));
-                        myFilter.setNamePref(searchName);
+                        myFilter.setHazardLevelPref("All");
+                        myFilter.setVioNumPref(0);
+                        myFilter.setNamePref("");
                         myFilter.setFavoritePref(false);
                         myFilter.setLessThanPref(false);
 
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
-                            recyclerViewAdapter.getFilter().filter(constraints);
+                            recyclerViewAdapter.getFilter().filter("");
                         }
 
                         optionDialogListener.onOptionDialogClearAll();
@@ -176,6 +172,7 @@ public class FilterOptionDialog extends DialogFragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerHazard.setAdapter(adapter);
         spinnerHazard.setSelection(getHazardSpinnerPosition());
+        hazardLevel = MyFilter.getHazardLevelPref(view.getContext());
         spinnerHazard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -245,7 +242,6 @@ public class FilterOptionDialog extends DialogFragment {
     }
 
     private void getSearchName() {
-        searchName = "";
         EditText editText = view.findViewById(R.id.nameEditText);
         editText.setText(MyFilter.getNamePref(view.getContext()));
         editText.addTextChangedListener(new TextWatcher() {

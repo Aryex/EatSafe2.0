@@ -108,21 +108,18 @@ public class MyFilter {
     private void sortByCritVio() {
         int critVioNum = getVioNumPref(context);
 
-        if (critVioNum != 0) {
-            List<Restaurant> oldList = filteredList;
-            filteredList = new ArrayList<>();
-
-            if (getLessThanPref(context)) {
-                for (Restaurant restaurant : oldList) {
-                    if (restaurant.getCritVioLastYear() <= critVioNum) {
-                        filteredList.add(restaurant);
-                    }
+        List<Restaurant> oldList = filteredList;
+        filteredList = new ArrayList<>();
+        if (getLessThanPref(context)) {
+            for (Restaurant restaurant : oldList) {
+                if (restaurant.getCritVioLastYear() <= critVioNum) {
+                    filteredList.add(restaurant);
                 }
-            } else {
-                for (Restaurant restaurant : oldList) {
-                    if (restaurant.getCritVioLastYear() >= critVioNum) {
-                        filteredList.add(restaurant);
-                    }
+            }
+        } else {
+            for (Restaurant restaurant : oldList) {
+                if (restaurant.getCritVioLastYear() >= critVioNum) {
+                    filteredList.add(restaurant);
                 }
             }
         }
@@ -161,7 +158,7 @@ public class MyFilter {
     }
     public static String getHazardLevelPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
-        String defaultVal = "";
+        String defaultVal = "All";
         return pref.getString(HAZARD_LEVEL, defaultVal);
     }
 
@@ -185,8 +182,7 @@ public class MyFilter {
     }
     public static boolean getFavoritePref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(FAVOURITE_FLAG, MODE_PRIVATE);
-        boolean defaultVal = false;
-        return pref.getBoolean(FAVOURITE_FLAG, defaultVal);
+        return pref.getBoolean(FAVOURITE_FLAG, false);
     }
 
     public void setLessThanPref(boolean flag) {
@@ -197,7 +193,6 @@ public class MyFilter {
     }
     public static boolean getLessThanPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(LESS_THAN_FLAG, MODE_PRIVATE);
-        boolean defaultVal = false;
-        return pref.getBoolean(LESS_THAN_FLAG, defaultVal);
+        return pref.getBoolean(LESS_THAN_FLAG, false);
     }
 }

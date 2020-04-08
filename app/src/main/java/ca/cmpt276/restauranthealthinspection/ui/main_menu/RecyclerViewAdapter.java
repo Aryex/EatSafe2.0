@@ -85,11 +85,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         protected FilterResults performFiltering(CharSequence constraints) {
             // parser for constraints
-            String[] filterValues = constraints.toString().split("-", 3);
+            /*String[] filterValues = constraints.toString().split("-", 3);
             myFilter.setNamePref(filterValues[0]);
             myFilter.setHazardLevelPref(filterValues[1]);
             int myNumber = Integer.parseInt(filterValues[2]);
-            myFilter.setVioNumPref(myNumber);
+            myFilter.setVioNumPref(myNumber);*/
 
             myFilter.performSorting();
 
