@@ -57,11 +57,9 @@ public class RestaurantManager implements Iterable<Restaurant> {
         if (instance == null) {
             Log.i(TAG, "getInstance: Starting to parse data....");
             instance = new RestaurantManager();
-
             InputStreamReader inspectionDataReader = null;
             InputStreamReader restaurantDataReader = null;
             boolean originalFile = true;
-
 
             if(checkFilesAvail(context)) {
                 try {
@@ -100,6 +98,12 @@ public class RestaurantManager implements Iterable<Restaurant> {
         }
 
         return instance;
+    }
+
+    public static void invalidate(Context context) {
+        instance = null;
+        restaurants.clear();
+        favourites.clear();
     }
 
     private static void updateFavourites(Context context) {

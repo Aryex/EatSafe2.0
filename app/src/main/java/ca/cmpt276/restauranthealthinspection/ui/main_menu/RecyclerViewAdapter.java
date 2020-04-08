@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
@@ -30,12 +31,13 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> implements Filterable {
 
     private Context context;
-    private RestaurantManager restaurantManager;
 
+    // Filter support
+    private List<Restaurant> restaurants;
     private MyFilter myFilter;
 
-    RecyclerViewAdapter(Context context, RestaurantManager restaurantManager) {
-        this.restaurantManager = restaurantManager;
+    public RecyclerViewAdapter(Context context, List<Restaurant> restaurants) {
+        this.restaurants = restaurants;
 
         // Filter support
         myFilter = MyFilter.getInstance(context);
@@ -54,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantCardViewHolder holder, int position) {
-        Restaurant restaurant = restaurantManager.get(position);
+        Restaurant restaurant = restaurants.get(position);
         holder.setupCardView(restaurant);
 
         holder.parentLayout.setOnClickListener(v -> {
@@ -66,7 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return restaurantManager.restaurantCount();
+        return restaurants.size();
     }
 
     /**
@@ -100,8 +102,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         @Override
-        protected void publishResults(CharSequence constraints, FilterResults results) {
-            restaurantManager.setRestaurants(myFilter.getFilteredList());
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            List<Restaurant> restaurantList = (List<Restaurant>)results.values;
+
+            RecyclerViewAdapter.this.restaurants = restaurantList;
+
             notifyDataSetChanged();
         }
     };

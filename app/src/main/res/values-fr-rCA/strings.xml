@@ -74,4 +74,5 @@
         <item>@string/greater_than</item>
     </string-array>
     <string name="crit_vio_desc"><![CDATA[Nombre total de violations critiques au cours de la dernière année >=]]></string>
+    <string name="new_inspections_for_your_favourite_restaurants">Les nouvelles inspections pour vos restaurants préférés:</string>
 </resources>
