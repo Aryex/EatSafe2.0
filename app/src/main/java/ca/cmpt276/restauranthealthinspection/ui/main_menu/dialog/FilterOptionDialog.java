@@ -175,16 +175,16 @@ public class FilterOptionDialog extends DialogFragment {
 
     private int getSavedHazard() {
         String value = MyFilter.getHazardLevelPref(view.getContext());
-        switch (value.toLowerCase()){
-            case "low":
-                return 0;
-            case "medium":
-                return 1;
-            case "high":
-                return 2;
-            default:
-                return 3;
+
+        if (value.equals(getString(R.string.hazard_rating_low))) {
+            return 0;
+        } else if (value.equals(getString(R.string.hazard_rating_medium))) {
+            return 1;
+        } else if (value.equals(getString(R.string.hazard_rating_high))) {
+            return 2;
         }
+
+        return 3;
     }
 
     private void setupViolationSpinner() {
