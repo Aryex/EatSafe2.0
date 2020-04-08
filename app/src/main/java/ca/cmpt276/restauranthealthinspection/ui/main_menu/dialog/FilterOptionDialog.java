@@ -92,11 +92,7 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Apply");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        myFilter.setHazardLevelPref(hazardLevel);
-                        myFilter.setVioNumPref(Integer.parseInt(vioNumString));
-                        myFilter.setNamePref(searchName);
-                        myFilter.setFavoritePref(keepFavorite);
-                        myFilter.setLessThanPref(isLessThan);
+                        setFilterVariables(searchName, hazardLevel, Integer.parseInt(vioNumString), keepFavorite, isLessThan);
 
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
@@ -122,11 +118,7 @@ public class FilterOptionDialog extends DialogFragment {
                         Log.d(TAG, "onClick: Clear All");
                         Log.d(TAG, "onClick: hazard level " + hazardLevel);
 
-                        myFilter.setHazardLevelPref("All");
-                        myFilter.setVioNumPref(0);
-                        myFilter.setNamePref("");
-                        myFilter.setFavoritePref(false);
-                        myFilter.setLessThanPref(false);
+                        setFilterVariables("", "All", 0, false, false);
 
                         if (recyclerViewAdapter != null) {
                             // Filter options applied on RecycleView
@@ -138,6 +130,14 @@ public class FilterOptionDialog extends DialogFragment {
                     }
                 })
                 .create();
+    }
+
+    private void setFilterVariables(String searchName, String hazardLevel, int vioNum, boolean keepFavorite, boolean isLessThan) {
+        myFilter.setNamePref(searchName);
+        myFilter.setHazardLevelPref(hazardLevel);
+        myFilter.setVioNumPref(vioNum);
+        myFilter.setFavoritePref(keepFavorite);
+        myFilter.setLessThanPref(isLessThan);
     }
 
     private void createInputs() {
