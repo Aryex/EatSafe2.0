@@ -2,8 +2,6 @@ package ca.cmpt276.restauranthealthinspection.model.filter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +9,6 @@ import java.util.List;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -92,7 +87,7 @@ public class MyFilter {
             filteredList.addAll(restaurantList);
         } else {
             String filterPattern = constraint.toLowerCase().trim();
-            for (Restaurant restaurant: restaurantList) {
+            for (Restaurant restaurant : restaurantList) {
                 if (restaurant.getName().toLowerCase().contains(filterPattern)) {
                     filteredList.add(restaurant);
                 }
@@ -108,7 +103,7 @@ public class MyFilter {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
 
-            for (Restaurant restaurant: oldList) {
+            for (Restaurant restaurant : oldList) {
                 if (restaurant.getHazardLevel(context).equals(hazardLevel)) {
                     filteredList.add(restaurant);
                 }
@@ -117,25 +112,23 @@ public class MyFilter {
     }
 
     private void sortByCritVio() {
-        //if (!getClearAllPref(context)) {
-            int critVioNum = getVioNumPref(context);
+        int critVioNum = getVioNumPref(context);
 
-            List<Restaurant> oldList = filteredList;
-            filteredList = new ArrayList<>();
-            if (getLessThanPref(context)) {
-                for (Restaurant restaurant : oldList) {
-                    if (restaurant.getCritVioLastYear() <= critVioNum) {
-                        filteredList.add(restaurant);
-                    }
-                }
-            } else {
-                for (Restaurant restaurant : oldList) {
-                    if (restaurant.getCritVioLastYear() >= critVioNum) {
-                        filteredList.add(restaurant);
-                    }
+        List<Restaurant> oldList = filteredList;
+        filteredList = new ArrayList<>();
+        if (getLessThanPref(context)) {
+            for (Restaurant restaurant : oldList) {
+                if (restaurant.getCritVioLastYear() <= critVioNum) {
+                    filteredList.add(restaurant);
                 }
             }
-        //}
+        } else {
+            for (Restaurant restaurant : oldList) {
+                if (restaurant.getCritVioLastYear() >= critVioNum) {
+                    filteredList.add(restaurant);
+                }
+            }
+        }
     }
 
     private void sortByFavorite() {
@@ -143,7 +136,7 @@ public class MyFilter {
             List<Restaurant> oldList = filteredList;
             filteredList = new ArrayList<>();
 
-            for (Restaurant restaurant: oldList) {
+            for (Restaurant restaurant : oldList) {
                 if (restaurant.isFavourite()) {
                     filteredList.add(restaurant);
                 }
@@ -157,6 +150,7 @@ public class MyFilter {
         editor.putString(NAME_SEARCH, searchName);
         editor.apply();
     }
+
     public static String getNamePref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
         String defaultVal = context.getResources().getString(R.string.empty_string);
@@ -169,6 +163,7 @@ public class MyFilter {
         editor.putString(HAZARD_LEVEL, hazardLevel);
         editor.apply();
     }
+
     public static String getHazardLevelPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
         String defaultVal = context.getResources().getString(R.string.hazard_rating_all);
@@ -181,6 +176,7 @@ public class MyFilter {
         editor.putInt(CRIT_VIO_NUM, vioNum);
         editor.apply();
     }
+
     public static int getVioNumPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
         int defaultVal = 0;
@@ -193,6 +189,7 @@ public class MyFilter {
         editor.putBoolean(FAVOURITE_FLAG, flag);
         editor.apply();
     }
+
     public static boolean getFavoritePref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(FAVOURITE_FLAG, MODE_PRIVATE);
         return pref.getBoolean(FAVOURITE_FLAG, false);
@@ -204,6 +201,7 @@ public class MyFilter {
         editor.putBoolean(LESS_THAN_FLAG, flag);
         editor.apply();
     }
+
     public static boolean getLessThanPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(LESS_THAN_FLAG, MODE_PRIVATE);
         return pref.getBoolean(LESS_THAN_FLAG, false);
@@ -215,12 +213,14 @@ public class MyFilter {
         editor.putBoolean(CLEAR_ALL, flag);
         editor.apply();
     }
+
     public static boolean getClearAllPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(CLEAR_ALL, MODE_PRIVATE);
         return pref.getBoolean(CLEAR_ALL, false);
     }
 
-    public void resetAllFilterOptions(String searchName, String hazardLevel, int vioNum, boolean keepFavorite, boolean isLessThan, boolean clearAll) {
+    public void resetAllFilterOptions(String searchName, String hazardLevel, int vioNum,
+                                      boolean keepFavorite, boolean isLessThan, boolean clearAll) {
         setNamePref(searchName);
         setHazardLevelPref(hazardLevel);
         setVioNumPref(vioNum);

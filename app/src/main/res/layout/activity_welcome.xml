@@ -22,11 +22,11 @@
         android:layout_width="143dp"
         android:layout_height="160dp"
         android:layout_marginBottom="64dp"
+        android:contentDescription="@string/splash_screen_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_new_round"
-        android:contentDescription="@string/splash_screen_image" />
+        app:srcCompat="@drawable/ic_launcher_new_round" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

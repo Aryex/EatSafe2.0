@@ -30,11 +30,11 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter;
 public class FilterOptionDialog extends DialogFragment {
 
     public interface OptionDialogListener {
-        public void onOptionDialogApply();
+        void onOptionDialogApply();
 
-        public void onOptionDialogCancel();
+        void onOptionDialogCancel();
 
-        public void onOptionDialogClearAll();
+        void onOptionDialogClearAll();
     }
 
     public static final String TAG = "Option Dialog";
@@ -157,11 +157,15 @@ public class FilterOptionDialog extends DialogFragment {
     private void setupHazardSpinner() {
         ArrayAdapter<CharSequence> adapter;
         Spinner spinnerHazard = view.findViewById(R.id.hazard_spinner);
+
         adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.hazard_levels_array, R.layout.spinner_item);
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinnerHazard.setAdapter(adapter);
         spinnerHazard.setSelection(getSavedHazard());
+
         spinnerHazard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -191,9 +195,12 @@ public class FilterOptionDialog extends DialogFragment {
 
     private void setupViolationSpinner() {
         Spinner spinnerInequality = view.findViewById(R.id.inequality_spinner);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.inequality_array, R.layout.spinner_item);
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinnerInequality.setAdapter(adapter);
         spinnerInequality.setSelection(getSavedInequality());
 
@@ -223,6 +230,7 @@ public class FilterOptionDialog extends DialogFragment {
     private void setupCritVioInput() {
         EditText editText = view.findViewById(R.id.crit_vio_editText);
         int value = MyFilter.getVioNumPref(view.getContext());
+
         editText.setText(String.valueOf(value));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -248,6 +256,7 @@ public class FilterOptionDialog extends DialogFragment {
     private void setupSearchName() {
         EditText editText = view.findViewById(R.id.nameEditText);
         editText.setText(MyFilter.getNamePref(view.getContext()));
+
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

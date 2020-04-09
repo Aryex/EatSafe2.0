@@ -93,19 +93,18 @@
                 android:id="@+id/favouriteText"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:textSize="15sp"
-                android:gravity="center"
                 android:layout_weight="1"
-                android:text= "@string/favourite" />
+                android:gravity="center"
+                android:text="@string/favourite"
+                android:textSize="15sp" />
 
             <CheckBox
-                android:button="@android:drawable/btn_star"
                 android:id="@+id/markFavourite"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:button="@android:drawable/btn_star" />
 
         </LinearLayout>
-
 
 
     </LinearLayout>
@@ -154,6 +153,5 @@
             android:text="@string/no_inspections_found" />
 
     </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
