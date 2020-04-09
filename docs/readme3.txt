@@ -13,3 +13,8 @@ Supported languages:
 
     - The app camera is locked by default upon installation
       (to unlock the camera, disable location permission)
+
+    - Note that the user can only cancel an update within 1.5 seconds
+      of the app updating, or else the data will be read to disk. The
+      user then will not be able to cancel (since cancelling during
+      a write operation result in corrupted data)
