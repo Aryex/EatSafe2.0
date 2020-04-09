@@ -12,11 +12,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -43,7 +41,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -243,7 +240,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         restaurantManager = RestaurantManager.getInstance(this);
         myFilter = MyFilter.getInstance(this);
-        //myFilter.resetAllFilterOptions("", "All", 0, false, false, true);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         setupDebug(false);
@@ -306,7 +302,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (clusterManager != null) {
             updateMapClusters();
         }
-
     }
 
     private void updateMapClusters() {
@@ -379,8 +374,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-//                    Log.d(TAG, "onLocationResult: called + cameraLocked: " + cameraLocked);
-
                     if (cameraLocked) {
                         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         double latPrecision = deviceLocation.latitude - location.getLatitude();

@@ -40,10 +40,10 @@
     <string name="hazard_level_low">Low Hazard</string>
     <string name="hazard_level_medium">Medium Hazard</string>
     <string-array name="hazard_levels_array">
-        <item>@string/hazard_rating_all</item>
         <item>@string/hazard_rating_low</item>
         <item>@string/hazard_rating_medium</item>
         <item>@string/hazard_rating_high</item>
+        <item>@string/hazard_rating_all</item>
     </string-array>
     <string name="hazard_rating_all">All</string>
     <string name="hazard_rating_high">High</string>

@@ -28,7 +28,6 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * RecyclerViewAdapter defines how RecyclerView in main menu will setup each Card view.
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> implements Filterable {
-
     private Context context;
 
     // Filter support
@@ -84,13 +83,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Filter restaurantFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraints) {
-            // parser for constraints
-            /*String[] filterValues = constraints.toString().split("-", 3);
-            myFilter.setNamePref(filterValues[0]);
-            myFilter.setHazardLevelPref(filterValues[1]);
-            int myNumber = Integer.parseInt(filterValues[2]);
-            myFilter.setVioNumPref(myNumber);*/
-
             myFilter.performSorting();
 
             FilterResults results = new FilterResults();
@@ -129,7 +121,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         private void setupCardView(Restaurant restaurant) {
-
             textViewRestaurantName.setText(restaurant.getName());
             textViewAddress.setText(restaurant.getAddress());
             logoIV.setImageResource(restaurant.getLogo());
@@ -159,7 +150,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         private void setupWarningBar(RestaurantListActivity.HazardLevel hazardLevel) {
-
             switch (hazardLevel) {
                 case LOW:
                     textViewHazardLevel.setText(R.string.hazard_level_low);

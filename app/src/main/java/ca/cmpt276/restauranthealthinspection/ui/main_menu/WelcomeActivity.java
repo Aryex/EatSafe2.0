@@ -42,6 +42,5 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }, 1000);
         }
-
     }
 }
