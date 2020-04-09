@@ -9,7 +9,6 @@ import java.util.List;
  * Represents the JSON element for result
  */
 public class Result {
-
     @SerializedName("resources")
     @Expose
     private List<Resource> resources = null;

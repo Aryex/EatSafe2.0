@@ -19,8 +19,6 @@ import static android.content.Context.MODE_PRIVATE;
  * https://www.youtube.com/redirect?v=sJ-Z9G0SDhc&event=video_description&q=https%3A%2F%2Fcodinginflow.com%2Ftutorials%2Fandroid%2Fsearchview-recyclerview&redir_token=tVrFuM57AHYwXm4Wz_N6gnbE7v18MTU4NTg4OTc0NEAxNTg1ODAzMzQ0
  */
 public class MyFilter {
-
-
     private List<Restaurant> restaurantList;
     private List<Restaurant> filteredList;
     private Context context;
@@ -29,8 +27,8 @@ public class MyFilter {
     private static final String HAZARD_LEVEL = "Hazard level";
     private static final String CRIT_VIO_NUM = "Number of critical violations";
     private static final String FAVOURITE_FLAG = "Favourite Flag";
-    public static final String LESS_THAN_FLAG = "Less-than Flag";
-    public static final String CLEAR_ALL = "Clear all";
+    private static final String LESS_THAN_FLAG = "Less-than Flag";
+    private static final String CLEAR_ALL = "Clear all";
 
     /*
      * Singleton support
@@ -144,7 +142,7 @@ public class MyFilter {
         }
     }
 
-    public void setNamePref(String searchName) {
+    private void setNamePref(String searchName) {
         SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(NAME_SEARCH, searchName);
@@ -157,7 +155,7 @@ public class MyFilter {
         return pref.getString(NAME_SEARCH, defaultVal);
     }
 
-    public void setHazardLevelPref(String hazardLevel) {
+    private void setHazardLevelPref(String hazardLevel) {
         SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(HAZARD_LEVEL, hazardLevel);
@@ -170,7 +168,7 @@ public class MyFilter {
         return pref.getString(HAZARD_LEVEL, defaultVal);
     }
 
-    public void setVioNumPref(int vioNum) {
+    private void setVioNumPref(int vioNum) {
         SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt(CRIT_VIO_NUM, vioNum);
@@ -183,7 +181,7 @@ public class MyFilter {
         return pref.getInt(CRIT_VIO_NUM, defaultVal);
     }
 
-    public void setFavoritePref(boolean flag) {
+    private void setFavoritePref(boolean flag) {
         SharedPreferences pref = context.getSharedPreferences(FAVOURITE_FLAG, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(FAVOURITE_FLAG, flag);
@@ -195,7 +193,7 @@ public class MyFilter {
         return pref.getBoolean(FAVOURITE_FLAG, false);
     }
 
-    public void setLessThanPref(boolean flag) {
+    private void setLessThanPref(boolean flag) {
         SharedPreferences pref = context.getSharedPreferences(LESS_THAN_FLAG, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(LESS_THAN_FLAG, flag);
@@ -214,7 +212,7 @@ public class MyFilter {
         editor.apply();
     }
 
-    public static boolean getClearAllPref(Context context) {
+    private static boolean getClearAllPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(CLEAR_ALL, MODE_PRIVATE);
         return pref.getBoolean(CLEAR_ALL, false);
     }
