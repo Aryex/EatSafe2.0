@@ -1,7 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -19,31 +18,18 @@ import ca.cmpt276.restauranthealthinspection.R;
  * Represents the inspections that were performed in the restaurant.
  */
 public class Inspection implements Iterable<Violation>, Serializable {
-
     private String insTrackingNumber;
-
     private Calendar calendar;
-
     private String insType;
-
     private int numCritical;
-
     private int numNonCritical;
-
     private String hazardRating;
-
     private String violLump;
-
     private List<Violation> violations = new ArrayList<>();
-
     private static final String HAZARD_RATING_LOW = "Low";
-
     private static final String HAZARD_RATING_MODERATE = "Moderate";
-
     private static final String HAZARD_RATING_HIGH = "High";
-
     private static final String FOLLOW_UP_INSPECTION = "Follow-Up";
-
     private static final String ROUTINE_INSPECTION = "Routine";
 
     // ****************************************

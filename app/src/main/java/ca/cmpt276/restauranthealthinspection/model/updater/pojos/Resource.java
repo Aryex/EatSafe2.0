@@ -1,13 +1,14 @@
 package ca.cmpt276.restauranthealthinspection.model.updater.pojos;
 
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+/**
+ * Represents the JSON element for resource
+ */
 public class Resource {
-
     @SerializedName("format")
     @Expose
     private String format;

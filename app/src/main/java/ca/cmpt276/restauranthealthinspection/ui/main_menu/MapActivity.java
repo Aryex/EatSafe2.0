@@ -270,15 +270,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         TextView textViewDebugCritOption = findViewById(R.id.debugTextViewCritNumOption);
         TextView textViewDebugFavorite = findViewById(R.id.debugTextViewFavoriteOption);
 
-        textViewDebugHazardLevel.setText(restaurantManager.getHazardLevel());
-        textViewDebugCritOption.setText(restaurantManager.getCritSetting());
-
-        if (restaurantManager.isFavorite()) {
-            textViewDebugFavorite.setText("true");
-        } else {
-            textViewDebugFavorite.setText("false");
-        }
-
         if (!debugOn) {
             button.setVisibility(View.GONE);
             floatingActionButton.setVisibility(View.GONE);

@@ -6,17 +6,11 @@ import java.io.Serializable;
  * Represents the violations in an inspection.
  */
 public class Violation implements Serializable {
-
     private int number;
-
     private String criticalStatus;
-
     private String description;
-
     private String repeatStatus;
-
     public static final String CRITICAL_STATUS = "Critical";
-
     public static final String NON_CRITICAL_STATUS = "Not Critical";
 
     Violation(int number, String criticalStatus, String description, String repeatStatus) {
