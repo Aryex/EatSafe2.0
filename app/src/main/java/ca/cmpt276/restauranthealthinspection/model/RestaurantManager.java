@@ -24,7 +24,7 @@ import static java.sql.Types.NULL;
 
 /**
  * Represents the manager for restaurants.
- *
+ * <p>
  * Contains a singleton to store and retain restaurants.
  */
 public class RestaurantManager implements Iterable<Restaurant> {
@@ -34,23 +34,12 @@ public class RestaurantManager implements Iterable<Restaurant> {
     private static List<Restaurant> favourites = new ArrayList<>();
 
     private static final String FAVOURITES_FILE = "favourites file";
-    private static final String FAVOURITES_LIST  = "favourites list";
-
+    private static final String FAVOURITES_LIST = "favourites list";
 
     // **********
     // Singleton
     // **********
-
-
-    /**
-     * mock up. pls delete
-     * */
     private static RestaurantManager instance;
-    public boolean hasQuery = false;
-    public String query = "";
-    private boolean favorite = false;
-    private String hazardLevel = "empty";
-    private String critSetting = "empty";
 
     public static RestaurantManager getInstance(Context context) {
 
@@ -61,7 +50,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
             InputStreamReader restaurantDataReader = null;
             boolean originalFile = true;
 
-            if(checkFilesAvail(context)) {
+            if (checkFilesAvail(context)) {
                 try {
                     inspectionDataReader = new InputStreamReader(
                             context.openFileInput(FileUpdater.INSPECTIONS_FILE));
@@ -123,11 +112,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
 
         return inspections.exists() && restaurants.exists();
     }
-
-    private RestaurantManager() {
-        // Nothing, ensures singleton usage.
-    }
-
+    
     // Package private
     void add(Restaurant restaurant) {
         restaurants.add(restaurant);
@@ -158,7 +143,7 @@ public class RestaurantManager implements Iterable<Restaurant> {
         return restaurants.iterator();
     }
 
-    public int restaurantCount() {
+    private int restaurantCount() {
         return restaurants.size();
     }
 
@@ -172,12 +157,12 @@ public class RestaurantManager implements Iterable<Restaurant> {
     }
 
     public Restaurant getRestaurant(String trackingID) {
-        for(Restaurant restaurant : restaurants){
-            if(restaurant.getResTrackingNumber().equals(trackingID)){
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getResTrackingNumber().equals(trackingID)) {
                 return restaurant;
             }
         }
-        return new Restaurant("none", "none","none","none","none",0,0);
+        return new Restaurant("none", "none", "none", "none", "none", 0, 0);
     }
 
     public void unFavourite(Context context, String trackingID) {
@@ -210,46 +195,5 @@ public class RestaurantManager implements Iterable<Restaurant> {
         SharedPreferences.Editor editor = context.getSharedPreferences(FAVOURITES_FILE, Context.MODE_PRIVATE).edit();
         editor.putStringSet(FAVOURITES_LIST, set);
         editor.apply();
-    }
-
-    public void setRestaurants(List<Restaurant> list) {
-        restaurants = list;
-    }
-
-
-    /**
-     * MOCK UP, PLS DELETE*/
-    public void showOnlyFavorite(boolean b) {
-        favorite = b;
-    }
-
-    public void setHazardFilter(String low) {
-        hazardLevel = low;
-    }
-
-    public void setCriticalSetting(String less_then, int i) {
-        critSetting = less_then+i;
-    }
-
-    public boolean isFavorite() {
-        return favorite;
-    }
-
-    public String getHazardLevel() {
-        return hazardLevel;
-    }
-
-    public String getCritSetting() {
-        return critSetting;
-    }
-
-    public void clearSettings() {
-        favorite = false;
-        hazardLevel = "empty";
-        critSetting = "empty";
-    }
-
-    public String getState() {
-        return hazardLevel + " " + critSetting;
     }
 }

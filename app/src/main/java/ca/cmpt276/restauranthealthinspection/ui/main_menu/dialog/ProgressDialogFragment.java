@@ -18,6 +18,7 @@ import java.util.List;
 import androidx.fragment.app.DialogFragment;
 
 import androidx.fragment.app.FragmentManager;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
@@ -30,9 +31,7 @@ import retrofit2.Call;
 /**
  * Displays progress bar for downloading
  */
-
 public class ProgressDialogFragment extends DialogFragment {
-
     static final String TAG = "downloading";
 
     private ProgressBar progressBar;
@@ -88,12 +87,6 @@ public class ProgressDialogFragment extends DialogFragment {
 
                     //signal the FileUpdater that the download is complete, and change to Map activity
                     if (progressBar.getProgress() == 100) {
-
-//                        FileUpdater.completeDownload(getContext());
-//                        getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
-//                        Intent i = MapActivity.makeLaunchIntent(getContext());
-//                        startActivity(i);
-
                         List<Restaurant> updatedRestaurants = getFavourites();
 
                         if (!updatedRestaurants.isEmpty()) {
@@ -101,8 +94,7 @@ public class ProgressDialogFragment extends DialogFragment {
                             FragmentManager fragmentManager = getFragmentManager();
                             FavouriteNotificationFragment favouriteNotificationFragment = new FavouriteNotificationFragment(updatedRestaurants);
                             favouriteNotificationFragment.show(fragmentManager, FavouriteNotificationFragment.TAG);
-                        }
-                        else {
+                        } else {
                             getFragmentManager().beginTransaction().remove(ProgressDialogFragment.this).commit();
                             Intent i = MapActivity.makeLaunchIntent(getContext());
                             startActivity(i);
@@ -126,10 +118,9 @@ public class ProgressDialogFragment extends DialogFragment {
 
         for (Restaurant currentFavourite : favourites) {
             for (Restaurant restaurant : newRestaurants) {
-
                 if (restaurant.getResTrackingNumber().equals(currentFavourite.getResTrackingNumber())
-                && currentFavourite.getInspections().size() != restaurant.getInspections().size()) {
-                        updatedFavourites.add(restaurant);
+                        && currentFavourite.getInspections().size() != restaurant.getInspections().size()) {
+                    updatedFavourites.add(restaurant);
 
                 }
             }

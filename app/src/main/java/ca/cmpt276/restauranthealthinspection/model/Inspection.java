@@ -1,7 +1,6 @@
 package ca.cmpt276.restauranthealthinspection.model;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -19,31 +18,18 @@ import ca.cmpt276.restauranthealthinspection.R;
  * Represents the inspections that were performed in the restaurant.
  */
 public class Inspection implements Iterable<Violation>, Serializable {
-
     private String insTrackingNumber;
-
     private Calendar calendar;
-
     private String insType;
-
     private int numCritical;
-
     private int numNonCritical;
-
     private String hazardRating;
-
     private String violLump;
-
     private List<Violation> violations = new ArrayList<>();
-
     private static final String HAZARD_RATING_LOW = "Low";
-
     private static final String HAZARD_RATING_MODERATE = "Moderate";
-
     private static final String HAZARD_RATING_HIGH = "High";
-
     private static final String FOLLOW_UP_INSPECTION = "Follow-Up";
-
     private static final String ROUTINE_INSPECTION = "Routine";
 
     // ****************************************
@@ -131,7 +117,7 @@ public class Inspection implements Iterable<Violation>, Serializable {
     }
 
     // Source : https://stackoverflow.com/questions/7103064/java-calculate-the-number-of-days-between-two-dates/14278129
-    private int getDaysInBetween() {
+    int getDaysInBetween() {
         long days = Calendar.getInstance().getTimeInMillis() - calendar.getTimeInMillis();
 
         return (int) Math.round(days / (60.0 * 60 * 24 * 1000)); // 60 seconds * 60 minutes * 24 hours * 1000 ms per second

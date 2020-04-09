@@ -3,8 +3,10 @@ package ca.cmpt276.restauranthealthinspection.model.updater.pojos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents the JSON element for info
+ */
 public class JsonInfo {
-
     @SerializedName("result")
     @Expose
     private Result result;

@@ -19,9 +19,7 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 /**
  * Fragment for a checking update dialog
  */
-
 public class CheckUpdateFragment extends DialogFragment {
-
     public static final String TAG = "check_update";
     private final int TIMEOUT = 5000;
     private boolean doneChecking = false;

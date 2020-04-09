@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.JsonInfo;
 import ca.cmpt276.restauranthealthinspection.model.updater.pojos.Resource;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.CheckUpdateFragment;
@@ -33,9 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Downloads data from server and saves in disk
  */
-
 public class FileUpdater {
-
     private static final String TEMP_RESTAURANTS_FILE = "temp_restaurants.csv";
     private static final String TEMP_INSPECTIONS_FILE = "temp_inspections.csv";
     public static final String RESTAURANTS_FILE = "restaurants.csv";
@@ -78,7 +75,9 @@ public class FileUpdater {
                 .baseUrl(APIService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+
         Call<JsonInfo> inspectionsUrlCall = retrofit.create(APIService.class).getInspectionsUrl();
+
         inspectionsUrlCall.enqueue(new Callback<JsonInfo>() {
             @Override
             public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
@@ -116,7 +115,6 @@ public class FileUpdater {
 
         //get the inspections url
         inspectionsUrlCall.enqueue(new Callback<JsonInfo>() {
-
             @Override
             public void onResponse(Call<JsonInfo> call, Response<JsonInfo> response) {
 
@@ -185,7 +183,6 @@ public class FileUpdater {
         return httpClientBuilder.build();
     }
 
-
     private static void getRestaurants(String url, Context context, ProgressDialogFragment progressDialogFragment) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -193,10 +190,6 @@ public class FileUpdater {
                 .client(getOkHttpClient(new DownloadListener() {
                     @Override
                     public void downloadUpdate(int percent) {
-
-                        //WIP, server side does not provide content length 100% of the time
-//                        progressDialogFragment.setProgress(percent);
-//                        Log.d("test", percent + "");
 
                     }
                 }))
@@ -221,7 +214,6 @@ public class FileUpdater {
         });
 
         progressDialogFragment.setRestaurantsCall(restaurantsCall);
-
     }
 
     private static void getInspections(String url, Context context, ProgressDialogFragment progressDialogFragment) {
@@ -247,7 +239,6 @@ public class FileUpdater {
         });
         progressDialogFragment.setInspectionsCall(inspectionsCall);
     }
-
 
     private static boolean writeInspectionsToDisk(ResponseBody body, Context context) {
         //write to disk
@@ -277,7 +268,6 @@ public class FileUpdater {
             return false;
         }
         return true;
-
     }
 
     //save when the server was last modified as a temp value

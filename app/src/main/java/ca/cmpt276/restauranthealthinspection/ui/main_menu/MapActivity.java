@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -12,11 +13,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -43,7 +42,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -53,6 +51,7 @@ import androidx.fragment.app.FragmentManager;
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
+import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
@@ -85,7 +84,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
-    private RestaurantManager resturantManager;
+    private RestaurantManager restaurantManager;
 
     private static final float DEFAULT_ZOOM_FOCUS = 19f;
     private static final float DEFAULT_ZOOM_HIGH = 12f;
@@ -110,6 +109,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static String INTENT_KEY_LAT = "lat";
     private static String INTENT_KEY_LNG = "lng";
     private static String INTENT_KEY_RESTAURANT_ID = "id";
+
+    // Filter support
+    private MyFilter myFilter;
 
     public static Intent makeLaunchIntent(Context context, double lat, double lng, String trackingId) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -149,6 +151,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, DEFAULT_ZOOM_HIGH));
             createRequestedMarker(data);
         } else {
+            myFilter.setClearAllPref(true);
             populateMap();
             setupLocationTracking();
             moveCamera(deviceLocation, DEFAULT_ZOOM_HIGH);
@@ -187,7 +190,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         latLng = new LatLng(data.getDoubleExtra(INTENT_KEY_LAT, 0), data.getDoubleExtra(INTENT_KEY_LNG, 0));
         String trackingId = data.getStringExtra(INTENT_KEY_RESTAURANT_ID);
 
-        String hazardLevel = resturantManager.getRestaurant(trackingId).getHazardLevel(getApplicationContext());
+        String hazardLevel = restaurantManager.getRestaurant(trackingId).getHazardLevel(getApplicationContext());
         BitmapDescriptor markerIcon = getHazardLevelBitmapDescriptor(hazardLevel, getApplicationContext());
 
         requestedMarker = map.addMarker(new MarkerOptions()
@@ -236,9 +239,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        resturantManager = RestaurantManager.getInstance(this);
+        restaurantManager = RestaurantManager.getInstance(this);
+        myFilter = MyFilter.getInstance(this);
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        setupDebug(debugOn);
+        setupDebug(false);
         setupLocationRequest();
 
         getLocationPermission();
@@ -262,19 +267,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         TextView textViewDebugCritOption = findViewById(R.id.debugTextViewCritNumOption);
         TextView textViewDebugFavorite = findViewById(R.id.debugTextViewFavoriteOption);
 
-        textViewDebugHazardLevel.setText(resturantManager.getHazardLevel());
-        textViewDebugCritOption.setText(resturantManager.getCritSetting());
-
-        if (resturantManager.isFavorite()) {
-            textViewDebugFavorite.setText("true");
-        } else {
-            textViewDebugFavorite.setText("false");
-        }
-
         if (!debugOn) {
             button.setVisibility(View.GONE);
             floatingActionButton.setVisibility(View.GONE);
             debugTextView.setVisibility(View.GONE);
+            textViewDebugHazardLevel.setVisibility(View.GONE);
+            textViewDebugCritOption.setVisibility(View.GONE);
+            textViewDebugFavorite.setVisibility(View.GONE);
             return;
         }
 
@@ -297,10 +296,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(this, "On Resume!", Toast.LENGTH_SHORT).show();
+
         makeLocationCallback();
         startLocationUpdates();
 
+        if (clusterManager != null) {
+            updateMapClusters();
+        }
+    }
+
+    private void updateMapClusters() {
+        clusterManager.clearItems();
+        myClusterItemList.clear();
+        //refresh
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
+
+        myFilter.performSorting();
+        List<Restaurant> restaurantsList = myFilter.getFilteredList();
+        setupClusterMarkers(restaurantsList);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
     @Override
@@ -317,7 +332,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         myClusterItemList = new ArrayList<>();
 
         //setup cluster if search engine has query.
-        List<Restaurant> restaurantsList = resturantManager.getRestaurants();
+        myFilter.performSorting();
+        List<Restaurant> restaurantsList = myFilter.getFilteredList();
         setupClusterMarkers(restaurantsList);
 
         clusterManager.setOnClusterItemClickListener(item -> {
@@ -359,8 +375,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-//                    Log.d(TAG, "onLocationResult: called + cameraLocked: " + cameraLocked);
-
                     if (cameraLocked) {
                         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         double latPrecision = deviceLocation.latitude - location.getLatitude();
@@ -506,29 +520,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onOptionDialogApply() {
-        Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
-        if(myClusterItemList.isEmpty()){
-            List<Restaurant> restaurantsList = resturantManager.getRestaurants();
-            setupClusterMarkers(restaurantsList);
-            //refresh
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
-        }
+        updateMapClusters();
     }
 
     @Override
     public void onOptionDialogCancel() {
-        Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
-        clusterManager.clearItems();
-        myClusterItemList.clear();
         //refresh
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
     @Override
     public void onOptionDialogClearAll() {
-        Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
-        //TODO: update list pls
-
+        updateMapClusters();
     }
 
     public class OnCameraMove implements GoogleMap.OnCameraMoveListener {
@@ -539,10 +542,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             if (approximateEqual(deviceLocation.latitude, cameraLaLng.latitude, DEFAULT_PRECISION)
                     && approximateEqual(deviceLocation.longitude, cameraLaLng.longitude, DEFAULT_PRECISION)) {
-                //debugDisplay("onCameraMove: locked");
                 cameraLocked = true;
             } else {
-                //debugDisplay("onCameraMove: unlocked");
                 cameraLocked = false;
             }
         }
@@ -576,13 +577,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             Log.d(TAG, "InfoWindowAdapter: filling activity");
 
-            Restaurant restaurant = resturantManager.getRestaurant(trackingNumber);
+            Restaurant restaurant = restaurantManager.getRestaurant(trackingNumber);
 
             String restaurantName = restaurant.getName();
             String address = restaurant.getAddress();
             String hazardLevel = restaurant.getHazardLevel(context);
             String lastInspected = restaurant.getLatestInspectionDate(context);
             String lastInspectedTotalIssues = restaurant.getLatestInspectionTotalIssues();
+            CardView parentLayout = view.findViewById(R.id.infoWindowParentViewCardView);
 
             ImageView logoIV = view.findViewById(R.id.logoImageView);
             logoIV.setImageResource(restaurant.getLogo());
@@ -602,6 +604,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             } else {
                 textViewInspectionDate.setText(R.string.no_inspections_found);
                 textViewTotalIssues.setText(R.string.no);
+            }
+
+            if (restaurant.isFavourite()) {
+                parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
+            } else {
+                parentLayout.setBackgroundColor(Color.parseColor("#ffffff"));
             }
 
             TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);
@@ -639,30 +647,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.menu_action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                debugDisplay(newText);
-                resturantManager.query = newText;
-                return false;
-            }
-        });
-
-        RestaurantManager searchEngine = RestaurantManager.getInstance(this);
-        if (searchEngine.hasQuery) {
-            //populate map based on search engine
-        }
-
         return true;
     }
 
@@ -674,9 +658,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return true;
         }
         if (item.getItemId() == R.id.menu_filter) {
+            // For Map View, set preferences only
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FilterOptionDialog filterOptionDialog = new FilterOptionDialog();
+            FilterOptionDialog filterOptionDialog = new FilterOptionDialog(null);
             filterOptionDialog.show(fragmentManager, FilterOptionDialog.TAG);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

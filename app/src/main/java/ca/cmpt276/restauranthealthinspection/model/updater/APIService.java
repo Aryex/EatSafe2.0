@@ -6,8 +6,10 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 
+/**
+ * Represents the API interface.
+ */
 public interface APIService {
-
     String BASE_URL = "http://data.surrey.ca/";
 
     @GET("/api/3/action/package_show?id=fraser-health-restaurant-inspection-reports")

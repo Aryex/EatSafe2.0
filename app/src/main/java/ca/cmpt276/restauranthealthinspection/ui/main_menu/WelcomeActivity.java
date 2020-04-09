@@ -15,7 +15,6 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.CheckUpdateFrag
  * Welcome activity before the Map Activity
  */
 public class WelcomeActivity extends AppCompatActivity {
-
     private final long UPDATE_TIME_THRESHOLD = 72000000;
 
     @Override
@@ -43,7 +42,5 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }, 1000);
         }
-
     }
-
 }

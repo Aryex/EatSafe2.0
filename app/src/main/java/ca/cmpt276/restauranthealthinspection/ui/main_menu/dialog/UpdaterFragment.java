@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,9 +18,7 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 /**
  * Asks user if they want to download data now
  */
-
 public class UpdaterFragment extends DialogFragment {
-
     static final String TAG = "updating";
 
     public interface UpdaterDialogListener {
@@ -45,17 +44,18 @@ public class UpdaterFragment extends DialogFragment {
                         FragmentManager fragmentManager = getFragmentManager();
                         ProgressDialogFragment progressDialogFragment = new ProgressDialogFragment();
                         progressDialogFragment.show(fragmentManager, ProgressDialogFragment.TAG);
+                        Log.i("Update started", "Starting to update...");
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.i("Update canceled", "Canceled update...");
                         //on cancel start map activity
                         Intent i = MapActivity.makeLaunchIntent(getContext());
                         startActivity(i);
                     }
                 });
-
 
         return builder.create();
     }

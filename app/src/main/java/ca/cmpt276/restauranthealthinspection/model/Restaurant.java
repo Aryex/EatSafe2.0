@@ -13,25 +13,15 @@ import ca.cmpt276.restauranthealthinspection.R;
  * Represents each restaurant.
  */
 public class Restaurant implements Iterable<Inspection> {
-
     private String resTrackingNumber;
-
     private String name;
-
     private String address;
-
     private String city;
-
     private String resType;
-
     private double latitude;
-
     private double longitude;
-
     private List<Inspection> inspections = new ArrayList<>();
-
     private int logo;
-
     private boolean favourite = false;
 
     // ****************************************
@@ -206,5 +196,19 @@ public class Restaurant implements Iterable<Inspection> {
 
     public void setFavourite(boolean favourite) {
         this.favourite = favourite;
+    }
+
+    public int getCritVioLastYear() {
+        int total = 0;
+
+        for (Inspection inspection: inspections) {
+            if (inspection.getDaysInBetween() > 365) {
+                break;
+            } else {
+                total += inspection.getNumCritical();
+            }
+        }
+
+        return total;
     }
 }

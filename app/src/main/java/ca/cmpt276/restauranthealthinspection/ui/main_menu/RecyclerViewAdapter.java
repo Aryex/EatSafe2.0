@@ -16,11 +16,11 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
-import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
@@ -28,11 +28,9 @@ import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDet
  * RecyclerViewAdapter defines how RecyclerView in main menu will setup each Card view.
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RestaurantCardViewHolder> implements Filterable {
-
     private Context context;
 
     // Filter support
-    private List<Restaurant> restaurantListFull;
     private List<Restaurant> restaurants;
     private MyFilter myFilter;
 
@@ -40,8 +38,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.restaurants = restaurants;
 
         // Filter support
-        this.restaurantListFull = restaurants;
-        myFilter = MyFilter.getInstance();
+        myFilter = MyFilter.getInstance(context);
 
         this.context = context;
     }
@@ -60,13 +57,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Restaurant restaurant = restaurants.get(position);
         holder.setupCardView(restaurant);
 
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String trackingID = restaurant.getResTrackingNumber();
-                Intent i = RestaurantDetails.makeLaunchIntent(context, trackingID);
-                context.startActivity(i);
-            }
+        holder.parentLayout.setOnClickListener(v -> {
+            String trackingID = restaurant.getResTrackingNumber();
+            Intent i = RestaurantDetails.makeLaunchIntent(context, trackingID);
+            context.startActivity(i);
         });
     }
 
@@ -76,7 +70,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     /**
-     *
      * Filter support
      */
     /* Filter implementation's reference:
@@ -89,33 +82,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Filter restaurantFilter = new Filter() {
         @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<Restaurant> filteredList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(restaurantListFull);
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-                for (Restaurant restaurant: restaurantListFull) {
-                    if (restaurant.getName().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(restaurant);
-                    }
-                }
-            }
+        protected FilterResults performFiltering(CharSequence constraints) {
+            myFilter.performSorting();
 
             FilterResults results = new FilterResults();
-            results.values = filteredList;
+            results.values = new ArrayList<>(Collections.unmodifiableList(myFilter.getFilteredList()));
 
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            List<Restaurant> restaurantList = (List<Restaurant>)results.values;
+            List<Restaurant> restaurantList = (List<Restaurant>) results.values;
 
             RecyclerViewAdapter.this.restaurants = restaurantList;
-            myFilter.setConstraint(constraint);
-            myFilter.setRestaurantList(restaurantList);
 
             notifyDataSetChanged();
         }
@@ -141,16 +121,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         private void setupCardView(Restaurant restaurant) {
-
             textViewRestaurantName.setText(restaurant.getName());
             textViewAddress.setText(restaurant.getAddress());
             logoIV.setImageResource(restaurant.getLogo());
 
-            //background colour for favourite restaurants, temporary
+            //background colour for favourite restaurants
             if (restaurant.isFavourite()) {
                 parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
-            }
-            else {
+            } else {
                 parentLayout.setBackgroundColor(Color.parseColor("#ffffff"));
             }
 
@@ -172,7 +150,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         private void setupWarningBar(RestaurantListActivity.HazardLevel hazardLevel) {
-
             switch (hazardLevel) {
                 case LOW:
                     textViewHazardLevel.setText(R.string.hazard_level_low);
@@ -200,7 +177,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             return RestaurantListActivity.HazardLevel.MEDIUM;
         } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
             return RestaurantListActivity.HazardLevel.HIGH;
-        }else{
+        } else {
             return RestaurantListActivity.HazardLevel.LOW;
         }
     }
