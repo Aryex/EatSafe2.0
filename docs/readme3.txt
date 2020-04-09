@@ -18,3 +18,11 @@ Supported languages:
       of the app updating, or else the data will be read to disk. The
       user then will not be able to cancel (since cancelling during
       a write operation result in corrupted data)
+
+    - For searching restaurants with hazard levels of the most recent
+      example, the default level is to display "All" hazard levels, in
+      this case, "Low", "Medium (Moderate)", and "High". "All" does NOT
+      mean that the inspection have all three hazard levels. Keep in mind
+      that "All", as default, displays restaurants with low hazard,
+      restaurants with medium hazard, and restaurants with high hazard
+      (not restaurants with all three hazards combined).
