@@ -21,7 +21,6 @@ import java.util.List;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
-import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.restaurant_details.RestaurantDetails;
 
@@ -72,7 +71,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     /**
-     *
      * Filter support
      */
     /* Filter implementation's reference:
@@ -103,7 +101,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            List<Restaurant> restaurantList = (List<Restaurant>)results.values;
+            List<Restaurant> restaurantList = (List<Restaurant>) results.values;
 
             RecyclerViewAdapter.this.restaurants = restaurantList;
 
@@ -139,8 +137,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             //background colour for favourite restaurants, temporary
             if (restaurant.isFavourite()) {
                 parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
-            }
-            else {
+            } else {
                 parentLayout.setBackgroundColor(Color.parseColor("#ffffff"));
             }
 
@@ -190,7 +187,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             return RestaurantListActivity.HazardLevel.MEDIUM;
         } else if (hazardLevel.equals(context.getString(R.string.hazard_rating_high))) {
             return RestaurantListActivity.HazardLevel.HIGH;
-        }else{
+        } else {
             return RestaurantListActivity.HazardLevel.LOW;
         }
     }

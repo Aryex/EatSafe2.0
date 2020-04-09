@@ -19,7 +19,6 @@ import ca.cmpt276.restauranthealthinspection.model.Inspection;
  * Display details of a single Inspection
  */
 public class InspectionDetails extends AppCompatActivity {
-
     public static final String INTENT_TAG_INSPECTION = "Inspection chosen";
     private Inspection inspection;
 

@@ -76,8 +76,7 @@ public class RestaurantDetails extends AppCompatActivity {
         CheckBox checkBox = findViewById(R.id.markFavourite);
         if (manager.getRestaurant(trackingID).isFavourite()) {
             checkBox.setChecked(true);
-        }
-        else {
+        } else {
             checkBox.setChecked(false);
         }
         checkBox.setOnClickListener(new View.OnClickListener() {
@@ -85,8 +84,7 @@ public class RestaurantDetails extends AppCompatActivity {
             public void onClick(View view) {
                 if (checkBox.isChecked()) {
                     manager.markFavourite(RestaurantDetails.this, trackingID);
-                }
-                else {
+                } else {
                     manager.unFavourite(RestaurantDetails.this, trackingID);
                 }
             }

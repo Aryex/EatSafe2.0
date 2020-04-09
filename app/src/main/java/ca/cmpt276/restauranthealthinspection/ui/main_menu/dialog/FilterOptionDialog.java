@@ -31,7 +31,9 @@ public class FilterOptionDialog extends DialogFragment {
 
     public interface OptionDialogListener {
         public void onOptionDialogApply();
+
         public void onOptionDialogCancel();
+
         public void onOptionDialogClearAll();
     }
 
@@ -54,7 +56,7 @@ public class FilterOptionDialog extends DialogFragment {
 
     /**
      * From https://developer.android.com/guide/topics/ui/dialogs
-     * */
+     */
 
     @Override
     public void onAttach(Context context) {
@@ -211,9 +213,9 @@ public class FilterOptionDialog extends DialogFragment {
 
     private int getSavedInequality() {
         boolean lessThanPref = MyFilter.getLessThanPref(view.getContext());
-        if(lessThanPref){
+        if (lessThanPref) {
             return 0;
-        }else{
+        } else {
             return 1;
         }
     }

@@ -7,20 +7,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
+
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
-import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
+
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDialog;
 
 /**
@@ -28,7 +25,6 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.dialog.FilterOptionDia
  * It will also initializes the model.
  */
 public class RestaurantListActivity extends AppCompatActivity implements FilterOptionDialog.OptionDialogListener {
-
     private RestaurantManager restaurantManager;
 
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -62,22 +58,14 @@ public class RestaurantListActivity extends AppCompatActivity implements FilterO
 
     @Override
     public void onOptionDialogApply() {
-        Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
-        //TODO: update list pls
     }
 
     @Override
     public void onOptionDialogCancel() {
-        Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
-        //TODO: update list pls
-
     }
 
     @Override
     public void onOptionDialogClearAll() {
-        Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
-        //TODO: update list pls
-
     }
 
     @Override

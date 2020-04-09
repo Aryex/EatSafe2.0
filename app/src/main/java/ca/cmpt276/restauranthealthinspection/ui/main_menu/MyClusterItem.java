@@ -3,6 +3,8 @@ package ca.cmpt276.restauranthealthinspection.ui.main_menu;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
+ * Represents the cluster markers on the map activity.
+ *
  * Reference:
  * https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
  */

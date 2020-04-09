@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ca.cmpt276.restauranthealthinspection.R;
 import ca.cmpt276.restauranthealthinspection.model.Restaurant;
 import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
@@ -30,16 +31,17 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
+/**
+ * Represents the fragment for displaying the updated inspections
+ * for the user's favourite restaurants.
+ */
 public class FavouriteNotificationFragment extends DialogFragment {
-
-
     public static final String TAG = "notify favourites";
     private List<Restaurant> updatedRestaurants;
 
     FavouriteNotificationFragment(List<Restaurant> updatedRestaurants) {
         this.updatedRestaurants = updatedRestaurants;
     }
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -66,5 +68,4 @@ public class FavouriteNotificationFragment extends DialogFragment {
                 .setTitle(R.string.new_inspections_for_your_favourite_restaurants)
                 .create();
     }
-
 }

@@ -308,7 +308,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(this, "On Resume!", Toast.LENGTH_SHORT).show();
+
         makeLocationCallback();
         startLocationUpdates();
 
@@ -535,20 +535,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onOptionDialogApply() {
-        Toast.makeText(this, "Dialog Apply!", Toast.LENGTH_SHORT).show();
         updateMapClusters();
     }
 
     @Override
     public void onOptionDialogCancel() {
-        Toast.makeText(this, "Dialog Cancel :(", Toast.LENGTH_SHORT).show();
         //refresh
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(map.getCameraPosition().target, map.getCameraPosition().zoom + 0.01f));
     }
 
     @Override
     public void onOptionDialogClearAll() {
-        Toast.makeText(this, "Dialog Clear All!", Toast.LENGTH_SHORT).show();
         updateMapClusters();
     }
 
@@ -560,10 +557,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             if (approximateEqual(deviceLocation.latitude, cameraLaLng.latitude, DEFAULT_PRECISION)
                     && approximateEqual(deviceLocation.longitude, cameraLaLng.longitude, DEFAULT_PRECISION)) {
-                //debugDisplay("onCameraMove: locked");
                 cameraLocked = true;
             } else {
-                //debugDisplay("onCameraMove: unlocked");
                 cameraLocked = false;
             }
         }

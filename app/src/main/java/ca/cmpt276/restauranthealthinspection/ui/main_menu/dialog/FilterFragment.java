@@ -31,13 +31,11 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Fragment for a filter dialog
  */
-
 public class FilterFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
-
     public static final String TAG = "filter";
-    public static final String NAME_SEARCH = "Name Search";
-    public static final String HAZARD_LEVEL = "Hazard level";
-    public static final String CRIT_VIO_NUM = "Number of critical violations";
+    private static final String NAME_SEARCH = "Name Search";
+    private static final String HAZARD_LEVEL = "Hazard level";
+    private static final String CRIT_VIO_NUM = "Number of critical violations";
     private View view;
     private Spinner spinner;
     private String hazardLevel;
@@ -67,7 +65,8 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
-        builder.setTitle("Filter");
+        builder.setTitle(getString(R.string.menu_filter));
+
         builder.setPositiveButton(R.string.apply_search, (dialogInterface, i) -> {
             String constraints = searchName + "-" + hazardLevel + "-" + vioNumString;
 
@@ -79,14 +78,15 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
 
             dismiss();
         });
+
         builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dismiss();
             }
         });
-        return builder
-                .create();
+
+        return builder.create();
     }
 
     private void createSpinner() {
@@ -178,6 +178,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         editor.putString(NAME_SEARCH, searchName);
         editor.apply();
     }
+
     public static String getNamePref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(NAME_SEARCH, MODE_PRIVATE);
         String defaultVal = "";
@@ -190,6 +191,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         editor.putString(HAZARD_LEVEL, hazardLevel);
         editor.apply();
     }
+
     public static String getHazardLevelPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(HAZARD_LEVEL, MODE_PRIVATE);
         String defaultVal = "";
@@ -202,6 +204,7 @@ public class FilterFragment extends DialogFragment implements AdapterView.OnItem
         editor.putInt(CRIT_VIO_NUM, vioNum);
         editor.apply();
     }
+
     public static int getVioNumPref(Context context) {
         SharedPreferences pref = context.getSharedPreferences(CRIT_VIO_NUM, MODE_PRIVATE);
         int defaultVal = 0;

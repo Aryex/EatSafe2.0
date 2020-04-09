@@ -17,9 +17,7 @@ import ca.cmpt276.restauranthealthinspection.ui.main_menu.MapActivity;
 /**
  * Asks user if they want to download data now
  */
-
 public class UpdaterFragment extends DialogFragment {
-
     static final String TAG = "updating";
 
     public interface UpdaterDialogListener {
@@ -55,7 +53,6 @@ public class UpdaterFragment extends DialogFragment {
                         startActivity(i);
                     }
                 });
-
 
         return builder.create();
     }
