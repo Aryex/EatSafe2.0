@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -583,6 +584,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             String hazardLevel = restaurant.getHazardLevel(context);
             String lastInspected = restaurant.getLatestInspectionDate(context);
             String lastInspectedTotalIssues = restaurant.getLatestInspectionTotalIssues();
+            CardView parentLayout = view.findViewById(R.id.infoWindowParentViewCardView);
 
             ImageView logoIV = view.findViewById(R.id.logoImageView);
             logoIV.setImageResource(restaurant.getLogo());
@@ -602,6 +604,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             } else {
                 textViewInspectionDate.setText(R.string.no_inspections_found);
                 textViewTotalIssues.setText(R.string.no);
+            }
+
+            if (restaurant.isFavourite()) {
+                parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
+            } else {
+                parentLayout.setBackgroundColor(Color.parseColor("#ffffff"));
             }
 
             TextView textViewRestaurantHazardLevel = view.findViewById(R.id.infoWindowHazardLevel);

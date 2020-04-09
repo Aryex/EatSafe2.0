@@ -125,7 +125,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textViewAddress.setText(restaurant.getAddress());
             logoIV.setImageResource(restaurant.getLogo());
 
-            //background colour for favourite restaurants, temporary
+            //background colour for favourite restaurants
             if (restaurant.isFavourite()) {
                 parentLayout.setBackgroundColor(Color.parseColor("#fffd70"));
             } else {
