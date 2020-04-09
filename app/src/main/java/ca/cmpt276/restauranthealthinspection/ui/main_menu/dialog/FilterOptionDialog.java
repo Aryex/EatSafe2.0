@@ -130,7 +130,6 @@ public class FilterOptionDialog extends DialogFragment {
     }
 
     private void createInputs() {
-
         // Inequality spinner for number of critical violations
         setupViolationSpinner();
         setupCritVioInput();
