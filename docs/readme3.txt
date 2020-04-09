@@ -2,7 +2,7 @@ Supported languages:
    - English (Default)
    - French (Canada)
 
- Note:
+ Notes:
     - When testing on one of the devices, upon app installation,
       clicking the "cancel" button still results in updated data
       (it downloaded the data in the background even though
@@ -20,7 +20,7 @@ Supported languages:
       a write operation result in corrupted data)
 
     - For searching restaurants with hazard levels of the most recent
-      example, the default level is to display "All" hazard levels, in
+      inspection, the default level is to display "All" hazard levels, in
       this case, "Low", "Medium (Moderate)", and "High". "All" does NOT
       mean that the inspection have all three hazard levels. Keep in mind
       that "All", as default, displays restaurants with low hazard,
