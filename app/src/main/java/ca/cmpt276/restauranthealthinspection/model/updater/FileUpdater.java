@@ -32,7 +32,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Downloads data from server and saves in disk
  */
-
 public class FileUpdater {
     private static final String TEMP_RESTAURANTS_FILE = "temp_restaurants.csv";
     private static final String TEMP_INSPECTIONS_FILE = "temp_inspections.csv";
@@ -191,10 +190,6 @@ public class FileUpdater {
                 .client(getOkHttpClient(new DownloadListener() {
                     @Override
                     public void downloadUpdate(int percent) {
-
-                        //WIP, server side does not provide content length 100% of the time
-//                        progressDialogFragment.setProgress(percent);
-//                        Log.d("test", percent + "");
 
                     }
                 }))

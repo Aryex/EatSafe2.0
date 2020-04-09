@@ -36,7 +36,6 @@ public class RestaurantManager implements Iterable<Restaurant> {
     private static final String FAVOURITES_FILE = "favourites file";
     private static final String FAVOURITES_LIST = "favourites list";
 
-
     // **********
     // Singleton
     // **********

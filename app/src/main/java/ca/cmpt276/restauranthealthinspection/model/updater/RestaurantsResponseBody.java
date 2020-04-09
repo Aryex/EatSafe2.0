@@ -22,7 +22,6 @@ import okio.Source;
  */
 
 public class RestaurantsResponseBody extends ResponseBody {
-
     private ResponseBody responseBody;
     private DownloadListener downloadListener;
     private BufferedSource bufferedSource;

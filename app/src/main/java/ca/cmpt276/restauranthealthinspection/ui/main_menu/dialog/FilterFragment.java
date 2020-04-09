@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,16 +14,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import ca.cmpt276.restauranthealthinspection.R;
-import ca.cmpt276.restauranthealthinspection.model.RestaurantManager;
 import ca.cmpt276.restauranthealthinspection.model.filter.MyFilter;
 import ca.cmpt276.restauranthealthinspection.ui.main_menu.RecyclerViewAdapter;
-import ca.cmpt276.restauranthealthinspection.ui.main_menu.RestaurantListActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 
